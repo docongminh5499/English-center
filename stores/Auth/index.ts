@@ -1,6 +1,6 @@
 import { createHook, createStore } from "react-sweet-state";
 import { UserRole } from "../../helpers/constants";
-import { loadUserFromLocalStorage, logIn } from "./auth.action";
+import { loadUserFromLocalStorage, logIn, logOut } from "./auth.action";
 
 export type State = {
   username?: string;
@@ -16,7 +16,7 @@ const initialState: State = {
   expireTime: undefined,
 };
 
-const actions = { loadUserFromLocalStorage, logIn };
+const actions = { loadUserFromLocalStorage, logIn, logOut };
 
 const Store = createStore({
   initialState,

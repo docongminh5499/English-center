@@ -1,0 +1,57 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerContent {
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    align-items: center;
+    padding: 2rem 3rem;
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logoContainer > a {
+    font-weight: bold;
+    font-size: 3.2rem;
+}
+
+.navContainer, .guestNavContainer {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.guestNavContainer {
+    gap: 1rem;
+}
+
+.navContainer {
+    gap: 3rem;
+}
+
+.navContainer > div {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.navContainer > div > svg {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
+.mainContent {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0rem 3rem;
+}

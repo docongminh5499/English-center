@@ -1,8 +1,12 @@
+:root {
+  font-size: 10px;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -12,5 +16,26 @@ a {
 }
 
 * {
+  font-size: 1.6rem;
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  :root {
+    font-size: 1.34vw;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    font-size: 2vw;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    font-size: 2.67vw;
+  }
 }

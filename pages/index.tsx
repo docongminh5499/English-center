@@ -7,6 +7,7 @@ const Home: CustomNextPage = (props) => {
 };
 
 Home.allowUsers = [
+  UserRole.GUEST,
   UserRole.ADMIN,
   UserRole.EMPLOYEE,
   UserRole.PARENT,

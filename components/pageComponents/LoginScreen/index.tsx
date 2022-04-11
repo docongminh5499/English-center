@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Url } from "../../../helpers/constants";
-import { useToasts } from "react-toast-notifications";
+import { toast } from "react-toastify";
 import { useAuth } from "../../../stores/Auth";
 import { useRouter } from "next/router";
 
@@ -17,7 +17,6 @@ const schema = yup.object().shape({
 });
 
 const LoginScreen = (props: IProps) => {
-  const { addToast } = useToasts();
   const [, authAction] = useAuth();
   const router = useRouter();
   const {
@@ -34,15 +33,9 @@ const LoginScreen = (props: IProps) => {
       router.push(returnUrl);
     } catch (error: any) {
       if (error.status && error.status == 404) {
-        addToast("Tên đăng nhập hoặc mật khẩu không đúng", {
-          appearance: "error",
-          autoDismiss: true,
-        });
+        toast.error("Tên đăng nhập hoặc mật khẩu không đúng");
       } else {
-        addToast("Hệ thống gặp sự cố. Vui lòng thử lại sau", {
-          appearance: "error",
-          autoDismiss: true,
-        });
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại sau");
       }
     }
   };

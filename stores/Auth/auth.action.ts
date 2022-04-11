@@ -21,3 +21,16 @@ export const logIn =
     localStorage.setItem(LocalStorageKey.USER, JSON.stringify(user));
     setState(user);
   };
+
+export const logOut =
+  (): Action<State> =>
+  async ({ setState }) => {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem(LocalStorageKey.USER);
+    setState({
+      username: undefined,
+      token: undefined,
+      role: UserRole.GUEST,
+      expireTime: undefined,
+    });
+  };

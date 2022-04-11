@@ -1,12 +1,14 @@
 import "../styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { CustomAppProps } from "../interfaces/app.interface";
 import { useAuth } from "../stores/Auth";
-import { ToastProvider } from "react-toast-notifications";
+import { ToastContainer } from "react-toastify";
 import { UserRole } from "../helpers/constants";
-import LoadingScreen from "../components/pageComponents/LoadingScreen";
 import { usePrevious } from "../helpers/usePrevious";
+import LoadingScreen from "../components/pageComponents/LoadingScreen";
+import ModalContainer from "../components/commons/ModalContainer";
 
 function MyApp({ Component, pageProps }: CustomAppProps) {
   const router = useRouter();
@@ -59,15 +61,20 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
   }
 
   return (
-    <ToastProvider>
+    <>
       {authorized && (
         <>
           <Component {...pageProps} />
-          <div className="modal-container"></div>
+          <ModalContainer />
+          <ToastContainer
+            theme="colored"
+            hideProgressBar={true}
+            closeButton={true}
+          />
         </>
       )}
       {!authorized && <LoadingScreen />}
-    </ToastProvider>
+    </>
   );
 }
 
