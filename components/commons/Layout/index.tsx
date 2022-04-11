@@ -3,11 +3,6 @@ import Image from "next/image";
 import React from "react";
 import Button from "../Button";
 import { useAuth } from "../../../stores/Auth";
-import {
-  AccountCircle,
-  NotificationsNone,
-  ChatBubbleOutline,
-} from "@mui/icons-material";
 import { UserRole } from "../../../helpers/constants";
 import styles from "./layout.module.css";
 
@@ -30,7 +25,7 @@ const Layout = ({ children }: IProps) => {
                 width={36}
                 height={36}
               />
-              <a>English Center</a>
+              <p>English Center</p>
             </a>
           </Link>
           {authState.role == UserRole.GUEST && (
@@ -46,20 +41,29 @@ const Layout = ({ children }: IProps) => {
             <div className={styles.navContainer}>
               <Link href={"#!"} passHref>
                 <div>
-                  <ChatBubbleOutline />
-                  <p>Trò chuyện</p>
+                  <img
+                    src="/assets/icons/ic_notification.png"
+                    alt="icon"
+                  />
+                  <p>Thông báo</p>
                 </div>
               </Link>
               <Link href={"#!"} passHref>
                 <div>
-                  <NotificationsNone />
-                  <p>Thông báo</p>
+                  <img
+                    src="/assets/icons/ic_chat.png"
+                    alt="icon"
+                  />
+                  <p>Trò chuyện</p>
                 </div>
               </Link>
               <div>
-                <AccountCircle />
+                <img
+                  src="/assets/icons/ic_user.png"
+                  alt="icon"
+                />
                 <p>Xin chào, {authState.username}</p>
-                <div>
+                <div className={styles.menuContainer}>
                   <p onClick={() => authAction.logOut()}>Đăng xuất</p>
                 </div>
               </div>

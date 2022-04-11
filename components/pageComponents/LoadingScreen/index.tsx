@@ -1,4 +1,3 @@
-import CircularProgress from "@mui/material/CircularProgress";
 import Head from "next/head";
 import styles from "./loading.module.css";
 
@@ -12,7 +11,11 @@ const LoadingScreen = (props: IProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.loadingContainer}>
-        <CircularProgress color="inherit" />
+        <div className={styles.ldsRing}>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
         <p className={styles.loadingText}>Đang tải...</p>
       </div>
     </>

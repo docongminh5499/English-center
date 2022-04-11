@@ -18,14 +18,17 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
 
   useEffect(() => {
     const hideContent = async () => authorized && setAuthorized(false);
-    hideContent().then(() => {
-      authCheck();
-      return true;
-    });
+    router.events.on('routeChangeStart', hideContent);
+    return () => router.events.off('routeChangeStart', hideContent);
+  }, []);
+
+  useEffect(() => {
+    authCheck();
   }, [router.asPath]);
 
   useEffect(() => {
     if (prevUserRole === undefined) authCheck();
+    else if (authState.role === undefined) authCheck();
   }, [authState]);
 
   function authCheck() {

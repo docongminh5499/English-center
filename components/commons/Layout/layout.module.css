@@ -18,7 +18,7 @@
     gap: 1rem;
 }
 
-.logoContainer > a {
+.logoContainer > p {
     font-weight: bold;
     font-size: 3.2rem;
 }
@@ -39,15 +39,39 @@
 }
 
 .navContainer > div {
+    position: relative;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.6rem;
 }
 
-.navContainer > div > svg {
+.navContainer > div > img {
     width: 2.4rem;
     height: 2.4rem;
+}
+
+.navContainer div.menuContainer {
+    display: none;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    padding: 1rem 0;
+    background-color: white;
+    box-shadow: 2px 2px 9px 5px #efefef;
+} 
+
+.navContainer div:hover > div.menuContainer {
+    display: block;
+}
+
+.navContainer div.menuContainer > * {
+    padding: 0.7rem 1rem;
+}
+
+.navContainer div.menuContainer > *:hover {
+    background-color: #efefef;
 }
 
 .mainContent {

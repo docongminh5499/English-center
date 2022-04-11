@@ -30,7 +30,7 @@ export const logOut =
     setState({
       username: undefined,
       token: undefined,
-      role: UserRole.GUEST,
+      role: undefined,
       expireTime: undefined,
     });
   };
