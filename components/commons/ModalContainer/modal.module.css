@@ -1,0 +1,45 @@
+.modalContainer {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    transition: all 0.3s ease-in-out;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    z-index: -1;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalNotOpen {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.modalOpen {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modalContainer > *:not(.overlay) {
+    transition: all 0.3s ease-in-out;
+}
+
+.modalNotOpen > *:not(.overlay) {
+    transform: scale(0);
+}
+
+.modalOpen > *:not(.overlay) {
+    transform: scale(1);
+}

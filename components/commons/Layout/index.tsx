@@ -1,17 +1,32 @@
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useCallback } from "react";
 import Button from "../Button";
+import LogoutModal from "../../pageComponents/LogoutModal";
 import { useAuth } from "../../../stores/Auth";
 import { UserRole } from "../../../helpers/constants";
+import { useModal } from "../../../helpers/useModal";
 import styles from "./layout.module.css";
-
 interface IProps {
   children?: React.ReactNode | React.ReactNode[];
 }
 
 const Layout = ({ children }: IProps) => {
   const [authState, authAction] = useAuth();
+
+  const onCancelLogout = useCallback(() => {
+    closeModal();
+  }, []);
+  
+  const onLogout = useCallback(() => {
+    authAction.logOut();
+    closeModal();
+  }, [authAction]);
+
+  const [openModal, closeModal] = useModal(LogoutModal, {
+    onLogout: onLogout,
+    onCancelLogout: onCancelLogout,
+  });
 
   return (
     <React.Fragment>
@@ -41,30 +56,21 @@ const Layout = ({ children }: IProps) => {
             <div className={styles.navContainer}>
               <Link href={"#!"} passHref>
                 <div>
-                  <img
-                    src="/assets/icons/ic_notification.png"
-                    alt="icon"
-                  />
+                  <img src="/assets/icons/ic_notification.png" alt="icon" />
                   <p>Thông báo</p>
                 </div>
               </Link>
               <Link href={"#!"} passHref>
                 <div>
-                  <img
-                    src="/assets/icons/ic_chat.png"
-                    alt="icon"
-                  />
+                  <img src="/assets/icons/ic_chat.png" alt="icon" />
                   <p>Trò chuyện</p>
                 </div>
               </Link>
               <div>
-                <img
-                  src="/assets/icons/ic_user.png"
-                  alt="icon"
-                />
+                <img src="/assets/icons/ic_user.png" alt="icon" />
                 <p>Xin chào, {authState.username}</p>
                 <div className={styles.menuContainer}>
-                  <p onClick={() => authAction.logOut()}>Đăng xuất</p>
+                  <p onClick={() => openModal()}>Đăng xuất</p>
                 </div>
               </div>
             </div>
