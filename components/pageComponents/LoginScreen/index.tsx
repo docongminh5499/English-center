@@ -8,6 +8,9 @@ import { Url } from "../../../helpers/constants";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../stores/Auth";
 import { useRouter } from "next/router";
+import Input from "../../commons/Input";
+import Button from "../../commons/Button";
+import styles from "./login.module.css";
 
 interface IProps {}
 
@@ -46,23 +49,33 @@ const LoginScreen = (props: IProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <p>Trang LOGIN</p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input
-            type="text"
-            {...register("username")}
-            placeholder="Tên đăng nhập"
-          />
-          {errors.username && <p>{errors.username.message}</p>}
-          <input
-            type="password"
-            {...register("password")}
-            autoComplete="on"
-            placeholder="Mật khẩu"
-          />
-          {errors.password && <p>{errors.password.message}</p>}
-          <button type="submit">Đăng nhập</button>
-        </form>
+        <div className={styles.loginContainer}>
+          <div className={styles.login}>
+            <p className={styles.title}>Đăng nhập</p>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Input
+                type="text"
+                label="Tên đăng nhập"
+                id="username_login_screen"
+                registerForm={register("username")}
+                placeholder="Tên đăng nhập"
+                error={errors.username?.message}
+              />
+              <Input
+                type="password"
+                label="Mật khẩu"
+                id="password_login_screen"
+                registerForm={register("password")}
+                placeholder="Mật khẩu"
+                error={errors.password?.message}
+                autoComplete="on"
+              />
+              <Button type="submit" theme="primary">
+                Đăng nhập
+              </Button>
+            </form>
+          </div>
+        </div>
       </Layout>
     </>
   );

@@ -55,6 +55,7 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
     }
     if (authState.expireTime && Date.now() >= authState.expireTime * 1000) {
       setAuthorized(false);
+      authAction.logOut();
       return router.push({
         pathname: "/login",
         query: { returnUrl: router.asPath },

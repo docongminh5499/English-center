@@ -1,0 +1,41 @@
+.loginContainer {
+    width: 100%;
+    min-height: 45rem;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.loginContainer .login {
+    padding: 3rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    border: 1px solid #efefef;
+    box-shadow: 5px 5px 15px 5px #efefef;
+}
+
+.loginContainer .login .title {
+    text-transform: uppercase;
+    font-size: 3.2rem;
+    font-weight: bold;
+    color: #2457C5;
+    margin-bottom: 3rem;
+}
+
+.loginContainer .login > form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.loginContainer .login > form > button {
+    margin-top: 2rem;
+}
