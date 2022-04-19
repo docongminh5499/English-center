@@ -13,8 +13,11 @@ export const LocalStorageKey = {
 };
 
 export const Url = {
-  baseUrl: 'http://localhost:5000',
+  baseUrl: "http://localhost:5000",
   users: {
     signIn: "/api/users/sign-in",
+  },
+  teachers: {
+    getCourse: "/api/teachers/courses/get-course",
   },
 };

@@ -18,6 +18,28 @@
     gap: 7.4rem;
 }
 
+.loadingContainer {
+    height: 26rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.errorContainer {
+    height: 26rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.errorContainer > p {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #4f4f4f;
+}
+
 .courseDateBasedSection {
     display: flex;
     flex-direction: column;

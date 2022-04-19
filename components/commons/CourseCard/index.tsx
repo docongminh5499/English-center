@@ -21,7 +21,12 @@ const CourseCard = (props: IProps) => {
         </div>
         <div className={styles.courseInfo}>
           <p className={styles.courseName}>{name}</p>
-          <p className={styles.courseId}>{courseId}</p>
+          <p className={styles.courseId}>
+            Mã lớp:{" "}
+            {Number.isNaN(Number(courseId))
+              ? courseId
+              : courseId.toString().padStart(6, "0")}
+          </p>
         </div>
       </div>
     </Link>

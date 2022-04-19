@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Loading from "../../commons/Loading";
 import styles from "./loading.module.css";
 
 interface IProps {}
@@ -11,11 +12,7 @@ const LoadingScreen = (props: IProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.loadingContainer}>
-        <div className={styles.ldsRing}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <Loading />
         <p className={styles.loadingText}>Đang tải...</p>
       </div>
     </>
