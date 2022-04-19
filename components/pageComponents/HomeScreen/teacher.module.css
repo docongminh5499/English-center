@@ -1,0 +1,36 @@
+.teacherHomePage {
+    margin: 3.6rem 8rem 5.6rem;
+    flex: 1;
+}
+
+.teacherHomePage .title {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 2.8rem;
+    width: 100%;
+    text-align: center;
+}
+
+.teacherHomePage .courseList {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 7.4rem;
+}
+
+.courseDateBasedSection {
+    display: flex;
+    flex-direction: column;
+    gap: 4.2rem;
+}
+
+.courseDateBasedSection .date {
+    font-size: 2.4rem;
+    font-weight: 600;
+}
+
+.courseDateBasedSection .courseContainer {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4rem;
+}

@@ -1,0 +1,42 @@
+.sidebarContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    gap: 2rem;
+    background-color: #B2F6FB;
+    padding: 2rem 1rem;
+}
+
+.sidebarContainer.hidden {
+    display: none;
+}
+
+.sidebarItem {
+    position: relative;
+    z-index: 1;
+    padding: 0.7rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebarItem.actived {
+    font-weight: bold;
+    background-color: white;
+    border-radius: 0.5rem;
+}
+
+.sidebarItem .iconContainer {
+    height: 3.6rem;
+    width: 3.6rem;
+}
+
+.sidebarItem .iconContainer img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0px !important;
+}
