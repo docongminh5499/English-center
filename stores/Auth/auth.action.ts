@@ -1,36 +1,47 @@
 import { Action } from "react-sweet-state";
 import { State } from ".";
-import { LocalStorageKey, UserRole } from "../../helpers/constants";
+import API from "../../helpers/api";
+import { LocalStorageKey, Url, UserRole } from "../../helpers/constants";
 
 export const loadUserFromLocalStorage =
   (): Action<State> =>
-  async ({ setState }) => {
-    if (typeof window === "undefined") return;
-    const localStorageData = localStorage.getItem(LocalStorageKey.USER);
-    if (localStorageData !== null) {
-      setState(JSON.parse(localStorageData));
-    } else {
-      setState({ role: UserRole.GUEST });
-    }
-  };
+    async ({ setState }) => {
+      if (typeof window === "undefined") return;
+      const localStorageData = localStorage.getItem(LocalStorageKey.USER);
+
+      if (localStorageData !== null) {
+        const tokenPayload = JSON.parse(localStorageData);
+        try {
+          const response = await API.post(Url.users.verify, tokenPayload);
+          setState({ token: tokenPayload.token, ...response });
+        } catch (error: any) {
+          localStorage.removeItem(LocalStorageKey.USER);
+          setState({ role: UserRole.GUEST });
+        }
+      } else {
+        setState({ role: UserRole.GUEST });
+      }
+    };
 
 export const logIn =
-  (user: State): Action<State> =>
-  async ({ setState }) => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem(LocalStorageKey.USER, JSON.stringify(user));
-    setState(user);
-  };
+  (data: any): Action<State> =>
+    async ({ dispatch }) => {
+      if (typeof window === "undefined") return;
+      const response = await API.post(Url.users.signIn, data);
+      localStorage.setItem(LocalStorageKey.USER, JSON.stringify(response));
+      dispatch(loadUserFromLocalStorage());
+    };
 
 export const logOut =
   (): Action<State> =>
-  async ({ setState }) => {
-    if (typeof window === "undefined") return;
-    localStorage.removeItem(LocalStorageKey.USER);
-    setState({
-      username: undefined,
-      token: undefined,
-      role: undefined,
-      expireTime: undefined,
-    });
-  };
+    async ({ setState }) => {
+      if (typeof window === "undefined") return;
+      localStorage.removeItem(LocalStorageKey.USER);
+      setState({
+        fullName: undefined,
+        userName: undefined,
+        token: undefined,
+        role: undefined,
+        expireTime: undefined,
+      });
+    };

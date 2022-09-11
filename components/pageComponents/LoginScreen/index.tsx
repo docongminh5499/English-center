@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Layout from "../../commons/Layout";
-import API from "../../../helpers/api";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -30,8 +29,7 @@ const LoginScreen = (props: IProps) => {
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await API.post(Url.users.signIn, data);
-      await authAction.logIn(response);
+      await authAction.logIn(data);
       const returnUrl = (router.query.returnUrl || "/") as string;
       router.push(returnUrl);
     } catch (error: any) {

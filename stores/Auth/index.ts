@@ -3,14 +3,16 @@ import { UserRole } from "../../helpers/constants";
 import { loadUserFromLocalStorage, logIn, logOut } from "./auth.action";
 
 export type State = {
-  username?: string;
+  fullName?: string;
+  userName?: string;
   token?: string;
   role?: UserRole;
   expireTime?: number;
 };
 
 const initialState: State = {
-  username: undefined,
+  fullName: undefined,
+  userName: undefined,
   token: undefined,
   role: undefined,
   expireTime: undefined,

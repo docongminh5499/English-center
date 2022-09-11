@@ -68,7 +68,7 @@ const Layout = ({ children }: IProps) => {
               </Link>
               <div>
                 <img src="/assets/icons/ic_user.png" alt="icon" />
-                <p>Xin chào, {authState.username}</p>
+                <p>Xin chào, {authState.fullName}</p>
                 <div className={styles.menuContainer}>
                   <p onClick={() => openModal()}>Đăng xuất</p>
                 </div>

@@ -16,6 +16,7 @@ export const Url = {
   baseUrl: "http://localhost:5000",
   users: {
     signIn: "/api/users/sign-in",
+    verify: "/api/users/verify",
   },
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
