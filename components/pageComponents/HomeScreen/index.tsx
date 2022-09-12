@@ -1,15 +1,25 @@
 import Head from "next/head";
 import { UserRole } from "../../../helpers/constants";
-import { useAuth } from "../../../stores/Auth";
 import Layout from "../../commons/Layout";
 import Sidebar from "../../commons/Sidebar";
 import styles from "./home.module.css";
-import TeacherHome from "./teacher.home";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-interface IProps {}
+interface IProps { 
+  userRole?: UserRole
+}
 
 const HomeScreen = (props: IProps) => {
-  const [authState] = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (props.userRole === UserRole.TEACHER)
+      router.push("/teacher");
+
+    // TODO: Another user role
+
+  }, []);
+
 
   return (
     <>
@@ -17,11 +27,10 @@ const HomeScreen = (props: IProps) => {
         <title>Trang chủ</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        <div className={styles.homeContainer}>
-          <Sidebar />
-          {authState.role == UserRole.TEACHER && <TeacherHome />}
-        </div>
+      <Layout displaySidebar={false} userRole={props.userRole}>
+          
+          {/* TODO : Guest home page */}
+
       </Layout>
     </>
   );

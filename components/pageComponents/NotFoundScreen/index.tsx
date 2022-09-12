@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../../commons/Layout";
 
-interface IProps {}
+interface IProps { }
 
 const NotFoundScreen = (props: IProps) => {
   return (
@@ -10,7 +10,7 @@ const NotFoundScreen = (props: IProps) => {
         <title>Không tìm thấy trang</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
+      <Layout displaySidebar={false}>
         <p>404 Not Found</p>
       </Layout>
     </>

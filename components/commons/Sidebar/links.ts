@@ -4,7 +4,7 @@ export const teacherSidebar: Array<SidebarItem> = [
   {
     src: "/assets/icons/ic_course.png",
     name: "Khóa học",
-    href: "/",
+    href: "/teacher",
   },
   {
     src: "/assets/icons/ic_diary.png",

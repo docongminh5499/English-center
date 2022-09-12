@@ -46,7 +46,7 @@ const LoginScreen = (props: IProps) => {
         <title>Đăng nhập</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
+      <Layout displaySidebar={false}>
         <div className={styles.loginContainer}>
           <div className={styles.login}>
             <p className={styles.title}>Đăng nhập</p>

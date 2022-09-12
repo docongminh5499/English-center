@@ -7,17 +7,23 @@ import { useAuth } from "../../../stores/Auth";
 import { UserRole } from "../../../helpers/constants";
 import { useModal } from "../../../helpers/useModal";
 import styles from "./layout.module.css";
+import Sidebar from "../Sidebar";
+import { useRouter } from "next/router";
+
 interface IProps {
   children?: React.ReactNode | React.ReactNode[];
+  displaySidebar?: Boolean;
+  userRole?: UserRole;
 }
 
-const Layout = ({ children }: IProps) => {
+const Layout = ({ children, displaySidebar, userRole }: IProps) => {
   const [authState, authAction] = useAuth();
+  const router = useRouter();
 
   const onCancelLogout = useCallback(() => {
     closeModal();
   }, []);
-  
+
   const onLogout = useCallback(() => {
     authAction.logOut();
     closeModal();
@@ -77,7 +83,14 @@ const Layout = ({ children }: IProps) => {
           )}
         </div>
       </div>
-      <div className={styles.mainContent}>{children}</div>
+      <div className={styles.mainContent}>
+        <div className={styles.content}>
+          {displaySidebar && (
+            <Sidebar userRole={userRole} />
+          )}
+          {children}
+        </div>
+      </div>
       <div className={styles.footer}></div>
     </React.Fragment>
   );

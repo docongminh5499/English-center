@@ -1,3 +1,5 @@
+export const TimeZoneOffset = 7;
+
 export enum UserRole {
   GUEST = "guest",
   ADMIN = "admin",
@@ -11,6 +13,14 @@ export enum UserRole {
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
 };
+
+export const CookieKey = {
+  USER: "EnglishCenter-User"
+};
+
+export const TeacherConstants = {
+  limitCourse: 4
+}
 
 export const Url = {
   baseUrl: "http://localhost:5000",
