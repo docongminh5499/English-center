@@ -93,7 +93,7 @@ const TeacherHomeScreen = (props: IProps) => {
             {!loading && error && (
               <div className={styles.errorContainer}>
                 <p>Có lỗi xảy ra, vui lòng thử lại</p>
-                <Button theme="primary" onClick={() => onClickPaginationPage(currentPage)}>Thử lại</Button>
+                <Button color="primary" onClick={() => onClickPaginationPage(currentPage)}>Thử lại</Button>
               </div>
             )}
 

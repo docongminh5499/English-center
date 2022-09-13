@@ -1,38 +1,36 @@
 import { UseFormRegisterReturn } from "react-hook-form";
+import { Input as MantineInput, InputProps } from '@mantine/core';
 import ErrorText from "../ErrorText";
-import styles from './input.module.css';
 
 interface IProps {
   label?: string;
   type?: string;
   placeholder?: string;
   registerForm?: UseFormRegisterReturn;
-  error?: string;
+  error?: any;
   id?: string;
   autoComplete?: string;
+  className?: string;
 }
 
-const Input = ({
-  label,
-  type,
-  placeholder,
-  registerForm,
-  error,
-  id,
-  autoComplete,
-}: IProps) => {
+const Input = (props: InputProps & IProps) => {
+  const {registerForm, ...leftProps} = props;
   return (
-    <div className={styles.inputContainer}>
-      {label && <label htmlFor={id}>{label}</label>}
-      <input
-        placeholder={placeholder || ""}
-        type={type || "text"}
-        id={id}
-        autoComplete={autoComplete}
-        {...registerForm}
+    <MantineInput.Wrapper
+      id={props.id}
+      label={props.label}
+      error={props.error && <ErrorText text={props.error} />}
+      className={`${props.className || ""}`}
+    >
+      <MantineInput
+        id={props.id}
+        placeholder={props.placeholder || ''}
+        type={props.type || 'text'}
+        autoComplete={props.autoComplete}
+        {...leftProps}
+        {...props.registerForm}
       />
-      {error && <ErrorText text={error} />}
-    </div>
+    </MantineInput.Wrapper>
   );
 };
 

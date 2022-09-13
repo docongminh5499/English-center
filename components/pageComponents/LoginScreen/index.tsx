@@ -3,15 +3,18 @@ import Layout from "../../commons/Layout";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Url } from "../../../helpers/constants";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../stores/Auth";
 import { useRouter } from "next/router";
 import Input from "../../commons/Input";
 import Button from "../../commons/Button";
+import { IconUser, IconLockOpen, IconEye, IconEyeOff } from "@tabler/icons";
 import styles from "./login.module.css";
+import { useState } from "react";
 
-interface IProps {}
+
+
+interface IProps { }
 
 const schema = yup.object().shape({
   username: yup.string().required("Vui lòng nhập tên người dùng"),
@@ -20,6 +23,7 @@ const schema = yup.object().shape({
 
 const LoginScreen = (props: IProps) => {
   const [, authAction] = useAuth();
+  const [seePassword, setSeePassword] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -52,23 +56,31 @@ const LoginScreen = (props: IProps) => {
             <p className={styles.title}>Đăng nhập</p>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Input
+                icon={<IconUser size={"1.6rem"} color="#444" stroke={1.5} />}
                 type="text"
-                label="Tên đăng nhập"
                 id="username_login_screen"
                 registerForm={register("username")}
                 placeholder="Tên đăng nhập"
+                autoComplete="off"
                 error={errors.username?.message}
               />
               <Input
-                type="password"
-                label="Mật khẩu"
+                icon={<IconLockOpen size={"1.6rem"} color="#444" stroke={1.5} />}
+                type={seePassword ? "text" : "password"}
                 id="password_login_screen"
                 registerForm={register("password")}
                 placeholder="Mật khẩu"
+                autoComplete="off"
                 error={errors.password?.message}
-                autoComplete="on"
+                rightSection={
+                  seePassword ? (<IconEye
+                    onClick={() => setSeePassword(!seePassword)}
+                    size={"1.6rem"} color="#444" stroke={1.5} />
+                  ) : (<IconEyeOff
+                    onClick={() => setSeePassword(!seePassword)}
+                    size={"1.6rem"} color="#444" stroke={1.5} />)}
               />
-              <Button type="submit" theme="primary">
+              <Button type="submit" color="primary">
                 Đăng nhập
               </Button>
             </form>

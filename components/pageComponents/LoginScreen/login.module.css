@@ -1,6 +1,6 @@
 .loginContainer {
     width: 100%;
-    min-height: 45rem;
+    height: calc(100vh - 10rem);
     max-width: 1440px;
     margin-left: auto;
     margin-right: auto;
@@ -24,13 +24,14 @@
 
 .loginContainer .login .title {
     text-transform: uppercase;
-    font-size: 3.2rem;
+    font-size: 2.4rem;
     font-weight: bold;
-    color: #2457C5;
+    color: #228BE6;
     margin-bottom: 3rem;
 }
 
 .loginContainer .login > form {
+    min-width: 250px;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -38,4 +39,11 @@
 
 .loginContainer .login > form > button {
     margin-top: 2rem;
+}
+
+
+@media screen and (max-width: 480px) {
+    .loginContainer .login > form {
+        min-width: 150px;
+    }
 }

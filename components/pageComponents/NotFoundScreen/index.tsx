@@ -1,5 +1,7 @@
 import Head from "next/head";
+import Button from "../../commons/Button";
 import Layout from "../../commons/Layout";
+import styles from "./notFound.module.css";
 
 interface IProps { }
 
@@ -11,7 +13,13 @@ const NotFoundScreen = (props: IProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout displaySidebar={false}>
-        <p>404 Not Found</p>
+        <div className={styles.notFoundContainer}>
+          <p className={styles.statusText}>404 - Not Found</p>
+          <p className={styles.notFoundText}>Không tìm thấy trang</p>
+          <Button href="/" color="success">
+            <p>Về trang chủ</p>
+          </Button>
+        </div>
       </Layout>
     </>
   );

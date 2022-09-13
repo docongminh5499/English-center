@@ -7,6 +7,7 @@ import { useAuth } from "../stores/Auth";
 import { ToastContainer } from "react-toastify";
 import { UserRole } from "../helpers/constants";
 import { usePrevious } from "../helpers/usePrevious";
+import { MantineProvider } from '@mantine/core';
 import LoadingScreen from "../components/pageComponents/LoadingScreen";
 import ModalContainer from "../components/commons/ModalContainer";
 
@@ -65,12 +66,13 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
   }
 
   return (
-    <>
+    <MantineProvider withGlobalStyles withNormalizeCSS>
       {authorized && (
         <>
           <Component {...pageProps} />
           <ModalContainer />
           <ToastContainer
+            style={{ fontSize: "1.6rem" }}
             theme="colored"
             hideProgressBar={true}
             closeButton={true}
@@ -78,7 +80,7 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
         </>
       )}
       {!authorized && <LoadingScreen />}
-    </>
+    </MantineProvider>
   );
 }
 

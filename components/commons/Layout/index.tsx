@@ -1,14 +1,16 @@
 import Link from "next/link";
-import Image from "next/image";
-import React, { useCallback } from "react";
-import Button from "../Button";
+import React, { useCallback, useState } from "react";
 import LogoutModal from "../../pageComponents/LogoutModal";
+import Sidebar from "../Sidebar";
+import Button from '../Button';
 import { useAuth } from "../../../stores/Auth";
 import { UserRole } from "../../../helpers/constants";
 import { useModal } from "../../../helpers/useModal";
-import styles from "./layout.module.css";
-import Sidebar from "../Sidebar";
 import { useRouter } from "next/router";
+import { getRoleName } from "../../../helpers/getRoleName";
+import { GuestMenu } from './guest.menu';
+import styles from "./layout.module.css";
+
 
 interface IProps {
   children?: React.ReactNode | React.ReactNode[];
@@ -17,6 +19,7 @@ interface IProps {
 }
 
 const Layout = ({ children, displaySidebar, userRole }: IProps) => {
+  const [buttonActive, setButtonActive] = useState(undefined);
   const [authState, authAction] = useAuth();
   const router = useRouter();
 
@@ -40,43 +43,65 @@ const Layout = ({ children, displaySidebar, userRole }: IProps) => {
         <div className={styles.headerContent}>
           <Link href={"/"}>
             <a className={styles.logoContainer}>
-              <Image
+              <img
                 src="/assets/icons/ic_logo.png"
                 alt="Logo"
-                width={36}
-                height={36}
               />
               <p>English Center</p>
             </a>
           </Link>
+
           {authState.role == UserRole.GUEST && (
             <div className={styles.guestNavContainer}>
-              <Button href="/login" theme="primary">
+              <Button color="blue" onClick={() => router.push("/login")}>
                 Đăng nhập
               </Button>
-              <Button theme="secondary">Đăng ký</Button>
+              <Button color="gray" variant="outline">
+                Đăng ký
+              </Button>
+            </div>
+          )}
+
+
+          {authState.role == UserRole.GUEST && (
+            <div className={styles.guestNavContainerMobile}>
+              <GuestMenu />
             </div>
           )}
 
           {authState.role != UserRole.GUEST && (
             <div className={styles.navContainer}>
-              <Link href={"#!"} passHref>
-                <div>
-                  <img src="/assets/icons/ic_notification.png" alt="icon" />
-                  <p>Thông báo</p>
+              <div className={`${buttonActive == "notification" ? styles.menuActive : ""}`}>
+                <img src="/assets/icons/ic_notification.png" alt="icon" />
+                <p className={styles.tabletHidden}>Thông báo</p>
+                <div className={styles.menuContainer}>
+                  Thông báo test
                 </div>
-              </Link>
+              </div>
               <Link href={"#!"} passHref>
                 <div>
                   <img src="/assets/icons/ic_chat.png" alt="icon" />
-                  <p>Trò chuyện</p>
+                  <p className={styles.tabletHidden}>Trò chuyện</p>
                 </div>
               </Link>
               <div>
                 <img src="/assets/icons/ic_user.png" alt="icon" />
-                <p>Xin chào, {authState.fullName}</p>
+                <p className={styles.tabletHidden}>Xin chào, {authState.fullName}</p>
                 <div className={styles.menuContainer}>
-                  <p onClick={() => openModal()}>Đăng xuất</p>
+                  <div className={styles.menuUserInfo}>
+                    <div className={styles.menuUserImg}>
+                      <img src="/assets/icons/ic_user.png" alt="icon" />
+                    </div>
+                    <div className={styles.user}>
+                      <p>{authState.fullName}</p>
+                      <p>{getRoleName(authState.role)}</p>
+                    </div>
+                  </div>
+                  <div className={styles.divider}></div>
+                  {authState.role === UserRole.TUTOR && (
+                    <p className={styles.selection}>Đăng ký ca làm</p>
+                  )}
+                  <p className={styles.selection} onClick={() => openModal()}>Đăng xuất</p>
                 </div>
               </div>
             </div>

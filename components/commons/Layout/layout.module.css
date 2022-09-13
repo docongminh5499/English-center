@@ -1,4 +1,5 @@
 .header {
+    color: #444444;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,12 +20,19 @@
     gap: 1rem;
 }
 
+.logoContainer > img {
+    width: 3.6rem;
+    height: 3.6rem;
+}
+
 .logoContainer > p {
     font-weight: bold;
     font-size: 3.2rem;
 }
 
-.navContainer, .guestNavContainer {
+.navContainer,
+.guestNavContainer,
+.guestNavContainerMobile {
     flex-grow: 1;
     display: flex;
     align-items: center;
@@ -35,17 +43,25 @@
     gap: 1rem;
 }
 
-.navContainer {
-    gap: 3rem;
+.guestNavContainerMobile {
+    display: none;
 }
 
 .navContainer > div {
+    border-radius: 5px;
+    padding: 0.8rem 2rem;
     position: relative;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.6rem;
+    transition: all 0.3s ease-in-out;
 }
+
+.navContainer > div:hover {
+    background-color: #eaeaea;
+}
+
 
 .navContainer > div > img {
     width: 2.4rem;
@@ -55,25 +71,68 @@
 .navContainer div.menuContainer {
     display: none;
     width: 100%;
+    min-width: 20rem;
     position: absolute;
-    left: 0;
+    right: 0;
     top: 100%;
     padding: 1rem 0;
     background-color: white;
     box-shadow: 2px 2px 9px 5px #efefef;
-} 
+}
 
 .navContainer div:hover > div.menuContainer {
     display: block;
 }
 
 .navContainer div.menuContainer > * {
-    padding: 0.7rem 1rem;
+    padding: 1rem;
 }
 
-.navContainer div.menuContainer > *:hover {
+.navContainer div.menuContainer .divider {
+    display: none;
+    padding: 0px;
+    width: 100%;
+    height: 1px;
     background-color: #efefef;
 }
+
+.navContainer div.menuContainer > .selection:hover {
+    background-color: #efefef;
+}
+
+.menuContainer .menuUserInfo {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+}
+
+.menuContainer .menuUserInfo .menuUserImg {
+    width: 3rem;
+    height: 3rem;
+}
+
+.menuContainer .menuUserInfo .menuUserImg img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.menuContainer .menuUserInfo .user {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.menuContainer .menuUserInfo .user p:first-child {
+    font-size: 1.5rem;
+}
+
+.menuContainer .menuUserInfo .user p:nth-child(2) {
+    color: #888;
+    font-size: 1.2rem;
+}
+
 
 .mainContent {
     max-width: 1440px;
@@ -82,4 +141,46 @@
 
 .content {
     display: flex;
+}
+
+@media screen and (max-width: 1024px) {
+
+    .menuContainer .menuUserInfo,
+    .navContainer div.menuContainer .divider {
+        display: flex;
+    }
+
+    .tabletHidden {
+        display: none;
+    }
+
+    .navContainer > div {
+        padding: 0.8rem;
+        border-radius: 999px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .logoContainer > p {
+        font-size: 2.8rem;
+    }
+
+    .navContainer > div > img {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .logoContainer > img {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .guestNavContainer {
+        display: none;
+    }
+
+    .guestNavContainerMobile {
+        display: flex;
+    }
 }
