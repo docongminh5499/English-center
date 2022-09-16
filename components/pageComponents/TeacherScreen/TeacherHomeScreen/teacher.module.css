@@ -11,6 +11,24 @@
     text-align: center;
 }
 
+.teacherHomePage .filterComponent {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+.teacherHomePage .filterComponent > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem
+}
+
+.teacherHomePage .filterComponent > div.filterButtons {
+    flex-direction: row;
+}
+
 .teacherHomePage .courseList {
     margin-top: 4rem;
     display: flex;
@@ -54,5 +72,35 @@
 .courseDateBasedSection .courseContainer {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4rem;
+    gap: 2rem;
+}
+
+.courseCard {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.courseCard .courseInfo {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.courseCard .courseInfo .courseName {
+    font-size: 1.6rem;
+    flex-grow: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+.courseCard:hover .courseInfo .courseName {
+    color: #228BE6;
+}
+
+.pagination {
+    margin: auto;
 }

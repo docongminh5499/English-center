@@ -1,6 +1,6 @@
 .notFoundContainer {
     width: 100%;
-    height: calc(100vh - 8.1rem);
+    height: calc(100vh - 10rem);
     padding: 1rem;
     display: flex;
     flex-direction: column;

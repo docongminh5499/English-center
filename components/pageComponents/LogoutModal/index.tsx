@@ -11,10 +11,10 @@ const LogoutModal = ({ onLogout, onCancelLogout }: IProps) => {
       <p className={styles.title}>Bạn muốn đăng xuất?</p>
       <p className={styles.message}>Bạn có chắc chắn muốn đăng xuất không?</p>
       <div className={styles.buttonWrapper}>
-        <Button color="secondary" onClick={onCancelLogout}>
+        <Button color="dark" onClick={onCancelLogout}>
           Hủy
         </Button>
-        <Button color="error" onClick={onLogout}>
+        <Button color="red" onClick={onLogout}>
           Đăng xuất
         </Button>
       </div>

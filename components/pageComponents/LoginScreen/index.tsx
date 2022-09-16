@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Layout from "../../commons/Layout";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -24,6 +23,7 @@ const schema = yup.object().shape({
 const LoginScreen = (props: IProps) => {
   const [, authAction] = useAuth();
   const [seePassword, setSeePassword] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -33,10 +33,13 @@ const LoginScreen = (props: IProps) => {
 
   const onSubmit = async (data: any) => {
     try {
+      setLoggingIn(true);
       await authAction.logIn(data);
       const returnUrl = (router.query.returnUrl || "/") as string;
-      router.push(returnUrl);
+      await router.push(returnUrl);
+      setLoggingIn(false);
     } catch (error: any) {
+      setLoggingIn(false);
       if (error.status && error.status == 404) {
         toast.error("Tên đăng nhập hoặc mật khẩu không đúng");
       } else {
@@ -50,43 +53,44 @@ const LoginScreen = (props: IProps) => {
         <title>Đăng nhập</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout displaySidebar={false}>
-        <div className={styles.loginContainer}>
-          <div className={styles.login}>
-            <p className={styles.title}>Đăng nhập</p>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Input
-                icon={<IconUser size={"1.6rem"} color="#444" stroke={1.5} />}
-                type="text"
-                id="username_login_screen"
-                registerForm={register("username")}
-                placeholder="Tên đăng nhập"
-                autoComplete="off"
-                error={errors.username?.message}
-              />
-              <Input
-                icon={<IconLockOpen size={"1.6rem"} color="#444" stroke={1.5} />}
-                type={seePassword ? "text" : "password"}
-                id="password_login_screen"
-                registerForm={register("password")}
-                placeholder="Mật khẩu"
-                autoComplete="off"
-                error={errors.password?.message}
-                rightSection={
-                  seePassword ? (<IconEye
-                    onClick={() => setSeePassword(!seePassword)}
-                    size={"1.6rem"} color="#444" stroke={1.5} />
-                  ) : (<IconEyeOff
-                    onClick={() => setSeePassword(!seePassword)}
-                    size={"1.6rem"} color="#444" stroke={1.5} />)}
-              />
-              <Button type="submit" color="primary">
-                Đăng nhập
-              </Button>
-            </form>
-          </div>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginBanner}>
+          <img src="/assets/images/login_banner.jpg" alt="banner" />
         </div>
-      </Layout>
+        <div className={styles.login}>
+          <p className={styles.title}>Đăng nhập</p>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              icon={<IconUser size={"1.6rem"} color="#444" stroke={1.5} />}
+              type="text"
+              id="username_login_screen"
+              registerForm={register("username")}
+              placeholder="Tên đăng nhập"
+              autoComplete="off"
+              error={errors.username?.message}
+            />
+            <Input
+              icon={<IconLockOpen size={"1.6rem"} color="#444" stroke={1.5} />}
+              type={seePassword ? "text" : "password"}
+              id="password_login_screen"
+              registerForm={register("password")}
+              placeholder="Mật khẩu"
+              autoComplete="off"
+              error={errors.password?.message}
+              rightSection={
+                seePassword ? (<IconEye
+                  onClick={() => setSeePassword(!seePassword)}
+                  size={"1.6rem"} color="#444" stroke={1.5} />
+                ) : (<IconEyeOff
+                  onClick={() => setSeePassword(!seePassword)}
+                  size={"1.6rem"} color="#444" stroke={1.5} />)}
+            />
+            <Button type="submit" color="primary" loading={loggingIn}>
+              Đăng nhập
+            </Button>
+          </form>
+        </div>
+      </div>
     </>
   );
 };

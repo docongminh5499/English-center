@@ -17,6 +17,7 @@ Home.allowUsers = [
   UserRole.TEACHER,
   UserRole.TUTOR,
 ];
+Home.displaySidebar = false;
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

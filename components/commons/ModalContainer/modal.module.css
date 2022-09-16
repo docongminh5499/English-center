@@ -32,14 +32,38 @@
     visibility: visible;
 }
 
-.modalContainer > *:not(.overlay) {
-    transition: all 0.3s ease-in-out;
-}
-
 .modalNotOpen > *:not(.overlay) {
-    transform: scale(0);
+    animation: minimize 0.3s ease-in-out;
 }
 
 .modalOpen > *:not(.overlay) {
-    transform: scale(1);
+    animation: bounce 0.3s ease-in-out;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale3d(0.1, 0.1, 1);
+    }
+
+    55% {
+        transform: scale3d(1.08, 1.08, 1);
+    }
+
+    75% {
+        transform: scale3d(0.95, 0.95, 1);
+    }
+
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@keyframes minimize {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+
+    100% {
+        transform: scale3d(0.3, 0.3, 1);
+    }
 }

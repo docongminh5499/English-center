@@ -1,12 +1,11 @@
 import Head from "next/head";
 import { UserRole } from "../../../helpers/constants";
-import Layout from "../../commons/Layout";
-import Sidebar from "../../commons/Sidebar";
 import styles from "./home.module.css";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import LoadingScreen from "../LoadingScreen";
 
-interface IProps { 
+interface IProps {
   userRole?: UserRole
 }
 
@@ -18,7 +17,7 @@ const HomeScreen = (props: IProps) => {
 
     // TODO: Another user role
 
-  }, []);
+  }, [props.userRole]);
 
 
   return (
@@ -27,11 +26,9 @@ const HomeScreen = (props: IProps) => {
         <title>Trang chủ</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout displaySidebar={false} userRole={props.userRole}>
-          
-          {/* TODO : Guest home page */}
+      {props.userRole !== UserRole.GUEST && <LoadingScreen />}
 
-      </Layout>
+      {/* TODO : Guest home page */}
     </>
   );
 };

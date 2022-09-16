@@ -2,7 +2,7 @@ import Head from "next/head";
 import Loading from "../../commons/Loading";
 import styles from "./loading.module.css";
 
-interface IProps {}
+interface IProps { }
 
 const LoadingScreen = (props: IProps) => {
   return (

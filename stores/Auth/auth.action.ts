@@ -7,7 +7,7 @@ import { LocalStorageKey, CookieKey, Url, UserRole } from "../../helpers/constan
 
 const setCookieHelper = (key: string, value: any) => {
   const valueString = JSON.stringify(value);
-  Cookies.set(key, valueString);
+  Cookies.set(key, valueString, { expires: 1 });
 }
 
 
@@ -21,16 +21,28 @@ export const loadUserFromLocalStorage =
         const tokenPayload = JSON.parse(localStorageData);
         try {
           const response = await API.post(Url.users.verify, tokenPayload);
-          setState({ token: tokenPayload.token, ...response });
-          setCookieHelper(CookieKey.USER, { token: tokenPayload.token, ...response });
+          setCookieHelper(CookieKey.USER, {
+            token: tokenPayload.token,
+            fullName: response.fullName,
+            userName: response.userName,
+            role: response.role,
+            expireTime: response.exp,
+          });
+          setState({
+            token: tokenPayload.token,
+            fullName: response.fullName,
+            userName: response.userName,
+            role: response.role,
+            expireTime: response.exp,
+          });
         } catch (error: any) {
           localStorage.removeItem(LocalStorageKey.USER);
-          setState({ role: UserRole.GUEST });
           setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
+          setState({ role: UserRole.GUEST });
         }
       } else {
-        setState({ role: UserRole.GUEST });
         setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
+        setState({ role: UserRole.GUEST });
       }
     };
 
@@ -48,6 +60,7 @@ export const logOut =
     async ({ setState }) => {
       if (typeof window === "undefined") return;
       localStorage.removeItem(LocalStorageKey.USER);
+      setCookieHelper(CookieKey.USER, {});
       setState({
         fullName: undefined,
         userName: undefined,
@@ -55,5 +68,4 @@ export const logOut =
         role: undefined,
         expireTime: undefined,
       });
-      setCookieHelper(CookieKey.USER, {});
     };

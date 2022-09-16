@@ -1,6 +1,6 @@
 .loadingContainer {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 10rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,6 +8,7 @@
 }
 
 .loadingText {
-    font-size: 1.8rem;
+    color: #444;
+    font-size: 1.2rem;
     margin-top: 2rem;
 }

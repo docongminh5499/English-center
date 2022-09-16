@@ -18,13 +18,14 @@ const Sidebar = (props: IProps) => {
 
     // TODO: another user role
 
-  }, []);
+  }, [props.userRole]);
 
 
   const sideBarList = useMemo(() => sidebarSelector(), [props.userRole]);
 
   return (
-    <div className={`${styles.sidebarContainer} ${props.userRole == UserRole.GUEST ? styles.hidden : ""}`}>
+    <div className={`${styles.sidebarContainer} 
+          ${props.userRole === UserRole.GUEST || props.userRole === undefined ? styles.hidden : ""}`}>
       {sideBarList && sideBarList.length > 0 && sideBarList.map((sidebarItem, index) => {
         return (
           <Link key={index} href={sidebarItem.href} passHref>

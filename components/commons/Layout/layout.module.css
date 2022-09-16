@@ -30,7 +30,7 @@
     font-size: 3.2rem;
 }
 
-.navContainer,
+/* .navContainer, */
 .guestNavContainer,
 .guestNavContainerMobile {
     flex-grow: 1;
@@ -47,7 +47,7 @@
     display: none;
 }
 
-.navContainer > div {
+/* .navContainer > div {
     border-radius: 5px;
     padding: 0.8rem 2rem;
     position: relative;
@@ -66,8 +66,8 @@
 .navContainer > div > img {
     width: 2.4rem;
     height: 2.4rem;
-}
-
+} */
+/* 
 .navContainer div.menuContainer {
     display: none;
     width: 100%;
@@ -131,7 +131,7 @@
 .menuContainer .menuUserInfo .user p:nth-child(2) {
     color: #888;
     font-size: 1.2rem;
-}
+} */
 
 
 .mainContent {
@@ -145,30 +145,30 @@
 
 @media screen and (max-width: 1024px) {
 
-    .menuContainer .menuUserInfo,
+    /* .menuContainer .menuUserInfo,
     .navContainer div.menuContainer .divider {
         display: flex;
-    }
+    } */
 
     .tabletHidden {
         display: none;
     }
 
-    .navContainer > div {
+    /* .navContainer > div {
         padding: 0.8rem;
         border-radius: 999px;
-    }
+    } */
 }
 
 @media screen and (max-width: 768px) {
     .logoContainer > p {
         font-size: 2.8rem;
     }
-
+/* 
     .navContainer > div > img {
         width: 2rem;
         height: 2rem;
-    }
+    } */
 
     .logoContainer > img {
         display: none !important;

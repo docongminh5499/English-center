@@ -10,18 +10,13 @@ import { usePrevious } from "../helpers/usePrevious";
 import { MantineProvider } from '@mantine/core';
 import LoadingScreen from "../components/pageComponents/LoadingScreen";
 import ModalContainer from "../components/commons/ModalContainer";
+import Layout from "../components/commons/Layout";
 
 function MyApp({ Component, pageProps }: CustomAppProps) {
   const router = useRouter();
   const [authState, authAction] = useAuth();
   const [authorized, setAuthorized] = useState(false);
   const prevUserRole = usePrevious(authState.role);
-
-  useEffect(() => {
-    const hideContent = async () => authorized && setAuthorized(false);
-    router.events.on('routeChangeStart', hideContent);
-    return () => router.events.off('routeChangeStart', hideContent);
-  }, []);
 
   useEffect(() => {
     authCheck();
@@ -67,19 +62,22 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      {authorized && (
+      <Layout
+        userRole={authState.role}
+        loading={!authorized}
+        displaySidebar={Component.displaySidebar === undefined ? true : Component.displaySidebar}
+      >
         <>
           <Component {...pageProps} />
           <ModalContainer />
           <ToastContainer
-            style={{ fontSize: "1.6rem" }}
+            style={{ fontSize: "1.4rem" }}
             theme="colored"
             hideProgressBar={true}
             closeButton={true}
           />
         </>
-      )}
-      {!authorized && <LoadingScreen />}
+      </Layout>
     </MantineProvider>
   );
 }

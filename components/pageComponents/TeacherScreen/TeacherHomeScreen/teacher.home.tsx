@@ -1,17 +1,14 @@
 import moment from "moment";
 import Head from "next/head";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import API from "../../../../helpers/api";
 import { TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
 import Course from "../../../../models/course.model";
 import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
-import CourseCard from "../../../commons/CourseCard";
-import Layout from "../../../commons/Layout";
 import Loading from "../../../commons/Loading";
-import Pagination from "../../../commons/Pagination";
-import Sidebar from "../../../commons/Sidebar";
+import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space } from '@mantine/core';
 import styles from "./teacher.module.css";
 
 interface IProps {
@@ -25,7 +22,7 @@ const TeacherHomeScreen = (props: IProps) => {
 
   const formatCourse = useCallback((courses: any) => {
     const result: any = {};
-    courses.forEach((course: any) => {
+    (courses || []).forEach((course: any) => {
       const key = moment(course.openingDate).utcOffset(TimeZoneOffset).format("MM-YYYY");
       result[key] = result[key] || [];
       result[key].push(course);
@@ -77,60 +74,110 @@ const TeacherHomeScreen = (props: IProps) => {
         <title>Trang chủ</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout displaySidebar={true} userRole={props.userRole}>
-        <div className={styles.teacherHomePage}>
-          <p className={styles.title}>Danh sách khóa học</p>
-          {/* TODO: Filter component */}
-          <div className={styles.filterComponent}></div>
-
-          <div className={styles.courseList}>
-            {loading && (
-              <div className={styles.loadingContainer}>
-                <Loading />
-              </div>
-            )}
-
-            {!loading && error && (
-              <div className={styles.errorContainer}>
-                <p>Có lỗi xảy ra, vui lòng thử lại</p>
-                <Button color="primary" onClick={() => onClickPaginationPage(currentPage)}>Thử lại</Button>
-              </div>
-            )}
-
-            {!loading &&
-              !error &&
-              Object.keys(course).map((key, sectionIndex) => {
-                const [month, year] = key.split("-");
-                return (
-                  <div className={styles.courseDateBasedSection} key={sectionIndex}>
-                    <p className={styles.date}>
-                      Tháng {month.padStart(2, "0")} năm {year}
-                    </p>
-                    <div className={styles.courseContainer}>
-                      {course[key].map((courseInfo: any) => {
-                        return (
-                          <CourseCard
-                            key={courseInfo.id}
-                            courseId={courseInfo.id}
-                            name={courseInfo.name}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-
-            {currentPage > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                maxPage={maxPage}
-                onClick={onClickPaginationPage}
-              />
-            )}
+      <div className={styles.teacherHomePage}>
+        <p className={styles.title}>Danh sách khóa học</p>
+        <Space h="md" />
+        <div className={styles.filterComponent}>
+          <div>
+            <Input
+              placeholder="Tên khóa học"
+            />
+          </div>
+          <div>
+            <Checkbox
+              label="Đang diễn ra"
+            />
+            <Checkbox
+              label="Đã kết thúc"
+            />
+          </div>
+          <div>
+            <Checkbox
+              label="Khóa ngắn hạn"
+            />
+            <Checkbox
+              label="Khóa dài hạn"
+            />
+          </div>
+          <div className={styles.filterButtons}>
+            <Button>Lọc khóa học</Button>
+            <Button color="gray">Xóa bộ lọc</Button>
           </div>
         </div>
-      </Layout>
+
+        <div className={styles.courseList}>
+          {loading && (
+            <div className={styles.loadingContainer}>
+              <Loading />
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className={styles.errorContainer}>
+              <p>Có lỗi xảy ra, vui lòng thử lại</p>
+              <Button color="primary" onClick={() => onClickPaginationPage(currentPage)}>Thử lại</Button>
+            </div>
+          )}
+
+          {!loading &&
+            !error &&
+            Object.keys(course).map((key, sectionIndex) => {
+              const [month, year] = key.split("-");
+              return (
+                <div className={styles.courseDateBasedSection} key={sectionIndex}>
+                  <p className={styles.date}>
+                    Tháng {month.padStart(2, "0")} năm {year}
+                  </p>
+                  <div className={styles.courseContainer}>
+                    {course[key].map((courseInfo: Course) => {
+                      return (
+                        <Card
+                          key={courseInfo.id}
+                          className={styles.courseCard}
+                          shadow="sm" p="lg" radius="md" withBorder
+                          onClick={() => console.log("Clicked")}>
+                          <Card.Section>
+                            <Image
+                              src="/assets/images/no_image.png"
+                              height={180}
+                              alt="image-course"
+                            />
+                          </Card.Section>
+                          <div className={styles.courseInfo}>
+                            <Text weight={600} align="center" className={styles.courseName}>
+                              {courseInfo.name}
+                            </Text>
+                            <Text size="sm" color="dimmed" align="center">
+                              Mã lớp: {courseInfo.id.toString().padStart(6, "0")}
+                            </Text>
+                            {moment().utc().diff(moment(courseInfo.closingDate)) > 0 ? (
+                              <Badge color="green" variant="light">
+                                Đang diễn ra
+                              </Badge>
+                            ) : (
+                              <Badge color="pink" variant="light">
+                                Đã kết thúc
+                              </Badge>
+                            )}
+                          </div>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+
+          {currentPage > 0 && (
+            <Pagination
+              className={styles.pagination}
+              page={currentPage}
+              total={maxPage}
+              onChange={onClickPaginationPage}
+            />
+          )}
+        </div>
+      </div>
     </>
   );
 };

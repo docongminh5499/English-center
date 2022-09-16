@@ -1,11 +1,12 @@
 import { Button as MantineButton, ButtonProps } from '@mantine/core';
+import React from 'react';
 import styles from "./button.module.css";
 
 interface IProps {
   onClick?: () => void;
 }
 
-const Button = (props: ButtonProps & IProps) => {
+const Button = React.forwardRef<HTMLButtonElement, React.PropsWithChildren<IProps & ButtonProps>>((props, ref) => {
   const {
     className = "",
     children,
@@ -14,10 +15,11 @@ const Button = (props: ButtonProps & IProps) => {
   } = props;
 
   return (
-    <MantineButton {...buttonProps} className={`${styles.button} ${className}`} onClick={onClick}>
+    <MantineButton {...buttonProps} ref={ref} className={`${styles.button} ${className}`} onClick={onClick}>
       {children}
     </MantineButton>
   );
-};
+});
 
+Button.displayName = "Button";
 export default Button;
