@@ -1,5 +1,7 @@
+import { TablerIcon } from "@tabler/icons";
+
 export interface SidebarItem {
-  src: string;
+  src: TablerIcon;
   name: string;
   href: string;
 }
