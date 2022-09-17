@@ -1,0 +1,68 @@
+.pageContainer {
+    width: 100%;
+    height: calc(100vh - 9.1rem);
+    display: flex;
+}
+
+.pageContainer .messageContainer {
+
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.pageContainer .messageContainer > .messageInfoContainer,
+.pageContainer .messageContainer > .messages,
+.pageContainer .messageContainer > .messageInputContainer {
+    padding: 1rem;
+}
+
+.pageContainer .messageContainer .divider {
+    background-color: #DEE2E6;
+    width: 100%;
+    height: 1px;
+    padding: 0px;
+}
+
+.pageContainer .messageContainer .messageInfoContainer,
+.pageContainer .contactContainer .contact {
+    display: flex;
+    align-items: center;
+}
+
+.pageContainer .messageContainer .messages {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.pageContainer .messageContainer .messages .mine {
+    max-width: 70%;
+    background-color: #228BE6;
+    color: white;
+    align-self: flex-end;
+}
+
+.pageContainer .messageContainer .messages .yours {
+    align-self: flex-start;
+    max-width: 70%;
+}
+
+.pageContainer .contactContainer {
+    background-color: #F1F3F5;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    max-width: 25%;
+}
+
+.textOneLine {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
