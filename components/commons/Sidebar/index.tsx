@@ -5,15 +5,21 @@ import { UserRole } from "../../../helpers/constants";
 import { teacherSidebar } from "./links";
 
 import { useState } from 'react';
-import { createStyles, Navbar, MediaQuery, Group, Title, Avatar } from '@mantine/core';
+import { 
+  createStyles,
+  Navbar, 
+  MediaQuery, 
+  Group, 
+  Avatar, 
+  Text, 
+  UnstyledButton, 
+} from '@mantine/core';
 import {
   IconSwitchHorizontal,
   IconLogout,
-  IconBrandApple,
   IconBellRinging,
   IconMessage,
 } from '@tabler/icons';
-import { UserButton } from '../UserButton/UserButton';
 
 interface IProps {
   userRole?: UserRole
@@ -22,6 +28,14 @@ interface IProps {
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef('icon');
   return {
+    navbar: {
+      height: '700px',
+
+      [`@media (max-width: ${theme.breakpoints.sm}px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+        width: '100px',
+      },
+    },
+
     avatar: {
       paddingBottom: theme.spacing.md,
       marginBottom: theme.spacing.md,
@@ -29,7 +43,11 @@ const useStyles = createStyles((theme, _params, getRef) => {
       borderBottom: `2px solid ${
         theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
       }`,
-  
+
+      [`@media (max-width: ${theme.breakpoints.sm}px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+        margin: 'auto',
+      },
+
       '&:not(:last-of-type)': {
         borderBottom: `1px solid ${
           theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
@@ -82,6 +100,10 @@ const useStyles = createStyles((theme, _params, getRef) => {
       ref: icon,
       color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
       marginRight: theme.spacing.sm,
+
+      [`@media (max-width: ${theme.breakpoints.sm}px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+        margin: 'auto',
+      },
     },
 
     linkActive: {
@@ -101,7 +123,7 @@ const Sidebar = (props: IProps) => {
   const router = useRouter();
 
   const sidebarSelector = useCallback(() => {
-    var userSidebar = [
+    let userSidebar = [
       {
         src: IconBellRinging ,
         name: "Thông Báo",
@@ -113,8 +135,10 @@ const Sidebar = (props: IProps) => {
         href: "#!",
       },
     ];
+    let personalSidebar;
     if (props.userRole === UserRole.TEACHER)
-    return userSidebar.concat(teacherSidebar);
+      personalSidebar = teacherSidebar;
+    return userSidebar.concat(personalSidebar);
 
     // TODO: another user role
 
@@ -139,58 +163,59 @@ const Sidebar = (props: IProps) => {
     >
       <Group position="apart">
         <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan="sm" styles={{ fontSize: '0.9rem'}}>
+        <MediaQuery smallerThan="sm" largerThan="xs" styles={{ fontSize: '0.9rem', textAlign: 'center'}}>
           <span>{item.name}</span>
         </MediaQuery>
       </Group>
     </a>
   ));
 
+  const navContent = (
+    <Navbar.Section grow className={classes.navbarContainer}>
+      <Navbar.Section className={classes.avatar}>
+        <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'none' }}>
+          <UnstyledButton>
+            <Group>
+              <Avatar size={40} color="blue" radius='xl'>BH</Avatar>
+              <div>
+                <Text>Bob Handsome</Text>
+                <Text size="xs" color="dimmed">bob@handsome.inc</Text>
+              </div>
+            </Group>
+          </UnstyledButton>
+        </MediaQuery>
+
+        <MediaQuery largerThan="sm"  smallerThan="xs" styles={{ display: 'none' }}>
+          <Avatar size={40} color="blue" radius='xl' />
+        </MediaQuery>
+      </Navbar.Section>
+
+      <Navbar.Section grow>
+        {links}
+      </Navbar.Section>
+      
+      <Navbar.Section className={classes.footer}>
+        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
+          <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'none' }}>
+            <span>Thay Đổi Tài Khoản</span>
+          </MediaQuery>
+        </a>
+
+        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+          <IconLogout className={classes.linkIcon} stroke={1.5} />
+          <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'none' }}>
+            <span>Đăng Xuất</span>
+          </MediaQuery>
+        </a>
+      </Navbar.Section>
+    </Navbar.Section>
+  );
+
   return (
-    <MediaQuery smallerThan="sm" styles={{ width: '100px' }}>     
-      <Navbar height={700} width={{ sm: 300 }} p="md" className={classes.navbar}>
-        <Group className={classes.header}>
-          <IconBrandApple className={classes.linkIcon} stroke={1.5} />
-          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-            <Title order={3}>ENGLISH CENTER</Title>
-          </MediaQuery>
-        </Group>
-
-        <Navbar.Section className={classes.avatar}>
-          <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-            <UserButton
-              image="https://i.imgur.com/fGxgcDF.png"
-              name="Bob Rulebreaker"
-              email="Product owner"
-            />
-          </MediaQuery>
-          
-          <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-            <Avatar src="https://i.imgur.com/fGxgcDF.png" radius="xl" />
-          </MediaQuery>
-        </Navbar.Section>
-
-        <Navbar.Section grow>
-          {links}
-        </Navbar.Section>
-        
-        <Navbar.Section className={classes.footer}>
-          <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-            <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-            <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-              <span>Thay Đổi Tài Khoản</span>
-            </MediaQuery>
-          </a>
-
-          <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-            <IconLogout className={classes.linkIcon} stroke={1.5} />
-            <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-              <span>Đăng Xuất</span>
-            </MediaQuery>
-          </a>
-        </Navbar.Section>
-      </Navbar>
-    </MediaQuery>
+    <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
+      {navContent}
+    </Navbar>         
   );
 }
 //========================================================================================================================
