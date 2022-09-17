@@ -116,6 +116,11 @@ const useStyles = createStyles((theme, _params, getRef) => {
         },
       },
     },
+
+    shortAvatar: {
+        display: 'none',
+        margin: 'auto',
+    },
   };
 });
 
@@ -185,8 +190,8 @@ const Sidebar = (props: IProps) => {
           </UnstyledButton>
         </MediaQuery>
 
-        <MediaQuery largerThan="sm"  smallerThan="xs" styles={{ display: 'none' }}>
-          <Avatar size={40} color="blue" radius='xl' />
+        <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'block' }}>
+          <Avatar size={40} color="blue" radius='xl' className={classes.shortAvatar} />
         </MediaQuery>
       </Navbar.Section>
 
