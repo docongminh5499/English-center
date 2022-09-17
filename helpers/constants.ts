@@ -19,7 +19,7 @@ export const CookieKey = {
 };
 
 export const TeacherConstants = {
-  limitCourse: 4
+  limitCourse: 12
 }
 
 export const Url = {

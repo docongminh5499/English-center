@@ -10,6 +10,7 @@ import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
 import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space } from '@mantine/core';
 import styles from "./teacher.module.css";
+import { useInputState } from "@mantine/hooks";
 
 interface IProps {
   courses?: Partial<Course>[],
@@ -39,13 +40,19 @@ const TeacherHomeScreen = (props: IProps) => {
   const [course, setCourse] = useState<any>(formatCourse(props.courses));
   const [authState] = useAuth();
 
+  // Filter state
+  const [name, setName] = useInputState("");
+  const [closed, setClosed] = useInputState(false);
+  const [open, setOpen] = useInputState(false);
+  const [longTerm, setLongTerm] = useInputState(false);
+  const [shortTerm, setShortTerm] = useInputState(false);
 
-  const getCourse = useCallback(async (limit: number, skip: number) => {
-    setError(false);
+
+  const getCourse = useCallback(async (limit: number, skip: number,
+    name: string, closed: boolean, open: boolean, longTerm: boolean, shortTerm: boolean) => {
     const responses = await API.get(Url.teachers.getCourse, {
       token: authState.token,
-      limit: limit,
-      skip: skip,
+      limit, skip, name, closed, open, longTerm, shortTerm
     });
     const result = formatCourse(responses.courses);
     setCourse(result);
@@ -53,11 +60,19 @@ const TeacherHomeScreen = (props: IProps) => {
   }, []);
 
 
-  const onClickPaginationPage = useCallback(async (page: number) => {
+  const onClickPaginationPage = useCallback(async (page: number,
+    name: string, closed: boolean, open: boolean, longTerm: boolean, shortTerm: boolean) => {
     try {
       if (page < 1) return;
       setLoading(true);
-      await getCourse(TeacherConstants.limitCourse, (page - 1) * TeacherConstants.limitCourse);
+      setError(false);
+
+      await getCourse(
+        TeacherConstants.limitCourse,
+        (page - 1) * TeacherConstants.limitCourse,
+        name, closed, open, longTerm, shortTerm,
+      );
+
       setLoading(false);
       setCurrentPage(page);
     } catch (err) {
@@ -66,7 +81,6 @@ const TeacherHomeScreen = (props: IProps) => {
       setError(true);
     }
   }, []);
-
 
   return (
     <>
@@ -80,28 +94,51 @@ const TeacherHomeScreen = (props: IProps) => {
         <div className={styles.filterComponent}>
           <div>
             <Input
+              value={name}
               placeholder="Tên khóa học"
+              onChange={setName}
             />
           </div>
           <div>
             <Checkbox
               label="Đang diễn ra"
+              checked={open}
+              onChange={setOpen}
             />
             <Checkbox
               label="Đã kết thúc"
+              checked={closed}
+              onChange={setClosed}
             />
           </div>
           <div>
             <Checkbox
               label="Khóa ngắn hạn"
+              checked={shortTerm}
+              onChange={setShortTerm}
             />
             <Checkbox
               label="Khóa dài hạn"
+              checked={longTerm}
+              onChange={setLongTerm}
             />
           </div>
           <div className={styles.filterButtons}>
-            <Button>Lọc khóa học</Button>
-            <Button color="gray">Xóa bộ lọc</Button>
+            <Button
+              onClick={() => {
+                setCurrentPage(1);
+                onClickPaginationPage(1, name, closed, open, longTerm, shortTerm);
+              }}
+            >Lọc khóa học</Button>
+            <Button color="gray" onClick={() => {
+              setCurrentPage(1);
+              setName("");
+              setClosed(false);
+              setOpen(false);
+              setLongTerm(false);
+              setShortTerm(false);
+              onClickPaginationPage(1, "", false, false, false, false);
+            }}>Xóa bộ lọc</Button>
           </div>
         </div>
 
@@ -115,9 +152,15 @@ const TeacherHomeScreen = (props: IProps) => {
           {!loading && error && (
             <div className={styles.errorContainer}>
               <p>Có lỗi xảy ra, vui lòng thử lại</p>
-              <Button color="primary" onClick={() => onClickPaginationPage(currentPage)}>Thử lại</Button>
+              <Button
+                color="primary"
+                onClick={() => onClickPaginationPage(currentPage, name, closed, open, longTerm, shortTerm,)}>
+                Thử lại
+              </Button>
             </div>
           )}
+
+          {/* TODO: Add empty result pages */}
 
           {!loading &&
             !error &&
@@ -150,7 +193,7 @@ const TeacherHomeScreen = (props: IProps) => {
                             <Text size="sm" color="dimmed" align="center">
                               Mã lớp: {courseInfo.id.toString().padStart(6, "0")}
                             </Text>
-                            {moment().utc().diff(moment(courseInfo.closingDate)) > 0 ? (
+                            {moment().utc().diff(moment(courseInfo.closingDate)) < 0 ? (
                               <Badge color="green" variant="light">
                                 Đang diễn ra
                               </Badge>
@@ -168,12 +211,14 @@ const TeacherHomeScreen = (props: IProps) => {
               );
             })}
 
-          {currentPage > 0 && (
+          {currentPage > 0 && maxPage > 0 && (
             <Pagination
               className={styles.pagination}
               page={currentPage}
               total={maxPage}
-              onChange={onClickPaginationPage}
+              onChange={(choosedPage: number) => onClickPaginationPage(
+                choosedPage, name, closed, open, longTerm, shortTerm,
+              )}
             />
           )}
         </div>
