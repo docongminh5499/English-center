@@ -1,23 +1,29 @@
 import { SidebarItem } from "../../../interfaces/sidebarItem.interface";
+import {
+  IconCertificate,
+  IconNotebook,
+  IconUserCircle,
+  IconSchool,
+} from '@tabler/icons';
 
 export const teacherSidebar: Array<SidebarItem> = [
   {
-    src: "/assets/icons/ic_course.png",
+    src: IconCertificate ,
     name: "Khóa học",
     href: "/teacher",
   },
   {
-    src: "/assets/icons/ic_diary.png",
+    src: IconNotebook,
     name: "Nhật ký",
     href: "#!",
   },
   {
-    src: "/assets/icons/ic_curriculum.png",
+    src: IconSchool ,
     name: "Chương trình dạy",
     href: "#!",
   },
   {
-    src: "/assets/icons/ic_userAccount.png",
+    src: IconUserCircle,
     name: "Tài khoản cá nhân",
     href: "#!",
   },

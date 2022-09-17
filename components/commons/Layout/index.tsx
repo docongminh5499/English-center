@@ -13,6 +13,8 @@ import { Menu, Text } from '@mantine/core';
 import { IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight } from '@tabler/icons';
 import styles from "./layout.module.css";
 import LoadingScreen from "../../pageComponents/LoadingScreen";
+import { ActionIcon, Drawer, Group, MediaQuery } from "@mantine/core";
+import { IconMenu2 } from "@tabler/icons";
 
 
 interface IProps {
@@ -41,10 +43,31 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
     onCancelLogout: onCancelLogout,
   });
 
+  const [openedDrawer, setOpenedDrawer] = useState(false);
+
   return (
     <React.Fragment>
       <div className={styles.header}>
         <div className={styles.headerContent}>
+          <Drawer
+            opened={openedDrawer}
+            onClose={() => setOpenedDrawer(false)}
+            title="Register"
+            padding="xl"
+            size="300px"
+          >
+            <Sidebar userRole={userRole} />
+          </Drawer>
+
+          {displaySidebar && (
+            <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
+              <Group position="center">
+                <ActionIcon onClick={() => setOpenedDrawer(true)}>
+                  <IconMenu2 size={18} />
+                </ActionIcon>
+              </Group>
+            </MediaQuery>
+          )}
           <Link href={"/"}>
             <a className={styles.logoContainer}>
               <img
@@ -139,11 +162,19 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
 
         {!loading && (
           <div className={styles.content}>
-            {displaySidebar && (<Sidebar userRole={userRole} />)}
+            <MediaQuery smallerThan="xs" styles={{ display: 'none' }}>
+              <div className={styles.sidebar}>
+                {displaySidebar && (
+                  <Sidebar userRole={userRole} />
+                )}
+              </div>
+            </MediaQuery>
             {children}
           </div>
         )}
       </div>
+
+
       <div className={styles.footer}></div>
     </React.Fragment>
   );
