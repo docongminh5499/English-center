@@ -1,47 +1,28 @@
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
-import LogoutModal from "../../pageComponents/LogoutModal";
+import React, { useState } from "react";
 import Sidebar from "../Sidebar";
 import Button from '../Button';
 import { useAuth } from "../../../stores/Auth";
 import { UserRole } from "../../../helpers/constants";
-import { useModal } from "../../../helpers/useModal";
 import { useRouter } from "next/router";
-import { getRoleName } from "../../../helpers/getRoleName";
 import { GuestMenu } from './guest.menu';
-import { Menu, Text } from '@mantine/core';
-import { IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight } from '@tabler/icons';
 import styles from "./layout.module.css";
 import LoadingScreen from "../../pageComponents/LoadingScreen";
 import { ActionIcon, Drawer, Group, MediaQuery } from "@mantine/core";
 import { IconMenu2 } from "@tabler/icons";
+import { UserMenu } from "./user.menu";
 
 
 interface IProps {
   children?: React.ReactNode | React.ReactNode[];
   displaySidebar?: Boolean;
-  userRole?: UserRole;
   loading?: Boolean;
 }
 
-const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps) => {
+const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   const [authState, authAction] = useAuth();
   const router = useRouter();
 
-  const onCancelLogout = useCallback(() => {
-    closeModal();
-  }, []);
-
-  const onLogout = useCallback(async () => {
-    await authAction.logOut();
-    await closeModal();
-    await router.push("/");
-  }, [authAction]);
-
-  const [openModal, closeModal] = useModal(LogoutModal, {
-    onLogout: onLogout,
-    onCancelLogout: onCancelLogout,
-  });
 
   const [openedDrawer, setOpenedDrawer] = useState(false);
 
@@ -54,20 +35,20 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
             onClose={() => setOpenedDrawer(false)}
             title="Register"
             padding="xl"
-            // size="300px"
           >
-            <Sidebar userRole={userRole} />
+            <Sidebar userRole={authState.role} />
           </Drawer>
 
           {displaySidebar && (
-            <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
+            <MediaQuery largerThan={480} styles={{ display: 'none' }}>
               <Group position="center">
                 <ActionIcon onClick={() => setOpenedDrawer(true)}>
-                  <IconMenu2 size={18} />
+                  <IconMenu2 size={40} />
                 </ActionIcon>
               </Group>
             </MediaQuery>
           )}
+
           <Link href={"/"}>
             <a className={styles.logoContainer}>
               <img
@@ -92,7 +73,12 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
                 <GuestMenu />
               </div>
             </>
+          )}
 
+          {authState.role !== UserRole.GUEST && authState.role !== undefined && !loading && (
+            <div className={styles.userNavbarContainer}>
+              <UserMenu />
+            </div>
           )}
         </div>
       </div>
@@ -106,7 +92,7 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
             <MediaQuery smallerThan="xs" styles={{ display: 'none' }}>
               <div className={styles.sidebar}>
                 {displaySidebar && (
-                  <Sidebar userRole={userRole} />
+                  <Sidebar userRole={authState.role} />
                 )}
               </div>
             </MediaQuery>

@@ -18,6 +18,21 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
   const [authorized, setAuthorized] = useState(false);
   const prevUserRole = usePrevious(authState.role);
 
+  // useEffect(() => {
+  //   const handleStart = (url: string) => (url !== router.asPath) && setAuthorized(true);
+  //   const handleComplete = (url: string) => (url === router.asPath) && setAuthorized(false);
+
+  //   router.events.on('routeChangeStart', handleStart)
+  //   router.events.on('routeChangeComplete', handleComplete)
+  //   router.events.on('routeChangeError', handleComplete)
+
+  //   return () => {
+  //     router.events.off('routeChangeStart', handleStart)
+  //     router.events.off('routeChangeComplete', handleComplete)
+  //     router.events.off('routeChangeError', handleComplete)
+  //   }
+  // }, []);
+
   useEffect(() => {
     authCheck();
   }, [router.asPath]);
@@ -63,7 +78,6 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Layout
-        userRole={authState.role}
         loading={!authorized}
         displaySidebar={Component.displaySidebar === undefined ? true : Component.displaySidebar}
       >

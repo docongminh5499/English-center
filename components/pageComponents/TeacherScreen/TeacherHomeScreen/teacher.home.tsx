@@ -91,7 +91,7 @@ const TeacherHomeScreen = (props: IProps) => {
       <div className={styles.teacherHomePage}>
         <p className={styles.title}>Danh sách khóa học</p>
         <Space h="md" />
-        <div className={styles.filterComponent}>
+        {/* <div className={styles.filterComponent}>
           <div>
             <Input
               value={name}
@@ -140,7 +140,7 @@ const TeacherHomeScreen = (props: IProps) => {
               onClickPaginationPage(1, "", false, false, false, false);
             }}>Xóa bộ lọc</Button>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.courseList}>
           {loading && (
