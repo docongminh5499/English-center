@@ -29,9 +29,11 @@ const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef('icon');
   return {
     navbar: {
-      height: '700px',
+      width: "250px",
+      height: "100%",
+      flexGrow: 1,
 
-      [`@media (max-width: ${theme.breakpoints.sm}px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+      [`@media (max-width: 1024px) and (min-width: ${theme.breakpoints.xs}px)`]: {
         width: '100px',
       },
     },
@@ -44,7 +46,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
         theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
       }`,
 
-      [`@media (max-width: ${theme.breakpoints.sm}px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+      [`@media (max-width: 1024px) and (min-width: ${theme.breakpoints.xs}px)`]: {
         margin: 'auto',
       },
 
@@ -101,7 +103,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
       marginRight: theme.spacing.sm,
 
-      [`@media (max-width: ${theme.breakpoints.sm}px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+      [`@media (max-width: 1024px) and (min-width: ${theme.breakpoints.xs}px)`]: {
         margin: 'auto',
       },
     },
@@ -151,8 +153,6 @@ const Sidebar = (props: IProps) => {
 
 
   const sideBarList = useMemo(() => sidebarSelector(), [props.userRole]);
-  console.log(sideBarList)
-//======================================================================================================================
   const { classes, cx } = useStyles();
   const [active, setActive] = useState('Billing');
 
@@ -168,7 +168,7 @@ const Sidebar = (props: IProps) => {
     >
       <Group position="apart">
         <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan="sm" largerThan="xs" styles={{ fontSize: '0.9rem', textAlign: 'center'}}>
+        <MediaQuery smallerThan={1024} largerThan="xs" styles={{ fontSize: '0.9rem', textAlign: 'center'}}>
           <span>{item.name}</span>
         </MediaQuery>
       </Group>
@@ -178,7 +178,7 @@ const Sidebar = (props: IProps) => {
   const navContent = (
     <Navbar.Section grow className={classes.navbarContainer}>
       <Navbar.Section className={classes.avatar}>
-        <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'none' }}>
+        <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'none' }}>
           <UnstyledButton>
             <Group>
               <Avatar size={40} color="blue" radius='xl'>BH</Avatar>
@@ -190,7 +190,7 @@ const Sidebar = (props: IProps) => {
           </UnstyledButton>
         </MediaQuery>
 
-        <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'block' }}>
+        <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'block' }}>
           <Avatar size={40} color="blue" radius='xl' className={classes.shortAvatar} />
         </MediaQuery>
       </Navbar.Section>
@@ -202,14 +202,14 @@ const Sidebar = (props: IProps) => {
       <Navbar.Section className={classes.footer}>
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'none' }}>
+          <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'none' }}>
             <span>Thay Đổi Tài Khoản</span>
           </MediaQuery>
         </a>
 
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <MediaQuery smallerThan="sm" largerThan="xs" styles={{ display: 'none' }}>
+          <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'none' }}>
             <span>Đăng Xuất</span>
           </MediaQuery>
         </a>
@@ -218,11 +218,10 @@ const Sidebar = (props: IProps) => {
   );
 
   return (
-    <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
+    <Navbar p="md" className={classes.navbar}>
       {navContent}
     </Navbar>         
   );
 }
-//========================================================================================================================
 
 export default Sidebar;

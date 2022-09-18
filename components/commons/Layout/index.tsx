@@ -54,7 +54,7 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
             onClose={() => setOpenedDrawer(false)}
             title="Register"
             padding="xl"
-            size="300px"
+            // size="300px"
           >
             <Sidebar userRole={userRole} />
           </Drawer>
@@ -93,65 +93,6 @@ const Layout = ({ children, displaySidebar, userRole, loading = false }: IProps)
               </div>
             </>
 
-          )}
-
-
-          {(authState.role !== UserRole.GUEST && authState.role !== undefined) && !loading && (
-            <div className={styles.navContainer}>
-              {/* <Menu position="bottom-end" width="auto">
-                <Menu.Target>
-                  <Button variant="outline" compact={true}>
-                    <p>AAA</p>
-                  </Button>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={() => router.push('/login')}
-                  >
-                    Đăng nhập
-                  </Menu.Item>
-                  <Menu.Item >
-                    Đăng ký
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu> */}
-
-
-
-              {/* <div className={`${buttonActive == "notification" ? styles.menuActive : ""}`}>
-                <img src="/assets/icons/ic_notification.png" alt="icon" />
-                <p className={styles.tabletHidden}>Thông báo</p>
-                <div className={styles.menuContainer}>
-                  Thông báo test
-                </div>
-              </div> */}
-              {/* <Link href={"#!"} passHref>
-                <div>
-                  <img src="/assets/icons/ic_chat.png" alt="icon" />
-                  <p className={styles.tabletHidden}>Trò chuyện</p>
-                </div>
-              </Link> */}
-              <div style={{ backgroundColor: "green" }}>
-                {/* <img src="/assets/icons/ic_user.png" alt="icon" /> */}
-                <p className={styles.tabletHidden}>Xin chào, {authState.fullName}</p>
-                <div className={styles.menuContainer}>
-                  {/* <div className={styles.menuUserInfo}>
-                    <div className={styles.menuUserImg}>
-                      <img src="/assets/icons/ic_user.png" alt="icon" />
-                    </div>
-                    <div className={styles.user}>
-                      <p>{authState.fullName}</p>
-                      <p>{getRoleName(authState.role)}</p>
-                    </div>
-                  </div> */}
-                  <div className={styles.divider}></div>
-                  {authState.role === UserRole.TUTOR && (
-                    <p className={styles.selection}>Đăng ký ca làm</p>
-                  )}
-                  <p className={styles.selection} onClick={() => openModal()}>Đăng xuất</p>
-                </div>
-              </div>
-            </div>
           )}
         </div>
       </div>
