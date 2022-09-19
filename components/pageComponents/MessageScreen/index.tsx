@@ -33,7 +33,7 @@ const MessageScreen = () => {
             </Indicator>
             <Space w={15} />
             <div style={{ flex: 1 }}>
-              <Text size="sm" weight={500}>
+              <Text size="sm" weight={500} color="#444">
                 Đỗ Công Minh
               </Text>
               <Text color="dimmed" size="xs">
@@ -79,6 +79,7 @@ const MessageScreen = () => {
 
           <div className={styles.messageInputContainer}>
             <TextInput
+              styles={{ input: { color: "#444" } }}
               radius="xl"
               size="md"
               rightSection={
@@ -93,11 +94,12 @@ const MessageScreen = () => {
         </div>
 
         <div className={styles.contactContainer}>
-          <Text size="xl" weight={700} align='center'>
+          <Text size="xl" weight={700} align='center' color="#444">
             Trò chuyện
           </Text>
           <Space h={10} />
           <TextInput
+            styles={{ input: { color: "#444" } }}
             icon={<IconSearch size={18} stroke={1.5} />}
             radius="xl"
             size="sm"
@@ -116,7 +118,7 @@ const MessageScreen = () => {
                   />
                 </Indicator>
                 <Container style={{ flex: 1 }}>
-                  <Text size="sm" weight={500}>
+                  <Text size="sm" weight={500} color="#444">
                     Đỗ Công Minh
                   </Text>
                   <Text color="dimmed" size="xs" lineClamp={1} >

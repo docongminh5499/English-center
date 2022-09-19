@@ -4,6 +4,7 @@
 }
 
 .teacherHomePage .title {
+    color: #444;
     text-transform: uppercase;
     font-weight: 600;
     font-size: 2.8rem;
@@ -65,6 +66,7 @@
 }
 
 .courseDateBasedSection .date {
+    color: #444;
     font-size: 2.4rem;
     font-weight: 600;
 }
@@ -92,6 +94,7 @@
 }
 
 .courseCard .courseInfo .courseName {
+    color: #444;
     font-size: 1.6rem;
     flex-grow: 1;
     transition: all 0.3s ease-in-out;
@@ -103,4 +106,8 @@
 
 .pagination {
     margin: auto;
+}
+
+.pagination * {
+    color: #444;
 }

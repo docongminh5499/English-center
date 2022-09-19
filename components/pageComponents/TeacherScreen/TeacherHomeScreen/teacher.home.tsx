@@ -91,9 +91,10 @@ const TeacherHomeScreen = (props: IProps) => {
       <div className={styles.teacherHomePage}>
         <p className={styles.title}>Danh sách khóa học</p>
         <Space h="md" />
-        {/* <div className={styles.filterComponent}>
+        <div className={styles.filterComponent}>
           <div>
             <Input
+              styles={{ input: { color: "#444" } }}
               value={name}
               placeholder="Tên khóa học"
               onChange={setName}
@@ -101,11 +102,13 @@ const TeacherHomeScreen = (props: IProps) => {
           </div>
           <div>
             <Checkbox
+              styles={{ label: { color: "#444" } }}
               label="Đang diễn ra"
               checked={open}
               onChange={setOpen}
             />
             <Checkbox
+              styles={{ label: { color: "#444" } }}
               label="Đã kết thúc"
               checked={closed}
               onChange={setClosed}
@@ -113,11 +116,13 @@ const TeacherHomeScreen = (props: IProps) => {
           </div>
           <div>
             <Checkbox
+              styles={{ label: { color: "#444" } }}
               label="Khóa ngắn hạn"
               checked={shortTerm}
               onChange={setShortTerm}
             />
             <Checkbox
+              styles={{ label: { color: "#444" } }}
               label="Khóa dài hạn"
               checked={longTerm}
               onChange={setLongTerm}
@@ -140,7 +145,7 @@ const TeacherHomeScreen = (props: IProps) => {
               onClickPaginationPage(1, "", false, false, false, false);
             }}>Xóa bộ lọc</Button>
           </div>
-        </div> */}
+        </div>
 
         <div className={styles.courseList}>
           {loading && (

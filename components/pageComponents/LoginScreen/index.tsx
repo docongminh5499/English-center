@@ -61,6 +61,7 @@ const LoginScreen = (props: IProps) => {
           <p className={styles.title}>Đăng nhập</p>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
+              styles={{ input: { color: "#444" } }}
               icon={<IconUser size={"1.6rem"} color="#444" stroke={1.5} />}
               type="text"
               id="username_login_screen"
@@ -70,6 +71,7 @@ const LoginScreen = (props: IProps) => {
               error={errors.username?.message}
             />
             <Input
+              styles={{ input: { color: "#444" } }}
               icon={<IconLockOpen size={"1.6rem"} color="#444" stroke={1.5} />}
               type={seePassword ? "text" : "password"}
               id="password_login_screen"
