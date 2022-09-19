@@ -2,7 +2,6 @@ import { SidebarItem } from "../../../interfaces/sidebarItem.interface";
 import {
   IconCertificate,
   IconNotebook,
-  IconUserCircle,
   IconSchool,
 } from '@tabler/icons';
 
@@ -20,11 +19,6 @@ export const teacherSidebar: Array<SidebarItem> = [
   {
     src: IconSchool ,
     name: "Chương trình dạy",
-    href: "#!",
-  },
-  {
-    src: IconUserCircle,
-    name: "Tài khoản cá nhân",
     href: "#!",
   },
 ];

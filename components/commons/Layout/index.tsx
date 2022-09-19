@@ -8,9 +8,10 @@ import { useRouter } from "next/router";
 import { GuestMenu } from './guest.menu';
 import styles from "./layout.module.css";
 import LoadingScreen from "../../pageComponents/LoadingScreen";
-import { ActionIcon, Drawer, Group, MediaQuery } from "@mantine/core";
-import { IconMenu2 } from "@tabler/icons";
+import { createStyles, ActionIcon, Drawer, Group, MediaQuery } from "@mantine/core";
+import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
 import { UserMenu } from "./user.menu";
+import { teacherSidebar } from "../Sidebar/links";
 
 
 interface IProps {
@@ -23,20 +24,115 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   const [authState, authAction] = useAuth();
   const router = useRouter();
 
+  //===========================================================================
+  const useStyles = createStyles((theme, _params, getRef) => {
+    const icon = getRef('icon');
+    return {
+
+      drawer: {
+        [`@media (max-width: 350px)`]: {
+          width: '100%',
+        },
+      },
+
+      link: {
+        ...theme.fn.focusStyles(),
+        display: 'flex',
+        alignItems: 'center',
+        textDecoration: 'none',
+        fontSize: theme.fontSizes.sm,
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7],
+        padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
+        borderRadius: theme.radius.sm,
+        fontWeight: 500,
+  
+        '&:hover': {
+          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+          color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+  
+          [`& .${icon}`]: {
+            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+          },
+        },
+      },
+  
+      linkIcon: {
+        ref: icon,
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
+        marginRight: theme.spacing.sm,
+  
+        // [`@media (max-width: 1024px)`]: {
+        //   margin: 'auto',
+        // },
+      },
+  
+      linkActive: {
+        '&, &:hover': {
+          backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor })
+            .background,
+          color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+          [`& .${icon}`]: {
+            color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+          },
+        },
+      }
+    };
+  });
 
   const [openedDrawer, setOpenedDrawer] = useState(false);
+  const { classes, cx } = useStyles();
+  const [active, setActive] = useState('Billing');
+
+  let userDrawer = [
+    {
+      src: IconBellRinging ,
+      name: "Thông Báo",
+      href: "#!",
+    },
+    {
+      src: IconMessage,
+      name: "Trò chuyện",
+      href: "#!",
+    },
+  ];
+  let personalDrawer : any[] = [];
+  if (authState.role === UserRole.TEACHER)
+    personalDrawer = teacherSidebar;
+  userDrawer = userDrawer.concat(personalDrawer);
+
+  const links = userDrawer.map((item) => (
+    <a
+      className={cx(classes.link, { [classes.linkActive]: item.name === active })}
+      href={item.href}
+      key={item.name}
+      onClick={(event) => {
+        event.preventDefault();
+        setActive(item.name);
+      }}
+    >
+      <Group position="apart">
+        <item.src className={classes.linkIcon} stroke={1.5} />
+        {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
+          <span style={{ fontSize: '1.5rem'}}>{item.name}</span>
+        {/* </MediaQuery> */}
+      </Group>
+    </a>
+  ));
+
+  //===========================================================================
 
   return (
     <React.Fragment>
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <Drawer
+            className={classes.drawer}
             opened={openedDrawer}
             onClose={() => setOpenedDrawer(false)}
-            title="Register"
+            // title="Register"
             padding="xl"
           >
-            <Sidebar userRole={authState.role} />
+            {links}
           </Drawer>
 
           {displaySidebar && (
@@ -89,7 +185,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
 
         {!loading && (
           <div className={styles.content}>
-            <MediaQuery smallerThan="xs" styles={{ display: 'none' }}>
+            <MediaQuery smallerThan="480" styles={{ display: 'none' }}>
               <div className={styles.sidebar}>
                 {displaySidebar && (
                   <Sidebar userRole={authState.role} />
