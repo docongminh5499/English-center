@@ -10,13 +10,8 @@ import {
   Navbar, 
   MediaQuery, 
   Group, 
-  Avatar, 
-  Text, 
-  UnstyledButton, 
 } from '@mantine/core';
 import {
-  IconSwitchHorizontal,
-  IconLogout,
   IconBellRinging,
   IconMessage,
 } from '@tabler/icons';
@@ -33,32 +28,8 @@ const useStyles = createStyles((theme, _params, getRef) => {
       height: "100%",
       flexGrow: 1,
 
-      [`@media (max-width: 1024px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+      [`@media (max-width: 1024px)`]: {
         width: '100px',
-      },
-    },
-
-    avatar: {
-      paddingBottom: theme.spacing.md,
-      marginBottom: theme.spacing.md,
-      paddingTop: theme.spacing.md,
-      borderBottom: `2px solid ${
-        theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-      }`,
-
-      [`@media (max-width: 1024px) and (min-width: ${theme.breakpoints.xs}px)`]: {
-        margin: 'auto',
-      },
-
-      '&:not(:last-of-type)': {
-        borderBottom: `1px solid ${
-          theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-        }`,
-      },
-
-      '&:hover': {
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
       },
     },
 
@@ -103,7 +74,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
       marginRight: theme.spacing.sm,
 
-      [`@media (max-width: 1024px) and (min-width: ${theme.breakpoints.xs}px)`]: {
+      [`@media (max-width: 1024px)`]: {
         margin: 'auto',
       },
     },
@@ -117,12 +88,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
           color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
         },
       },
-    },
-
-    shortAvatar: {
-        display: 'none',
-        margin: 'auto',
-    },
+    }
   };
 });
 
@@ -168,58 +134,18 @@ const Sidebar = (props: IProps) => {
     >
       <Group position="apart">
         <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan={1024} largerThan="xs" styles={{ fontSize: '0.9rem', textAlign: 'center'}}>
-          <span>{item.name}</span>
+        <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}>
+          <span style={{ fontSize: '1.5rem'}} >{item.name}</span>
         </MediaQuery>
       </Group>
     </a>
   ));
 
-  const navContent = (
-    <Navbar.Section grow className={classes.navbarContainer}>
-      <Navbar.Section className={classes.avatar}>
-        <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'none' }}>
-          <UnstyledButton>
-            <Group>
-              <Avatar size={40} color="blue" radius='xl'>BH</Avatar>
-              <div>
-                <Text>Bob Handsome</Text>
-                <Text size="xs" color="dimmed">bob@handsome.inc</Text>
-              </div>
-            </Group>
-          </UnstyledButton>
-        </MediaQuery>
-
-        <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'block' }}>
-          <Avatar size={40} color="blue" radius='xl' className={classes.shortAvatar} />
-        </MediaQuery>
-      </Navbar.Section>
-
+  return (
+    <Navbar p="md" className={classes.navbar}>
       <Navbar.Section grow>
         {links}
       </Navbar.Section>
-      
-      <Navbar.Section className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'none' }}>
-            <span>Thay Đổi Tài Khoản</span>
-          </MediaQuery>
-        </a>
-
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <MediaQuery smallerThan={1024} largerThan="xs" styles={{ display: 'none' }}>
-            <span>Đăng Xuất</span>
-          </MediaQuery>
-        </a>
-      </Navbar.Section>
-    </Navbar.Section>
-  );
-
-  return (
-    <Navbar p="md" className={classes.navbar}>
-      {navContent}
     </Navbar>         
   );
 }
