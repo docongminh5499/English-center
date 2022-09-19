@@ -87,34 +87,30 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
 
   const [openedDrawer, setOpenedDrawer] = useState(false);
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState('Billing');
 
   let userDrawer = [
     {
       src: IconBellRinging,
       name: "Thông Báo",
-      href: "#!",
+      href: "/notification",
     },
     {
       src: IconMessage,
       name: "Trò chuyện",
-      href: "#!",
+      href: "/message",
     },
   ];
   let personalDrawer: any[] = [];
   if (authState.role === UserRole.TEACHER)
     personalDrawer = teacherSidebar;
-  userDrawer = userDrawer.concat(personalDrawer);
+  userDrawer = personalDrawer.concat(userDrawer);
 
   const links = userDrawer.map((item) => (
     <a
-      className={cx(classes.link, { [classes.linkActive]: item.name === active })}
+      className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}
       href={item.href}
-      key={item.name}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.name);
-      }}
+      key={item.href}
+      onClick={() => router.push(item.href)}
     >
       <Group position="apart">
         <item.src className={classes.linkIcon} stroke={1.5} />

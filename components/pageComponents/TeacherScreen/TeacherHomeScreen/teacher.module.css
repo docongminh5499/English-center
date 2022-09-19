@@ -1,113 +1,128 @@
 .teacherHomePage {
-    margin: 3.6rem 8rem 5.6rem;
-    flex: 1;
+  margin: 3.6rem 5rem 5.6rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .teacherHomePage .title {
-    color: #444;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 2.8rem;
-    width: 100%;
-    text-align: center;
-}
-
-.teacherHomePage .filterComponent {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 2rem;
-}
-
-.teacherHomePage .filterComponent > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1rem
-}
-
-.teacherHomePage .filterComponent > div.filterButtons {
-    flex-direction: row;
+  color: #444;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 2.4rem;
+  width: 100%;
+  text-align: center;
 }
 
 .teacherHomePage .courseList {
-    margin-top: 4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 7.4rem;
+  flex-grow: 1;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
 }
 
 .loadingContainer {
-    height: 26rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .errorContainer {
-    height: 26rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .errorContainer > p {
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: #4f4f4f;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #4f4f4f;
+}
+
+.emptyResultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.emptyResultContainer > p {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #4f4f4f;
 }
 
 .courseDateBasedSection {
-    display: flex;
-    flex-direction: column;
-    gap: 4.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
 .courseDateBasedSection .date {
-    color: #444;
-    font-size: 2.4rem;
-    font-weight: 600;
+  color: #444;
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .courseDateBasedSection .courseContainer {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
 }
 
 .courseCard {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
 }
 
 .courseCard .courseInfo {
-    margin-top: 1.5rem;
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .courseCard .courseInfo .courseName {
-    color: #444;
-    font-size: 1.6rem;
-    flex-grow: 1;
-    transition: all 0.3s ease-in-out;
+  color: #444;
+  font-size: 1.6rem;
+  flex-grow: 1;
+  transition: all 0.3s ease-in-out;
 }
 
 .courseCard:hover .courseInfo .courseName {
-    color: #228BE6;
+  color: #228BE6;
 }
 
 .pagination {
-    margin: auto;
+  margin: auto;
 }
 
 .pagination * {
-    color: #444;
+  color: #444;
+}
+
+@media screen and (max-width: 1024px) {
+  .teacherHomePage {
+    margin: 2rem;
+  }
+
+  .courseDateBasedSection .courseContainer {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .courseDateBasedSection .courseContainer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

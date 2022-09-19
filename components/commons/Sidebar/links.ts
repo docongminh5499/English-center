@@ -14,11 +14,11 @@ export const teacherSidebar: Array<SidebarItem> = [
   {
     src: IconNotebook,
     name: "Nhật ký",
-    href: "#!",
+    href: "/teacher/teaching-history",
   },
   {
     src: IconSchool ,
     name: "Chương trình dạy",
-    href: "#!",
+    href: "/teacher/curriculum",
   },
 ];

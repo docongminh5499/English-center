@@ -1,4 +1,5 @@
 import { Avatar, Container, Group, MediaQuery, Menu, Modal, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconUserCircle,
   IconSwitchHorizontal,
@@ -12,6 +13,7 @@ import LogoutModal from '../../pageComponents/LogoutModal';
 
 export function UserMenu() {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 480px)');
   const [authState, authAction] = useAuth();
   const theme = useMantineTheme();
   const router = useRouter();
@@ -46,11 +48,11 @@ export function UserMenu() {
         <Menu.Target>
           <UnstyledButton>
             <Group>
-              <Avatar size={40} color="blue" radius='xl'>A</Avatar>
+              <Avatar size={isMobile ? 32 : 40} color="blue" radius='xl'>A</Avatar>
               <MediaQuery smallerThan={480} styles={{ display: 'none' }}>
                 <div>
                   <Text weight={500} color="#444">{authState.fullName}</Text>
-                  <Text size="xs" color="dimmed">{getRoleName(authState.role)}</Text>
+                  <Text style={{ fontSize: "1.2rem" }} color="dimmed">{getRoleName(authState.role)}</Text>
                 </div>
               </MediaQuery>
             </Group>
@@ -61,7 +63,7 @@ export function UserMenu() {
             <div>
               <Container>
                 <Text align='center' weight={500} color="#444">{authState.fullName}</Text>
-                <Text size="xs" color="dimmed" align='center'>{getRoleName(authState.role)}</Text>
+                <Text style={{ fontSize: "1.2rem" }} color="dimmed" align='center'>{getRoleName(authState.role)}</Text>
               </Container>
               <Menu.Divider />
             </div>
@@ -75,7 +77,7 @@ export function UserMenu() {
           <Menu.Item
             color="#444"
             icon={<IconSwitchHorizontal size={"1.6rem"} color={theme.colors.violet[6]} stroke={1.5} />}>
-            Thay đổi tài khoản
+            Chỉnh sửa tài khoản
           </Menu.Item>
           <Menu.Divider />
           <Menu.Item

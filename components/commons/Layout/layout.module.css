@@ -55,6 +55,7 @@
 .content {
     display: flex;
     align-items: stretch;
+    min-height: calc(100vh - 9.1rem);
 }
 
 @media screen and (max-width: 1024px) {

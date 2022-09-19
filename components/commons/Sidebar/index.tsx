@@ -101,18 +101,18 @@ const Sidebar = (props: IProps) => {
       {
         src: IconBellRinging,
         name: "Thông Báo",
-        href: "#!",
+        href: "/notification",
       },
       {
         src: IconMessage,
         name: "Trò chuyện",
-        href: "#!",
+        href: "/message",
       },
     ];
     let personalSidebar: any[] = [];
     if (props.userRole === UserRole.TEACHER)
       personalSidebar = teacherSidebar;
-    return userSidebar.concat(personalSidebar);
+    return personalSidebar.concat(userSidebar);
 
     // TODO: another user role
 
@@ -121,21 +121,17 @@ const Sidebar = (props: IProps) => {
 
   const sideBarList = useMemo(() => sidebarSelector(), [props.userRole]);
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState('Billing');
 
   const links = sideBarList.map((item) => (
     <a
-      className={cx(classes.link, { [classes.linkActive]: item.name === active })}
+      className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}
       href={item.href}
-      key={item.name}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.name);
-      }}
+      key={item.href}
+      onClick={() => router.push(item.href)}
     >
       <Group position="apart" spacing={8}>
         <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto'}}>
+        <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto' }}>
           <span>{item.name}</span>
         </MediaQuery>
       </Group>
