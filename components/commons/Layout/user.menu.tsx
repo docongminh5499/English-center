@@ -87,6 +87,5 @@ export function UserMenu() {
         </Menu.Dropdown>
       </Menu>
     </>
-
   );
 }

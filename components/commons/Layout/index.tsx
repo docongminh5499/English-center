@@ -28,9 +28,13 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   const useStyles = createStyles((theme, _params, getRef) => {
     const icon = getRef('icon');
     return {
-
+      header: {
+        marginBottom: "0px",
+      },
       drawer: {
+        padding: "0.5rem",
         [`@media (max-width: 350px)`]: {
+          padding: "0.5rem",
           width: '100%',
         },
       },
@@ -45,27 +49,29 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
         padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
         borderRadius: theme.radius.sm,
         fontWeight: 500,
-  
+
         '&:hover': {
           backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
           color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-  
+
           [`& .${icon}`]: {
             color: theme.colorScheme === 'dark' ? theme.white : theme.black,
           },
         },
       },
-  
+
       linkIcon: {
         ref: icon,
+        width: "2.4rem",
+        height: "2.4rem",
         color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
-        marginRight: theme.spacing.sm,
-  
+        // marginRight: theme.spacing.sm,
+
         // [`@media (max-width: 1024px)`]: {
         //   margin: 'auto',
         // },
       },
-  
+
       linkActive: {
         '&, &:hover': {
           backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor })
@@ -85,7 +91,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
 
   let userDrawer = [
     {
-      src: IconBellRinging ,
+      src: IconBellRinging,
       name: "Thông Báo",
       href: "#!",
     },
@@ -95,7 +101,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
       href: "#!",
     },
   ];
-  let personalDrawer : any[] = [];
+  let personalDrawer: any[] = [];
   if (authState.role === UserRole.TEACHER)
     personalDrawer = teacherSidebar;
   userDrawer = userDrawer.concat(personalDrawer);
@@ -113,7 +119,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
       <Group position="apart">
         <item.src className={classes.linkIcon} stroke={1.5} />
         {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
-          <span style={{ fontSize: '1.5rem'}}>{item.name}</span>
+        <span style={{ fontSize: '1.5rem' }}>{item.name}</span>
         {/* </MediaQuery> */}
       </Group>
     </a>
@@ -127,6 +133,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
         <div className={styles.headerContent}>
           <Drawer
             className={classes.drawer}
+            classNames={{ header: classes.header }}
             opened={openedDrawer}
             onClose={() => setOpenedDrawer(false)}
             // title="Register"
@@ -185,7 +192,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
 
         {!loading && (
           <div className={styles.content}>
-            <MediaQuery smallerThan="480" styles={{ display: 'none' }}>
+            <MediaQuery smallerThan={480} styles={{ display: 'none' }}>
               <div className={styles.sidebar}>
                 {displaySidebar && (
                   <Sidebar userRole={authState.role} />

@@ -24,28 +24,27 @@ const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef('icon');
   return {
     navbar: {
-      width: "250px",
+      width: "225px",
       height: "100%",
       flexGrow: 1,
 
       [`@media (max-width: 1024px)`]: {
         width: '100px',
+        padding: "5px"
       },
     },
 
     header: {
       paddingBottom: theme.spacing.md,
-      borderBottom: `2px solid ${
-        theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-      }`,
+      borderBottom: `2px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+        }`,
     },
 
     footer: {
       paddingTop: theme.spacing.md,
       marginTop: theme.spacing.md,
-      borderTop: `2px solid ${
-        theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-      }`,
+      borderTop: `2px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
+        }`,
     },
 
     link: {
@@ -53,7 +52,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       display: 'flex',
       alignItems: 'center',
       textDecoration: 'none',
-      fontSize: theme.fontSizes.sm,
+      fontSize: '1.5rem',
       color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7],
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
       borderRadius: theme.radius.sm,
@@ -71,8 +70,10 @@ const useStyles = createStyles((theme, _params, getRef) => {
 
     linkIcon: {
       ref: icon,
+      width: "2.4rem",
+      height: "2.4rem",
       color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
-      marginRight: theme.spacing.sm,
+      // marginRight: theme.spacing.sm,
 
       [`@media (max-width: 1024px)`]: {
         margin: 'auto',
@@ -98,7 +99,7 @@ const Sidebar = (props: IProps) => {
   const sidebarSelector = useCallback(() => {
     let userSidebar = [
       {
-        src: IconBellRinging ,
+        src: IconBellRinging,
         name: "Thông Báo",
         href: "#!",
       },
@@ -108,7 +109,7 @@ const Sidebar = (props: IProps) => {
         href: "#!",
       },
     ];
-    let personalSidebar : any[] = [];
+    let personalSidebar: any[] = [];
     if (props.userRole === UserRole.TEACHER)
       personalSidebar = teacherSidebar;
     return userSidebar.concat(personalSidebar);
@@ -132,10 +133,10 @@ const Sidebar = (props: IProps) => {
         setActive(item.name);
       }}
     >
-      <Group position="apart">
+      <Group position="apart" spacing={8}>
         <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}>
-          <span style={{ fontSize: '1.5rem'}} >{item.name}</span>
+        <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto'}}>
+          <span>{item.name}</span>
         </MediaQuery>
       </Group>
     </a>
@@ -146,7 +147,7 @@ const Sidebar = (props: IProps) => {
       <Navbar.Section grow>
         {links}
       </Navbar.Section>
-    </Navbar>         
+    </Navbar>
   );
 }
 
