@@ -106,19 +106,20 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   userDrawer = personalDrawer.concat(userDrawer);
 
   const links = userDrawer.map((item) => (
-    <a
-      className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}
+    <Link
       href={item.href}
       key={item.href}
-      onClick={() => router.push(item.href)}
     >
-      <Group position="apart">
-        <item.src className={classes.linkIcon} stroke={1.5} />
-        {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
-        <span style={{ fontSize: '1.5rem' }}>{item.name}</span>
-        {/* </MediaQuery> */}
-      </Group>
-    </a>
+      <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
+        <Group position="apart">
+          <item.src className={classes.linkIcon} stroke={1.5} />
+          {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
+          <span style={{ fontSize: '1.5rem' }}>{item.name}</span>
+          {/* </MediaQuery> */}
+        </Group>
+      </a>
+    </Link>
+
   ));
 
   //===========================================================================

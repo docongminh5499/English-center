@@ -1,19 +1,160 @@
-import { ActionIcon, Avatar, Card, Container, Divider, Indicator, ScrollArea, Space, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { IconSearch, IconSend } from '@tabler/icons';
-import { useEffect, useRef } from 'react';
+import { ActionIcon, Avatar, Card, Container, Divider, Group, Indicator, Input, Loader, Modal, ScrollArea, Space, Text, useMantineTheme } from '@mantine/core';
+import { IconBrandMessenger, IconChecks, IconSearch, IconSend } from '@tabler/icons';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import styles from './message.module.css';
+import { useInputState, useMediaQuery } from '@mantine/hooks';
+import Button from '../../commons/Button';
+import { useChat } from '../../../stores/Chat';
+import Loading from '../../commons/Loading';
+import { useAuth } from '../../../stores/Auth';
+import { toast } from 'react-toastify';
+import { TimeZoneOffset, Url } from '../../../helpers/constants';
+import ChatUser from '../../../models/chatUser.model';
+import { getRoleName } from '../../../helpers/getRoleName';
+import moment from 'moment';
+import { useSocket } from '../../../stores/Socket';
 
 
 const MessageScreen = () => {
   const theme = useMantineTheme();
+  const [openModal, setOpenModal] = useState(false);
+  const [findName, setFindName] = useInputState("");
+  const [message, setMessage] = useInputState("");
+  const [loadingMessage, setLoadingMessage] = useState(false);
+  const [firstEnterChatBox, setFirstEnterChatBox] = useState(true);
+  const [previousScrollHeight, setPreviusScrollHeight] = useState(0);
+  const [chatState, chatAction] = useChat();
+  const [, socketAction] = useSocket();
+  const [authState] = useAuth();
+  const isMobile = useMediaQuery('(max-width: 480px)');
+  const isSmallTablet = useMediaQuery('(max-width: 768px)');
   const viewport = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
 
-  const scrollToBottom = () =>
-    viewport.current.scrollTo({
+  useEffect(() => {
+    const getAllContacts = async () => {
+      const token = authState.token || "";
+      await chatAction.getContacts(token);
+    }
+    getAllContacts().catch((error) => {
+      console.log(error);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại")
+    });
+    return () => { chatAction.resetData(); }
+  }, []);
+
+
+
+  useEffect(() => {
+    !loadingMessage && viewport.current && viewport.current.scrollTo({
       top: viewport.current.scrollHeight, behavior: 'smooth'
     });
-  useEffect(() => scrollToBottom(), [])
+  }, [chatState.currentBox?.user.userId, chatState.currentBox?.messages?.length])
+
+
+
+  useEffect(() => {
+    const onScrollComplete = (event: any) => {
+      const element = event.target;
+      const verticalThreshold = 50;
+      if (element.scrollTop > verticalThreshold)
+        firstEnterChatBox && setFirstEnterChatBox(false);
+    }
+    viewport.current && viewport.current.addEventListener("scroll", onScrollComplete);
+    return () => viewport.current && viewport.current.removeEventListener("scroll", onScrollComplete);
+  }, [viewport.current]);
+
+
+
+  useEffect(() => {
+    if (loadingMessage) {
+      const verticalThreshold = 50;
+      viewport.current.scrollBy({ top: viewport.current.scrollHeight - previousScrollHeight - verticalThreshold });
+      setLoadingMessage(false);
+    }
+  }, [chatState.currentBox?.messages?.length])
+
+
+
+  const onCloseModal = useCallback(() => {
+    setOpenModal(false);
+    setFindName("");
+    chatAction.clearSearchResults();
+  }, []);
+
+
+
+  const onStartChatBox = useCallback(async (targetUser: ChatUser) => {
+    try {
+      const token = authState.token || "";
+      await chatAction.startChatBox(token, targetUser);
+      setFirstEnterChatBox(true);
+      setLoadingMessage(false);
+      seenMessage(targetUser.userId);
+    } catch (error) {
+      console.log(error);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại")
+    }
+  }, [authState.token]);
+
+
+
+  const onSubmitSearchForm = useCallback(async (e: FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const token = authState.token || "";
+      await chatAction.findContacts(token, findName)
+    } catch (err) {
+      console.log(err);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+    }
+  }, [authState.token, findName])
+
+
+
+  const onSendMessage = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (message === undefined || message.trim() === "")
+      return;
+    const payload = {
+      senderId: Number(authState.userId),
+      receiverId: chatState.currentBox?.user.userId,
+      message: message,
+    };
+    socketAction.emit("message", payload);
+    setMessage("");
+  }, [message, authState, chatState]);
+
+
+
+  const onScrollPositionChange = useCallback(async (positions: any) => {
+    if (chatState.currentBox === undefined) return;
+    if (firstEnterChatBox === true) return;
+
+    const verticalThreshold = 50;
+    const maxMessageCount = chatState.currentBox?.maxMessageCount || 0;
+    const currentMessageCount = chatState.currentBox?.messages?.length || 0;
+    const token = authState.token || "";
+    if (currentMessageCount < maxMessageCount && !loadingMessage && positions.y < verticalThreshold) {
+      try {
+        setLoadingMessage(true);
+        setPreviusScrollHeight(viewport.current.scrollHeight);
+        await chatAction.getMoreMessages(token, currentMessageCount, chatState.currentBox?.user);
+      } catch (error) {
+        console.log(error);
+        setLoadingMessage(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+      }
+    }
+  }, [authState.token, chatState.currentBox, loadingMessage, firstEnterChatBox]);
+
+
+
+  const seenMessage = useCallback((senderId?: number) => {
+    socketAction.emit("seen_message", { sender: { userId: senderId } });
+  }, [])
+
+
 
   return (
     <>
@@ -21,109 +162,273 @@ const MessageScreen = () => {
         <title>Tin nhắn</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Modal
+        opened={openModal}
+        overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
+        overlayOpacity={0.55}
+        overlayBlur={3}
+        onClose={onCloseModal}
+        closeOnClickOutside
+        centered
+      >
+        <div className={styles.modalContainer}>
+          <form onSubmit={onSubmitSearchForm}>
+            <Input
+              value={findName}
+              onChange={setFindName}
+              placeholder="Nhập tên người mà bạn muốn tìm kiếm..."
+            />
+          </form>
+          <Space h={10} />
+          <ScrollArea style={{ height: '300px' }} type={isSmallTablet ? "never" : "scroll"}>
+            {chatState.searchResults.map((contact, index) => (
+              <Container key={index} py={10} px={15} className={styles.contact} onClick={() => {
+                setOpenModal(false);
+                onStartChatBox(contact.user);
+              }}>
+                <Indicator dot inline size={12} offset={3} position="bottom-end" color={contact.user.isActive ? "green" : "red"} withBorder>
+                  <Avatar
+                    size="sm"
+                    radius="xl"
+                    src={Url.baseUrl + contact.user.userAvatar}
+                  />
+                </Indicator>
+                <Space w={15} />
+                <div style={{ flex: 1 }}>
+                  <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444">
+                    {contact.user.userFullName}
+                  </Text>
+                </div>
+              </Container>
+            ))}
+          </ScrollArea>
+        </div>
+      </Modal>
+
+
       <div className={styles.pageContainer}>
         <div className={styles.messageContainer}>
-          <div className={styles.messageInfoContainer}>
-            <Indicator dot inline size={16} offset={7} position="bottom-end" color="red" withBorder>
-              <Avatar
-                size="md"
-                radius="xl"
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=250&q=80"
+
+          {chatState.currentBox === undefined && (
+            <Container style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%"
+            }}>
+              <IconBrandMessenger
+                color='#DEE2E6'
+                style={{ width: "12rem", height: "12rem" }}
               />
-            </Indicator>
-            <Space w={15} />
-            <div style={{ flex: 1 }}>
-              <Text size="sm" weight={500} color="#444">
-                Đỗ Công Minh
+              <Space h={10} />
+              <Text style={{ fontSize: "1.4rem", color: '#DEE2E6' }}>
+                Hãy bắt đầu trò chuyện
               </Text>
-              <Text color="dimmed" size="xs">
-                Học viên
-              </Text>
-            </div>
-          </div>
+            </Container>
+          )}
 
-          <Divider />
-
-          <ScrollArea className={styles.messages} viewportRef={viewport}>
-            {Array(20).fill(0).map((_, index) => {
-              let className = "";
-              let messageColor = "";
-              let dateColor = "";
-
-              if (index % 2 == 0) {
-                className = styles.yours;
-                messageColor = "#444";
-                dateColor = "dimmed";
-              } else {
-                className = styles.mine;
-                messageColor = "white";
-                dateColor = "white";
-              }
-
-              return (
-                <Card withBorder radius="md" p="md" className={className} key={index}>
-                  <Card.Section p="xs">
-                    <Text color={messageColor}>
-                      ({index}) Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    </Text>
-                    <Space h={10} />
-                    <Text color={dateColor} size="xs">
-                      20:14 01/01/2022
-                    </Text>
-                  </Card.Section>
-                </Card>
-              );
-            })}
-          </ScrollArea>
-
-
-          <div className={styles.messageInputContainer}>
-            <TextInput
-              styles={{ input: { color: "#444" } }}
-              radius="xl"
-              size="md"
-              rightSection={
-                <ActionIcon size={32} radius="xl" color={theme.primaryColor} variant="filled">
-                  <IconSend size={18} stroke={1.5} />
-                </ActionIcon>
-              }
-              placeholder="Nhập tin nhắn..."
-              rightSectionWidth={42}
-            />
-          </div>
-        </div>
-
-        <div className={styles.contactContainer}>
-          <Text size="xl" weight={700} align='center' color="#444">
-            Trò chuyện
-          </Text>
-          <Space h={10} />
-          <TextInput
-            styles={{ input: { color: "#444" } }}
-            icon={<IconSearch size={18} stroke={1.5} />}
-            radius="xl"
-            size="sm"
-            placeholder="Tìm kiếm trò chuyện"
-            rightSectionWidth={42}
-          />
-          <Space h={20} />
-          <ScrollArea style={{ flex: 1 }}>
-            {Array(20).fill(0).map((_, index) => (
-              <Container mb="1.5rem" className={styles.contact} key={index}>
-                <Indicator dot inline size={16} offset={7} position="bottom-end" color="red" withBorder>
+          {chatState.currentBox && (
+            <>
+              <div className={styles.messageInfoContainer}>
+                <Indicator
+                  dot inline size={16} offset={7} position="bottom-end"
+                  color={chatState.currentBox.user.isActive ? "green" : "red"}
+                  withBorder>
                   <Avatar
                     size="md"
                     radius="xl"
-                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=250&q=80"
+                    src={Url.baseUrl + chatState.currentBox.user.userAvatar}
                   />
                 </Indicator>
-                <Container style={{ flex: 1 }}>
-                  <Text size="sm" weight={500} color="#444">
-                    Đỗ Công Minh
+                <Space w={15} />
+                <div style={{ flex: 1 }}>
+                  <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444">
+                    {chatState.currentBox.user.userFullName}
                   </Text>
-                  <Text color="dimmed" size="xs" lineClamp={1} >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  <Text color="dimmed" style={{ fontSize: "1.2rem" }}>
+                    {getRoleName(chatState.currentBox.user.userRole)}
                   </Text>
+                </div>
+              </div>
+
+              <Divider />
+
+              <ScrollArea
+                style={{ flex: 1 }}
+                className={styles.messages}
+                viewportRef={viewport}
+                onScrollPositionChange={onScrollPositionChange}>
+                {loadingMessage && (
+                  <Container style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }} px={10} py={20}>
+                    <Loader variant='dots' />
+                  </Container>
+                )}
+
+                {chatState.currentBox.messages?.map((message, index) => {
+                  let className = "";
+                  let messageColor = "";
+                  let dateColor = "";
+                  let iconColor = "";
+
+                  if (message.senderId == authState.userId) {
+                    className = styles.mine;
+                    messageColor = "blue";
+                    dateColor = "blue";
+                    iconColor = "#228BE6";
+                  } else if (message.senderId == chatState.currentBox?.user.userId) {
+                    className = styles.yours;
+                    messageColor = "#444";
+                    dateColor = "dimmed";
+                    iconColor = "#868E96";
+                  }
+
+                  return (
+                    <Card withBorder radius="md" p="md" className={className} key={index}>
+                      <Card.Section p="xs">
+                        <Text color={messageColor} style={{ fontSize: "1.4rem" }}>
+                          {message.messageContent}
+                        </Text>
+                        <Space h={10} />
+                        <Group spacing="sm">
+                          <Text color={dateColor} style={{ fontSize: "1.0rem" }}>
+                            {moment(message.sendingTime).utcOffset(TimeZoneOffset).format("HH:mm DD-MM-YYYY")}
+                          </Text>
+                          {message.read && message.senderId == authState.userId && (
+                            <IconChecks size="1.3rem" color={iconColor} />
+                          )}
+                        </Group>
+                      </Card.Section>
+                    </Card>
+                  );
+                })}
+              </ScrollArea>
+
+              {!chatState.currentBox.messages && (
+                <Container style={{
+                  display: "flex",
+                  height: "100%",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }} px={10} py={20}>
+                  <Loader variant='dots' />
+                </Container>
+              )}
+
+
+              <form onSubmit={onSendMessage} className={styles.messageInputContainer}>
+                <Input
+                  disabled={chatState.currentBox && !chatState.currentBox.messages}
+                  onFocus={() => seenMessage(chatState.currentBox?.user.userId)}
+                  value={message}
+                  onChange={setMessage}
+                  styles={{ input: { color: "#444" } }}
+                  radius="xl"
+                  size={isMobile ? "sm" : "md"}
+                  rightSection={
+                    <ActionIcon
+                      disabled={chatState.currentBox && !chatState.currentBox.messages}
+                      size={32} radius="xl" color={theme.primaryColor} variant="filled"
+                      type='submit'>
+                      <IconSend size={18} stroke={1.5} />
+                    </ActionIcon>
+                  }
+                  placeholder="Nhập tin nhắn..."
+                  rightSectionWidth={42}
+                />
+              </form>
+            </>
+          )}
+        </div>
+
+        <div className={styles.contactContainer}>
+          <Text
+            style={{
+              fontSize: "2rem",
+              display: isSmallTablet ? "none" : "block"
+            }}
+            weight={700}
+            align='center'
+            color="#444">
+            Trò chuyện
+          </Text>
+          <Space h={10} />
+
+          {isSmallTablet ?
+            <ActionIcon
+              onClick={() => setOpenModal(true)}
+              style={{ width: "100%" }}
+              variant="gradient"
+              gradient={{ from: 'indigo', to: 'cyan' }} size="lg">
+              <IconSearch size={18} />
+            </ActionIcon> : (
+              <Button
+                onClick={() => setOpenModal(true)}
+                leftIcon={<IconSearch />}
+                variant="gradient"
+                gradient={{ from: 'indigo', to: 'cyan' }}>
+                <Text style={{ fontSize: "1.4rem" }}>Tìm kiếm</Text>
+              </Button>
+            )}
+
+          <Space h={20} />
+
+          {chatState.contacts === undefined && (
+            <Container style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexGrow: 1,
+            }}>
+              <Loading />
+            </Container>
+          )}
+
+          <ScrollArea style={{ flex: 1 }} type={isSmallTablet ? "never" : "scroll"}>
+            {chatState.contacts && chatState.contacts.map((contact, index) => (
+              <Container
+                className={`${styles.contact} ${contact.user.userId === chatState.currentBox?.user.userId ? styles.active : ""}`}
+                key={index} py={10} px={15}
+                onClick={() => onStartChatBox(contact.user)}>
+                <Indicator dot inline size={16} offset={7} position="bottom-end" color={contact.user.isActive ? "green" : "red"} withBorder>
+                  <Avatar
+                    size={isMobile ? "md" : (isSmallTablet ? "lg" : "md")}
+                    radius="xl"
+                    src={Url.baseUrl + contact.user.userAvatar}
+                  />
+                </Indicator>
+                <Space w={10} style={{ display: isSmallTablet ? "none" : "block" }} />
+                <Container style={{ flex: 1, display: isSmallTablet ? "none" : "block" }} p={0}>
+                  <Text style={{ fontSize: "1.3rem" }} weight={500} color="#444">
+                    {contact.user.userFullName}
+                  </Text>
+                  {contact.latestMessage.read || contact.user.userId !== contact.latestMessage.senderId
+                    ? (
+                      <Text
+                        color="dimmed"
+                        style={{ fontSize: "1.1rem" }}
+                        lineClamp={1}>
+                        {contact.user.userId !== contact.latestMessage.senderId ? "Bạn: " : contact.user.userFullName.split(" ")[0] + ": "}
+                        {contact.latestMessage.messageContent}
+                      </Text>
+                    ) : (
+                      <Indicator size={8} offset={-5} position="middle-end">
+                        <Text
+                          color="blue"
+                          style={{ fontSize: "1.1rem" }}
+                          lineClamp={1}
+                          weight={600}>
+                          {contact.user.userId !== contact.latestMessage.senderId ? "Bạn: " : contact.user.userFullName.split(" ")[0] + ": "}
+                          {contact.latestMessage.messageContent}
+                        </Text>
+                      </Indicator>
+                    )}
                 </Container>
               </Container>
             ))}

@@ -3,6 +3,7 @@ import { UserRole } from "../../helpers/constants";
 import { loadUserFromLocalStorage, logIn, logOut } from "./auth.action";
 
 export type State = {
+  userId?: string;
   fullName?: string;
   userName?: string;
   token?: string;
@@ -11,6 +12,7 @@ export type State = {
 };
 
 const initialState: State = {
+  userId: undefined,
   fullName: undefined,
   userName: undefined,
   token: undefined,
@@ -20,7 +22,7 @@ const initialState: State = {
 
 const actions = { loadUserFromLocalStorage, logIn, logOut };
 
-const Store = createStore({
+export const Store = createStore({
   initialState,
   actions,
   name: "auth",

@@ -5,16 +5,17 @@ import { UserRole } from "../../../helpers/constants";
 import { teacherSidebar } from "./links";
 
 import { useState } from 'react';
-import { 
+import {
   createStyles,
-  Navbar, 
-  MediaQuery, 
-  Group, 
+  Navbar,
+  MediaQuery,
+  Group,
 } from '@mantine/core';
 import {
   IconBellRinging,
   IconMessage,
 } from '@tabler/icons';
+import Link from "next/link";
 
 interface IProps {
   userRole?: UserRole
@@ -123,19 +124,17 @@ const Sidebar = (props: IProps) => {
   const { classes, cx } = useStyles();
 
   const links = sideBarList.map((item) => (
-    <a
-      className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}
-      href={item.href}
-      key={item.href}
-      onClick={() => router.push(item.href)}
-    >
-      <Group position="apart" spacing={8}>
-        <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto' }}>
-          <span>{item.name}</span>
-        </MediaQuery>
-      </Group>
-    </a>
+    <Link href={item.href}
+      key={item.href}>
+      <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
+        <Group position="apart" spacing={8}>
+          <item.src className={classes.linkIcon} stroke={1.5} />
+          <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto' }}>
+            <span>{item.name}</span>
+          </MediaQuery>
+        </Group>
+      </a>
+    </Link>
   ));
 
   return (
