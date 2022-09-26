@@ -8,6 +8,7 @@ import {
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { getRoleName } from '../../../helpers/getRoleName';
+import { getAvatarImageUrl } from '../../../helpers/image.helper';
 import { useAuth } from '../../../stores/Auth';
 import LogoutModal from '../../pageComponents/LogoutModal';
 
@@ -48,7 +49,7 @@ export function UserMenu() {
         <Menu.Target>
           <UnstyledButton>
             <Group>
-              <Avatar size={isMobile ? 32 : 40} color="blue" radius='xl'>A</Avatar>
+              <Avatar size={isMobile ? 32 : 40} color="blue" radius='xl' src={getAvatarImageUrl(authState.avatar)} />
               <MediaQuery smallerThan={480} styles={{ display: 'none' }}>
                 <div>
                   <Text weight={500} color="#444">{authState.fullName}</Text>

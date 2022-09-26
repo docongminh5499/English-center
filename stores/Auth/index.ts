@@ -9,6 +9,7 @@ export type State = {
   token?: string;
   role?: UserRole;
   expireTime?: number;
+  avatar?: string;
 };
 
 const initialState: State = {
@@ -18,6 +19,7 @@ const initialState: State = {
   token: undefined,
   role: undefined,
   expireTime: undefined,
+  avatar: undefined,
 };
 
 const actions = { loadUserFromLocalStorage, logIn, logOut };

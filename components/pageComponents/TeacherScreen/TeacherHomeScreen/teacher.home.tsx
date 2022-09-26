@@ -11,6 +11,7 @@ import Loading from "../../../commons/Loading";
 import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space, Group, Container, Grid, SimpleGrid } from '@mantine/core';
 import styles from "./teacher.module.css";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
+import { getCourseImageUrl } from "../../../../helpers/image.helper";
 
 interface IProps {
   courses?: Partial<Course>[],
@@ -209,7 +210,7 @@ const TeacherHomeScreen = (props: IProps) => {
                           onClick={() => console.log("Clicked")}>
                           <Card.Section>
                             <Image
-                              src="/assets/images/no_image.png"
+                              src={getCourseImageUrl(courseInfo.image)}
                               height={180}
                               alt="image-course"
                             />

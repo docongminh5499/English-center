@@ -30,6 +30,7 @@ export const loadUserFromLocalStorage =
             role: response.role,
             expireTime: response.exp,
             userId: response.userId,
+            avatar: response.avatar,
           });
           setState({
             token: tokenPayload.token,
@@ -38,6 +39,7 @@ export const loadUserFromLocalStorage =
             role: response.role,
             expireTime: response.exp,
             userId: response.userId,
+            avatar: response.avatar,
           });
           SocketStoreInstance.actions.emit("signin", { userId: response.userId });
         } catch (error: any) {
@@ -73,6 +75,7 @@ export const logOut =
         token: undefined,
         role: undefined,
         expireTime: undefined,
+        avatar: undefined,
       });
       SocketStoreInstance.actions.emit("signout", undefined);
     };

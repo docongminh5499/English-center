@@ -14,6 +14,7 @@ import ChatUser from '../../../models/chatUser.model';
 import { getRoleName } from '../../../helpers/getRoleName';
 import moment from 'moment';
 import { useSocket } from '../../../stores/Socket';
+import { getAvatarImageUrl } from '../../../helpers/image.helper';
 
 
 const MessageScreen = () => {
@@ -191,7 +192,7 @@ const MessageScreen = () => {
                   <Avatar
                     size="sm"
                     radius="xl"
-                    src={Url.baseUrl + contact.user.userAvatar}
+                    src={getAvatarImageUrl(contact.user.userAvatar)}
                   />
                 </Indicator>
                 <Space w={15} />
@@ -240,7 +241,7 @@ const MessageScreen = () => {
                   <Avatar
                     size="md"
                     radius="xl"
-                    src={Url.baseUrl + chatState.currentBox.user.userAvatar}
+                    src={getAvatarImageUrl(chatState.currentBox.user.userAvatar)}
                   />
                 </Indicator>
                 <Space w={15} />
@@ -400,7 +401,7 @@ const MessageScreen = () => {
                   <Avatar
                     size={isMobile ? "md" : (isSmallTablet ? "lg" : "md")}
                     radius="xl"
-                    src={Url.baseUrl + contact.user.userAvatar}
+                    src={getAvatarImageUrl(contact.user.userAvatar)}
                   />
                 </Indicator>
                 <Space w={10} style={{ display: isSmallTablet ? "none" : "block" }} />
