@@ -41,7 +41,10 @@ const MessageScreen = () => {
       console.log(error);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại")
     });
-    return () => { chatAction.resetData(); }
+    return () => { 
+      chatAction.resetData();
+      authState.token && chatAction.getUnreadMessageCount(authState.token);
+     }
   }, []);
 
 

@@ -250,3 +250,15 @@ export const recevingOwnSeenSignal = (incomingContact: Contact): Action<State> =
 
     setState({ contacts: contacts });
   }
+
+
+export const getUnreadMessageCount = (token: string): Action<State> =>
+  async ({ setState }) => {
+    const responses = await API.post(Url.users.getUnreadMessageCount, { token });
+    setState({ unreadMessageCount: responses.messageCount });
+  }
+
+export const setUnreadMessageCount = (count: number): Action<State> =>
+  async ({ setState }) => {
+    setState({ unreadMessageCount: count });
+  }

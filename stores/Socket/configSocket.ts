@@ -2,6 +2,7 @@ import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { Store as ChatStore } from "../Chat";
 import { defaultRegistry } from "react-sweet-state";
+import { toast } from "react-toastify";
 
 
 const ChatStoreInstance = defaultRegistry.getStore(ChatStore);
@@ -16,6 +17,10 @@ export default function configureSocket(socket: Socket<DefaultEventsMap, Default
     });
 
     socket.on("message", (json) => {
+        const currentCount = ChatStoreInstance.storeState.getState().unreadMessageCount;
+        const inMessageScreen = ChatStoreInstance.storeState.getState().contacts !== undefined;
+        ChatStoreInstance.actions.setUnreadMessageCount(currentCount + 1);
+        if (!inMessageScreen) toast.info("Bạn có tin nhắn mới");
         ChatStoreInstance.actions.receiveMessage(json);
     })
 
@@ -28,7 +33,6 @@ export default function configureSocket(socket: Socket<DefaultEventsMap, Default
     })
 
     socket.on("own_seen_message", (json) => {
-        console.log(json);
         ChatStoreInstance.actions.recevingOwnSeenSignal(json);
     })
 }

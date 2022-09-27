@@ -33,7 +33,8 @@ export const Url = {
     verify: "/api/users/verify",
     getContacts: "/api/users/message/get-contacts",
     findContacts: "/api/users/message/find-contacts",
-    getMessages: "/api/users/message/get-messages"
+    getMessages: "/api/users/message/get-messages",
+    getUnreadMessageCount: "/api/users/message/get-unread-messages-count",
   },
   teachers: {
     getCourse: "/api/teachers/courses/get-course",

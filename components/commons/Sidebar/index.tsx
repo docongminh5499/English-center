@@ -10,6 +10,7 @@ import {
   Navbar,
   MediaQuery,
   Group,
+  Indicator,
 } from '@mantine/core';
 import {
   IconBellRinging,
@@ -18,6 +19,8 @@ import {
 import Link from "next/link";
 
 interface IProps {
+  unreadMessageCount: number;
+  inMessageScreen: boolean;
   userRole?: UserRole
 }
 
@@ -128,7 +131,14 @@ const Sidebar = (props: IProps) => {
       key={item.href}>
       <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
         <Group position="apart" spacing={8}>
-          <item.src className={classes.linkIcon} stroke={1.5} />
+          {item.name === "Trò chuyện" && props.unreadMessageCount > 0 && !props.inMessageScreen ? (
+            <Indicator size={8} offset={5} className={classes.linkIcon}>
+              <item.src stroke={1.5} />
+            </Indicator>
+          ) : (
+            <item.src className={classes.linkIcon} stroke={1.5} />
+          )}
+
           <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto' }}>
             <span>{item.name}</span>
           </MediaQuery>

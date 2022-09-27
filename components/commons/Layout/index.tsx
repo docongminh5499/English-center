@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import Button from '../Button';
 import { useAuth } from "../../../stores/Auth";
@@ -8,10 +8,11 @@ import { useRouter } from "next/router";
 import { GuestMenu } from './guest.menu';
 import styles from "./layout.module.css";
 import LoadingScreen from "../../pageComponents/LoadingScreen";
-import { createStyles, ActionIcon, Drawer, Group, MediaQuery } from "@mantine/core";
+import { createStyles, ActionIcon, Drawer, Group, MediaQuery, Indicator } from "@mantine/core";
 import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
 import { UserMenu } from "./user.menu";
 import { teacherSidebar } from "../Sidebar/links";
+import { useChat } from "../../../stores/Chat";
 
 
 interface IProps {
@@ -22,7 +23,16 @@ interface IProps {
 
 const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   const [authState, authAction] = useAuth();
+  const [chatState, chatAction] = useChat();
   const router = useRouter();
+
+  useEffect(() => {
+    try {
+      authState.token && chatAction.getUnreadMessageCount(authState.token);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [authState.token])
 
   //===========================================================================
   const useStyles = createStyles((theme, _params, getRef) => {
@@ -106,19 +116,30 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   userDrawer = personalDrawer.concat(userDrawer);
 
   const links = userDrawer.map((item) => (
-    <Link
-      href={item.href}
+    <div
+      onClick={() => {
+        router.push(item.href);
+        setOpenedDrawer(false);
+      }}
       key={item.href}
     >
       <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
         <Group position="apart">
-          <item.src className={classes.linkIcon} stroke={1.5} />
+          {item.name === "Trò chuyện"
+            && chatState.unreadMessageCount > 0
+            && chatState.contacts === undefined ? (
+            <Indicator size={8} offset={5} className={classes.linkIcon}>
+              <item.src stroke={1.5} />
+            </Indicator>
+          ) : (
+            <item.src className={classes.linkIcon} stroke={1.5} />
+          )}
           {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
           <span style={{ fontSize: '1.5rem' }}>{item.name}</span>
           {/* </MediaQuery> */}
         </Group>
       </a>
-    </Link>
+    </div>
 
   ));
 
@@ -192,7 +213,11 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
             <MediaQuery smallerThan={480} styles={{ display: 'none' }}>
               <div className={styles.sidebar}>
                 {displaySidebar && (
-                  <Sidebar userRole={authState.role} />
+                  <Sidebar
+                    userRole={authState.role}
+                    unreadMessageCount={chatState.unreadMessageCount}
+                    inMessageScreen={chatState.contacts !== undefined}
+                  />
                 )}
               </div>
             </MediaQuery>
