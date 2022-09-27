@@ -60,10 +60,6 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
         ref: icon,
         color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
         marginRight: theme.spacing.sm,
-  
-        // [`@media (max-width: 1024px)`]: {
-        //   margin: 'auto',
-        // },
       },
   
       linkActive: {
@@ -112,9 +108,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
     >
       <Group position="apart">
         <item.src className={classes.linkIcon} stroke={1.5} />
-        {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
           <span style={{ fontSize: '1.5rem'}}>{item.name}</span>
-        {/* </MediaQuery> */}
       </Group>
     </a>
   ));
@@ -161,7 +155,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
                 <Button color="blue" onClick={() => router.push("/login")}>
                   Đăng nhập
                 </Button>
-                <Button color="gray" variant="outline">
+                <Button color="gray" variant="outline" onClick={() => router.push("/register")}>
                   Đăng ký
                 </Button>
               </div>
