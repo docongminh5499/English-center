@@ -186,7 +186,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
                 <Button color="blue" onClick={() => router.push("/login")}>
                   Đăng nhập
                 </Button>
-                <Button color="gray" variant="outline">
+                <Button color="gray" variant="outline" onClick={() => router.push("/register")}>
                   Đăng ký
                 </Button>
               </div>

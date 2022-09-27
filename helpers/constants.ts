@@ -10,6 +10,12 @@ export enum UserRole {
   PARENT = "parent",
 }
 
+export enum Gender {
+  MALE = "male",
+  FEMALE = "female",
+  UNDEFINE = "undefine",
+}
+
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
 };
@@ -35,6 +41,8 @@ export const Url = {
     findContacts: "/api/users/message/find-contacts",
     getMessages: "/api/users/message/get-messages",
     getUnreadMessageCount: "/api/users/message/get-unread-messages-count",
+    signUp: "/api/users/sign-up",
+    checkOldEmail: "/api/users/sign-up/check-old-email",
   },
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
