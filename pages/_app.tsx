@@ -8,8 +8,6 @@ import { ToastContainer } from "react-toastify";
 import { UserRole } from "../helpers/constants";
 import { usePrevious } from "../helpers/usePrevious";
 import { MantineProvider } from '@mantine/core';
-import LoadingScreen from "../components/pageComponents/LoadingScreen";
-import ModalContainer from "../components/commons/ModalContainer";
 import Layout from "../components/commons/Layout";
 
 function MyApp({ Component, pageProps }: CustomAppProps) {
@@ -17,21 +15,6 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
   const [authState, authAction] = useAuth();
   const [authorized, setAuthorized] = useState(false);
   const prevUserRole = usePrevious(authState.role);
-
-  // useEffect(() => {
-  //   const handleStart = (url: string) => (url !== router.asPath) && setAuthorized(true);
-  //   const handleComplete = (url: string) => (url === router.asPath) && setAuthorized(false);
-
-  //   router.events.on('routeChangeStart', handleStart)
-  //   router.events.on('routeChangeComplete', handleComplete)
-  //   router.events.on('routeChangeError', handleComplete)
-
-  //   return () => {
-  //     router.events.off('routeChangeStart', handleStart)
-  //     router.events.off('routeChangeComplete', handleComplete)
-  //     router.events.off('routeChangeError', handleComplete)
-  //   }
-  // }, []);
 
   useEffect(() => {
     authCheck();
@@ -83,7 +66,6 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
       >
         <>
           <Component {...pageProps} />
-          <ModalContainer />
           <ToastContainer
             style={{ fontSize: "1.4rem" }}
             theme="colored"
