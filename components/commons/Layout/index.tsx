@@ -13,6 +13,7 @@ import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
 import { UserMenu } from "./user.menu";
 import { teacherSidebar } from "../Sidebar/links";
 import { useChat } from "../../../stores/Chat";
+import { useNotification } from "../../../stores/Notification";
 
 
 interface IProps {
@@ -24,11 +25,13 @@ interface IProps {
 const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   const [authState, authAction] = useAuth();
   const [chatState, chatAction] = useChat();
+  const [notificationState, notificationAction] = useNotification();
   const router = useRouter();
 
   useEffect(() => {
     try {
       authState.token && chatAction.getUnreadMessageCount(authState.token);
+      authState.token && notificationAction.getUnreadNotificationCount(authState.token);
     } catch (error) {
       console.log(error);
     }
@@ -131,9 +134,15 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
             <Indicator size={8} offset={5} className={classes.linkIcon}>
               <item.src stroke={1.5} />
             </Indicator>
+          ) : (item.name === "Thông Báo"
+            && notificationState.unreadNotificationCount > 0
+            && notificationState.maxNotificationCount === undefined ? (
+            <Indicator size={8} offset={5} className={classes.linkIcon}>
+              <item.src stroke={1.5} />
+            </Indicator>
           ) : (
             <item.src className={classes.linkIcon} stroke={1.5} />
-          )}
+          ))}
           {/* <MediaQuery smallerThan={1024} styles={{ fontSize: '0.9rem', textAlign: 'center', margin: 'auto'}}> */}
           <span style={{ fontSize: '1.5rem' }}>{item.name}</span>
           {/* </MediaQuery> */}
@@ -217,6 +226,8 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
                     userRole={authState.role}
                     unreadMessageCount={chatState.unreadMessageCount}
                     inMessageScreen={chatState.contacts !== undefined}
+                    unreadNotificationCount={notificationState.unreadNotificationCount}
+                    inNotificationScreen={notificationState.maxNotificationCount !== undefined}
                   />
                 )}
               </div>

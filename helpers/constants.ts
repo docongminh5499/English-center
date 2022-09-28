@@ -32,6 +32,10 @@ export const ChatConstants = {
   limitMessage: 10
 }
 
+export const NotificationConstants = {
+  limitNotification: 10
+}
+
 export const Url = {
   baseUrl: "http://localhost:5000",
   users: {
@@ -41,6 +45,8 @@ export const Url = {
     findContacts: "/api/users/message/find-contacts",
     getMessages: "/api/users/message/get-messages",
     getUnreadMessageCount: "/api/users/message/get-unread-messages-count",
+    getNotifcation: "/api/users/notification/get-notification",
+    getUnreadNotificationCount: "/api/users/notification/get-unread-notification-count",
     signUp: "/api/users/sign-up",
     checkOldEmail: "/api/users/sign-up/check-old-email",
   },

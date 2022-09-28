@@ -19,6 +19,8 @@ import {
 import Link from "next/link";
 
 interface IProps {
+  unreadNotificationCount: number;
+  inNotificationScreen: boolean;
   unreadMessageCount: number;
   inMessageScreen: boolean;
   userRole?: UserRole
@@ -135,9 +137,13 @@ const Sidebar = (props: IProps) => {
             <Indicator size={8} offset={5} className={classes.linkIcon}>
               <item.src stroke={1.5} />
             </Indicator>
+          ) : (item.name === "Thông Báo" && props.unreadNotificationCount > 0 && !props.inNotificationScreen ? (
+            <Indicator size={8} offset={5} className={classes.linkIcon}>
+              <item.src stroke={1.5} />
+            </Indicator>
           ) : (
             <item.src className={classes.linkIcon} stroke={1.5} />
-          )}
+          ))}
 
           <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto' }}>
             <span>{item.name}</span>
