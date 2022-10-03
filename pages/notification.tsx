@@ -15,5 +15,4 @@ Notification.allowUsers = [
     UserRole.TEACHER,
     UserRole.TUTOR,
 ];
-Notification.displaySidebar = false;
 export default Notification;

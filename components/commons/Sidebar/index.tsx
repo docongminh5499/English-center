@@ -1,20 +1,27 @@
 import { useCallback, useMemo } from "react";
 import { UserRole } from "../../../helpers/constants";
 import { firstClickItem, studentSidebar, teacherSidebar } from "./links";
-
+import { useRouter } from "next/router";
 import { useState } from 'react';
-import { 
+
+import {
   createStyles,
-  Navbar, 
-  MediaQuery, 
-  Group, 
+  Navbar,
+  MediaQuery,
+  Group,
+  Indicator,
 } from '@mantine/core';
 import {
   IconBellRinging,
   IconMessage,
 } from '@tabler/icons';
+import Link from "next/link";
 
 interface IProps {
+  unreadNotificationCount: number;
+  inNotificationScreen: boolean;
+  unreadMessageCount: number;
+  inMessageScreen: boolean;
   userRole?: UserRole
 }
 
@@ -92,17 +99,19 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const Sidebar = (props: IProps) => {
+  const router = useRouter();
+
   const sidebarSelector = useCallback(() => {
     let userSidebar = [
       {
         src: IconBellRinging,
         name: "Thông Báo",
-        href: "#!",
+        href: "/notification",
       },
       {
         src: IconMessage,
         name: "Trò chuyện",
-        href: "#!",
+        href: "/message",
       },
     ];
     let personalSidebar: any[] = [];
@@ -119,25 +128,30 @@ const Sidebar = (props: IProps) => {
 
   const sideBarList = useMemo(() => sidebarSelector(), [props.userRole]);
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState(() => firstClickItem(props.userRole));
 
   const links = sideBarList.map((item) => (
-    <a
-      className={cx(classes.link, { [classes.linkActive]: item.name === active })}
-      href={item.href}
-      key={item.name}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.name);
-      }}
-    >
-      <Group position="apart" spacing={8}>
-        <item.src className={classes.linkIcon} stroke={1.5} />
-        <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto'}}>
-          <span>{item.name}</span>
-        </MediaQuery>
-      </Group>
-    </a>
+    <Link href={item.href}
+      key={item.href}>
+      <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
+        <Group position="apart" spacing={8}>
+          {item.name === "Trò chuyện" && props.unreadMessageCount > 0 && !props.inMessageScreen ? (
+            <Indicator size={8} offset={5} className={classes.linkIcon}>
+              <item.src stroke={1.5} />
+            </Indicator>
+          ) : (item.name === "Thông Báo" && props.unreadNotificationCount > 0 && !props.inNotificationScreen ? (
+            <Indicator size={8} offset={5} className={classes.linkIcon}>
+              <item.src stroke={1.5} />
+            </Indicator>
+          ) : (
+            <item.src className={classes.linkIcon} stroke={1.5} />
+          ))}
+
+          <MediaQuery smallerThan={1024} styles={{ fontSize: '1.2rem', textAlign: 'center', margin: 'auto' }}>
+            <span>{item.name}</span>
+          </MediaQuery>
+        </Group>
+      </a>
+    </Link>
   ));
 
   return (

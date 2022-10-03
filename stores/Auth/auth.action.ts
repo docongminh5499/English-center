@@ -1,9 +1,11 @@
-import { Action } from "react-sweet-state";
+import { Action, defaultRegistry } from "react-sweet-state";
 import { State } from ".";
 import API from "../../helpers/api";
 import Cookies from 'js-cookie';
 import { LocalStorageKey, CookieKey, Url, UserRole } from "../../helpers/constants";
+import { Store as SocketStore } from "../Socket";
 
+const SocketStoreInstance = defaultRegistry.getStore(SocketStore);
 
 const setCookieHelper = (key: string, value: any) => {
   const valueString = JSON.stringify(value);
@@ -27,6 +29,8 @@ export const loadUserFromLocalStorage =
             userName: response.userName,
             role: response.role,
             expireTime: response.exp,
+            userId: response.userId,
+            avatar: response.avatar,
           });
           setState({
             token: tokenPayload.token,
@@ -34,7 +38,10 @@ export const loadUserFromLocalStorage =
             userName: response.userName,
             role: response.role,
             expireTime: response.exp,
+            userId: response.userId,
+            avatar: response.avatar,
           });
+          SocketStoreInstance.actions.emit("signin", { userId: response.userId });
         } catch (error: any) {
           localStorage.removeItem(LocalStorageKey.USER);
           setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
@@ -62,10 +69,13 @@ export const logOut =
       localStorage.removeItem(LocalStorageKey.USER);
       setCookieHelper(CookieKey.USER, {});
       setState({
+        userId: undefined,
         fullName: undefined,
         userName: undefined,
         token: undefined,
         role: undefined,
         expireTime: undefined,
+        avatar: undefined,
       });
+      SocketStoreInstance.actions.emit("signout", undefined);
     };

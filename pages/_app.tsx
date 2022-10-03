@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CustomAppProps } from "../interfaces/app.interface";
 import { useAuth } from "../stores/Auth";
 import { ToastContainer } from "react-toastify";
@@ -9,23 +9,27 @@ import { UserRole } from "../helpers/constants";
 import { usePrevious } from "../helpers/usePrevious";
 import { MantineProvider } from '@mantine/core';
 import Layout from "../components/commons/Layout";
+import { useSocket } from "../stores/Socket";
 
 function MyApp({ Component, pageProps }: CustomAppProps) {
   const router = useRouter();
+  const [, socketAction] = useSocket();
   const [authState, authAction] = useAuth();
   const [authorized, setAuthorized] = useState(false);
   const prevUserRole = usePrevious(authState.role);
+  const prevRouterPath = usePrevious(router.asPath);
 
-  useEffect(() => {
-    authCheck();
-  }, [router.asPath]);
 
   useEffect(() => {
     if (prevUserRole === undefined) authCheck();
     else if (authState.role === undefined) authCheck();
-  }, [authState]);
+    else if (router.asPath !== prevRouterPath) authCheck();
+  }, [authState, router.asPath]);
 
-  function authCheck() {
+
+  async function authCheck() {
+    await socketAction.socketInitialization();
+
     if (authState.role === undefined)
       return authAction.loadUserFromLocalStorage();
     if (!Component.allowUsers) return setAuthorized(true);
@@ -57,6 +61,7 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
     }
     setAuthorized(true);
   }
+
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>

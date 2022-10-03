@@ -1,4 +1,4 @@
-export const TimeZoneOffset = 7;
+export const TimeZoneOffset =  new Date().getTimezoneOffset() * (-1);
 
 export enum UserRole {
   GUEST = "guest",
@@ -28,11 +28,25 @@ export const TeacherConstants = {
   limitCourse: 12
 }
 
+export const ChatConstants = {
+  limitMessage: 10
+}
+
+export const NotificationConstants = {
+  limitNotification: 10
+}
+
 export const Url = {
   baseUrl: "http://localhost:5000",
   users: {
     signIn: "/api/users/sign-in",
     verify: "/api/users/verify",
+    getContacts: "/api/users/message/get-contacts",
+    findContacts: "/api/users/message/find-contacts",
+    getMessages: "/api/users/message/get-messages",
+    getUnreadMessageCount: "/api/users/message/get-unread-messages-count",
+    getNotifcation: "/api/users/notification/get-notification",
+    getUnreadNotificationCount: "/api/users/notification/get-unread-notification-count",
     signUp: "/api/users/sign-up",
     checkOldEmail: "/api/users/sign-up/check-old-email",
   },
@@ -43,3 +57,5 @@ export const Url = {
     getTimetable: "/api/students/timetable",
   }
 };
+
+export const SocketBaseUrl = "ws://localhost:5000";

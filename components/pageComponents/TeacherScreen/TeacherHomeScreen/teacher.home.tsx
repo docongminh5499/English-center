@@ -8,9 +8,10 @@ import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
-import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space } from '@mantine/core';
+import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space, Group, Container, Grid, SimpleGrid } from '@mantine/core';
 import styles from "./teacher.module.css";
-import { useInputState } from "@mantine/hooks";
+import { useInputState, useMediaQuery } from "@mantine/hooks";
+import { getCourseImageUrl } from "../../../../helpers/image.helper";
 
 interface IProps {
   courses?: Partial<Course>[],
@@ -39,6 +40,7 @@ const TeacherHomeScreen = (props: IProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [course, setCourse] = useState<any>(formatCourse(props.courses));
   const [authState] = useAuth();
+  const isSmallerThan768 = useMediaQuery('(max-width: 768px)');
 
   // Filter state
   const [name, setName] = useInputState("");
@@ -92,59 +94,74 @@ const TeacherHomeScreen = (props: IProps) => {
         <p className={styles.title}>Danh sách khóa học</p>
         <Space h="md" />
         <div className={styles.filterComponent}>
-          <div>
-            <Input
-              styles={{ input: { color: "#444" } }}
-              value={name}
-              placeholder="Tên khóa học"
-              onChange={setName}
-            />
-          </div>
-          <div>
-            <Checkbox
-              styles={{ label: { color: "#444" } }}
-              label="Đang diễn ra"
-              checked={open}
-              onChange={setOpen}
-            />
-            <Checkbox
-              styles={{ label: { color: "#444" } }}
-              label="Đã kết thúc"
-              checked={closed}
-              onChange={setClosed}
-            />
-          </div>
-          <div>
-            <Checkbox
-              styles={{ label: { color: "#444" } }}
-              label="Khóa ngắn hạn"
-              checked={shortTerm}
-              onChange={setShortTerm}
-            />
-            <Checkbox
-              styles={{ label: { color: "#444" } }}
-              label="Khóa dài hạn"
-              checked={longTerm}
-              onChange={setLongTerm}
-            />
-          </div>
-          <div className={styles.filterButtons}>
-            <Button
-              onClick={() => {
-                setCurrentPage(1);
-                onClickPaginationPage(1, name, closed, open, longTerm, shortTerm);
-              }}
-            >Lọc khóa học</Button>
-            <Button color="gray" onClick={() => {
-              setCurrentPage(1);
-              setName("");
-              setClosed(false);
-              setOpen(false);
-              setLongTerm(false);
-              setShortTerm(false);
-              onClickPaginationPage(1, "", false, false, false, false);
-            }}>Xóa bộ lọc</Button>
-          </div>
+          <Grid>
+            <Grid.Col span={isSmallerThan768 ? 12 : 9}>
+              <Input
+                styles={{ input: { color: "#444" } }}
+                value={name}
+                placeholder="Tên khóa học"
+                onChange={setName}
+              />
+              <Space h="xs" />
+              <SimpleGrid cols={isSmallerThan768 ? 2 : 4}>
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Đang diễn ra"
+                  checked={open}
+                  onChange={setOpen}
+                />
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Đã kết thúc"
+                  checked={closed}
+                  onChange={setClosed}
+                />
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Khóa ngắn hạn"
+                  checked={shortTerm}
+                  onChange={setShortTerm}
+                />
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Khóa dài hạn"
+                  checked={longTerm}
+                  onChange={setLongTerm}
+                />
+              </SimpleGrid>
+            </Grid.Col>
+            <Grid.Col span={isSmallerThan768 ? 12 : 3} py={isSmallerThan768 ? 8 : 0}>
+              <Container
+                p={0}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  gap: "0.2rem",
+                  height: "100%"
+                }}>
+                <Button
+                  // compact={!isSmallerThan768}
+                  onClick={() => {
+                    setCurrentPage(1);
+                    onClickPaginationPage(1, name, closed, open, longTerm, shortTerm);
+                  }}
+                >Lọc khóa học</Button>
+                <Button
+                  // compact={!isSmallerThan768}
+                  color="gray"
+                  onClick={() => {
+                    setCurrentPage(1);
+                    setName("");
+                    setClosed(false);
+                    setOpen(false);
+                    setLongTerm(false);
+                    setShortTerm(false);
+                    onClickPaginationPage(1, "", false, false, false, false);
+                  }}>Xóa bộ lọc</Button>
+              </Container>
+            </Grid.Col>
+          </Grid>
         </div>
 
         <div className={styles.courseList}>
@@ -165,10 +182,17 @@ const TeacherHomeScreen = (props: IProps) => {
             </div>
           )}
 
-          {/* TODO: Add empty result pages */}
+          {!loading &&
+            !error &&
+            Object.keys(course).length == 0 && (
+              <div className={styles.emptyResultContainer}>
+                <p>Không có kết quả</p>
+              </div>
+            )}
 
           {!loading &&
             !error &&
+            Object.keys(course).length > 0 &&
             Object.keys(course).map((key, sectionIndex) => {
               const [month, year] = key.split("-");
               return (
@@ -186,16 +210,16 @@ const TeacherHomeScreen = (props: IProps) => {
                           onClick={() => console.log("Clicked")}>
                           <Card.Section>
                             <Image
-                              src="/assets/images/no_image.png"
+                              src={getCourseImageUrl(courseInfo.image)}
                               height={180}
                               alt="image-course"
                             />
                           </Card.Section>
                           <div className={styles.courseInfo}>
-                            <Text weight={600} align="center" className={styles.courseName}>
+                            <Text weight={600} align="center" className={styles.courseName} lineClamp={2}>
                               {courseInfo.name}
                             </Text>
-                            <Text size="sm" color="dimmed" align="center">
+                            <Text style={{ fontSize: "1.2rem" }} color="dimmed" align="center">
                               Mã lớp: {courseInfo.id.toString().padStart(6, "0")}
                             </Text>
                             {moment().utc().diff(moment(courseInfo.closingDate)) < 0 ? (
