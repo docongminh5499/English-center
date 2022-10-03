@@ -1,4 +1,5 @@
 import { Container, Title, Text, Space, Grid, Tabs } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconBallpen, IconBook, IconMicroscope, IconSchool, IconStar, IconUsers } from "@tabler/icons";
 import Head from "next/head";
 import CourseCurriculum from "./course.curriculum";
@@ -9,13 +10,17 @@ import CourseSession from "./course.session";
 import CourseStudent from "./course.student";
 
 const TeacherCourseDetailScreen = () => {
+  const isLargeTablet = useMediaQuery('(max-width: 1024px)');
+  const isTablet = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery('(max-width: 480px)');
+
   return (
     <>
       <Head>
         <title>Chi tiết khóa học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Container p="md" size="lg">
+      <Container p={isMobile ? "xs" : "md"} size="lg">
         <Title size="2.6rem" color="#444">Khóa học IELTS 6.0+</Title>
         <Space h={14} />
         <Text align="justify" color="#444">
@@ -26,60 +31,54 @@ const TeacherCourseDetailScreen = () => {
         </Text>
         <Space h={14} />
         <Grid>
-          <Grid.Col span={4}>
+          <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4}>
             <Text color="#444">
-              Ngày khai giảng: 01/01/2022
+              <Text weight={600} component="span">Ngày khai giảng: </Text>01/01/2022
             </Text>
             <Space h={5} />
             <Text color="#444">
-              Ngày dự kiến kết thúc: 03/05/2022
+              <Text weight={600} component="span">Ngày dự kiến kết thúc: </Text>03/05/2022
             </Text>
           </Grid.Col>
-          <Grid.Col span={4}>
+          <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4}>
             <Text color="#444">
-              Trạng thái: Đang diễn ra
+              <Text weight={600} component="span">Trạng thái: </Text>Đang diễn ra
             </Text>
             <Space h={5} />
             <Text color="#444">
-              Ngày kết thúc: --/--/--
+              <Text weight={600} component="span">Ngày kết thúc: </Text>--/--/----
             </Text>
           </Grid.Col>
         </Grid>
         <Space h={14} />
-        <Tabs defaultValue="curriculum">
-          <Tabs.List>
+        <Tabs defaultValue="curriculum" styles={{ tabLabel: { color: "#444" } }}>
+          <Tabs.List grow>
             <Tabs.Tab
               value="curriculum"
-              styles={{ tabLabel: { color: "#444" } }}
               icon={<IconSchool size={14} />}>
               Chương trình học
             </Tabs.Tab>
             <Tabs.Tab
               value="session"
-              styles={{ tabLabel: { color: "#444" } }}
               icon={<IconMicroscope size={14} />}>
               Buổi học
             </Tabs.Tab>
             <Tabs.Tab value="student"
-              styles={{ tabLabel: { color: "#444" } }}
               icon={<IconUsers size={14} />}>
               Học viên
             </Tabs.Tab>
             <Tabs.Tab
               value="exercise"
-              styles={{ tabLabel: { color: "#444" } }}
               icon={<IconBallpen size={14} />}>
               Bài tập
             </Tabs.Tab>
             <Tabs.Tab
               value="document"
-              styles={{ tabLabel: { color: "#444" } }}
               icon={<IconBook size={14} />}>
               Tài liệu
             </Tabs.Tab>
             <Tabs.Tab
               value="rating"
-              styles={{ tabLabel: { color: "#444" } }}
               icon={<IconStar size={14} />}>
               Đánh giá
             </Tabs.Tab>

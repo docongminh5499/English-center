@@ -30,7 +30,7 @@ const MessageScreen = () => {
   const [authState] = useAuth();
   const isMobile = useMediaQuery('(max-width: 480px)');
   const isSmallTablet = useMediaQuery('(max-width: 768px)');
-  const viewport = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
+  const viewport = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLDivElement>;
 
   useEffect(() => {
     const getAllContacts = async () => {

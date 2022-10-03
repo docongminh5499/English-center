@@ -70,12 +70,13 @@ export function UserMenu() {
             </div>
           </MediaQuery>
           <Menu.Item
-            onClick={() => null}
+            onClick={() => router.push('/personal')}
             color="#444"
             icon={<IconUserCircle size={"1.6rem"} color={theme.colors.cyan[6]} stroke={1.5} />}>
             Tài khoản cá nhân
           </Menu.Item>
           <Menu.Item
+            onClick={() => router.push("/modify-personal")}
             color="#444"
             icon={<IconSwitchHorizontal size={"1.6rem"} color={theme.colors.violet[6]} stroke={1.5} />}>
             Chỉnh sửa tài khoản

@@ -10,7 +10,7 @@ interface IProps {
 
 const Comment = ({ name, score, date, comment }: IProps) => {
   return (
-    <Container size="lg">
+    <Container size="xl" p={0}>
       <Group>
         <Text color="#444" weight={600}>{name}</Text>
         <Rating score={score} size="1.2rem" />
