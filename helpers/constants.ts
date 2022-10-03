@@ -39,4 +39,7 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
   },
+  students: {
+    getTimetable: "/api/students/timetable",
+  }
 };

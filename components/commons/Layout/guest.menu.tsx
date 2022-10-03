@@ -23,7 +23,9 @@ export function GuestMenu() {
           icon={<IconUsers size={"1.6rem"} color={theme.colors.cyan[6]} stroke={1.5} />}>
           Đăng nhập
         </Menu.Item>
-        <Menu.Item icon={<IconSquareCheck size={"1.6rem"} color={theme.colors.pink[6]} stroke={1.5} />}>
+        <Menu.Item 
+          onClick={() => router.push('/register')}
+          icon={<IconSquareCheck size={"1.6rem"} color={theme.colors.pink[6]} stroke={1.5} />}>
           Đăng ký
         </Menu.Item>
       </Menu.Dropdown>

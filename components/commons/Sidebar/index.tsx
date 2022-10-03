@@ -1,8 +1,6 @@
-
-import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { UserRole } from "../../../helpers/constants";
-import { teacherSidebar } from "./links";
+import { firstClickItem, studentSidebar, teacherSidebar } from "./links";
 
 import { useState } from 'react';
 import { 
@@ -94,8 +92,6 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const Sidebar = (props: IProps) => {
-  const router = useRouter();
-
   const sidebarSelector = useCallback(() => {
     let userSidebar = [
       {
@@ -112,7 +108,9 @@ const Sidebar = (props: IProps) => {
     let personalSidebar: any[] = [];
     if (props.userRole === UserRole.TEACHER)
       personalSidebar = teacherSidebar;
-    return userSidebar.concat(personalSidebar);
+    else if (props.userRole === UserRole.STUDENT)
+      personalSidebar = studentSidebar;
+    return [...personalSidebar, ...userSidebar];
 
     // TODO: another user role
 
@@ -121,7 +119,7 @@ const Sidebar = (props: IProps) => {
 
   const sideBarList = useMemo(() => sidebarSelector(), [props.userRole]);
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState(() => firstClickItem(props.userRole));
 
   const links = sideBarList.map((item) => (
     <a

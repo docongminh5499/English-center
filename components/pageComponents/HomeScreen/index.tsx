@@ -16,6 +16,8 @@ const HomeScreen = (props: IProps) => {
       router.push("/teacher");
 
     // TODO: Another user role
+    else if(props.userRole === UserRole.STUDENT)
+      router.push("/student");
 
   }, [props.userRole]);
 

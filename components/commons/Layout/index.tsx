@@ -11,7 +11,7 @@ import LoadingScreen from "../../pageComponents/LoadingScreen";
 import { createStyles, ActionIcon, Drawer, Group, MediaQuery } from "@mantine/core";
 import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
 import { UserMenu } from "./user.menu";
-import { teacherSidebar } from "../Sidebar/links";
+import { firstClickItem, studentSidebar, teacherSidebar } from "../Sidebar/links";
 
 
 interface IProps {
@@ -87,7 +87,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
 
   const [openedDrawer, setOpenedDrawer] = useState(false);
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState(() => firstClickItem(authState.role));
 
   let userDrawer = [
     {
@@ -104,7 +104,9 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
   let personalDrawer: any[] = [];
   if (authState.role === UserRole.TEACHER)
     personalDrawer = teacherSidebar;
-  userDrawer = userDrawer.concat(personalDrawer);
+  else if (authState.role === UserRole.STUDENT)
+    personalDrawer = studentSidebar;
+  userDrawer = [...personalDrawer, ...userDrawer];
 
   const links = userDrawer.map((item) => (
     <a
