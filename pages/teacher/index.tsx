@@ -5,6 +5,7 @@ import { CookieParser } from "../../helpers/cookieParser";
 import { CustomNextPage } from "../../interfaces/page.interface";
 import { GetServerSideProps } from "next";
 import Pageable from "../../models/pageable.model";
+import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 
 const TeacherHomePage: CustomNextPage = (props) => {
     return <TeacherHomeScreen {...props} />;
@@ -17,7 +18,8 @@ TeacherHomePage.allowUsers = [
 ];
 export default TeacherHomePage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+
+export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context) : Promise<any> => {
     const cookies = CookieParser.parse(context.req.headers.cookie);
     const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : {};
 
@@ -46,4 +48,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Default property returned for server-side rendering
     return { props: {} };
-}
+})

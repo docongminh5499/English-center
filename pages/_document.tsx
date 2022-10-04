@@ -1,12 +1,20 @@
 import { createGetInitialProps } from '@mantine/next';
-import Document, { Head, Html, Main, NextScript } from 'next/document';
+import {
+  getCspInitialProps,
+  provideComponents,
+} from "@next-safe/middleware/dist/document";
+import Document, { Html, Main } from 'next/document';
 
-const getInitialProps = createGetInitialProps();
-
+const mantineGetInitialProps = createGetInitialProps();
 export default class _Document extends Document {
-  static getInitialProps = getInitialProps;
+  static async getInitialProps(ctx: any) {
+    const mantineInitialProps = await mantineGetInitialProps(ctx);
+    const cspInitialProps = await getCspInitialProps({ ctx });
+    return { ...mantineInitialProps, ...cspInitialProps };
+  }
 
   render() {
+    const { Head, NextScript } = provideComponents(this.props);
     return (
       <Html>
         <Head />
