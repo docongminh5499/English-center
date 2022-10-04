@@ -4,22 +4,26 @@ import styles from "./home.module.css";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import LoadingScreen from "../LoadingScreen";
+import { useAuth } from "../../../stores/Auth";
 
 interface IProps {
   userRole?: UserRole
 }
 
 const HomeScreen = (props: IProps) => {
+  const [authState] = useAuth();
   const router = useRouter();
   useEffect(() => {
+    if (authState.loggingOut) return;
+
     if (props.userRole === UserRole.TEACHER)
       router.replace("/teacher");
-    if (props.userRole === UserRole.EMPLOYEE)
+    else if (props.userRole === UserRole.EMPLOYEE)
       router.replace("/employee");
+    else if (props.userRole === UserRole.STUDENT)
+      router.push("/student");
 
     // TODO: Another user role
-    else if(props.userRole === UserRole.STUDENT)
-      router.push("/student");
 
   }, [props.userRole]);
 

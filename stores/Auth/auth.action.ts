@@ -69,15 +69,27 @@ export const logOut =
       const token = getState().token;
 
       localStorage.removeItem(LocalStorageKey.USER);
-      setCookieHelper(CookieKey.USER, {});
+      setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
       setState({
         userId: undefined,
         fullName: undefined,
         userName: undefined,
         token: undefined,
-        role: undefined,
+        role: UserRole.GUEST,
         expireTime: undefined,
         avatar: undefined,
       });
       SocketStoreInstance.actions.emit("signout", { token });
     };
+
+
+export const startLoggingOut = (): Action<State> =>
+  async ({ setState }) => {
+    setState({ loggingOut: true });
+  }
+
+
+export const endLoggingOut = (): Action<State> =>
+  async ({ setState }) => {
+    setState({ loggingOut: false });
+  }

@@ -25,11 +25,15 @@ export function UserMenu() {
   }, []);
 
   const onLogout = useCallback(async () => {
-    await authAction.logOut();
+    await authAction.startLoggingOut();
     await router.push("/");
+    await authAction.endLoggingOut();
+    await authAction.logOut();
+    await router.replace("/");
     setIsOpenModal(false);
   }, [authAction]);
 
+  
   return (
     <>
       <Modal
