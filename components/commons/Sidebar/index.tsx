@@ -1,10 +1,9 @@
-
-import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { UserRole } from "../../../helpers/constants";
-import { teacherSidebar } from "./links";
-
+import { firstClickItem, studentSidebar, teacherSidebar } from "./links";
+import { useRouter } from "next/router";
 import { useState } from 'react';
+
 import {
   createStyles,
   Navbar,
@@ -118,7 +117,9 @@ const Sidebar = (props: IProps) => {
     let personalSidebar: any[] = [];
     if (props.userRole === UserRole.TEACHER)
       personalSidebar = teacherSidebar;
-    return personalSidebar.concat(userSidebar);
+    else if (props.userRole === UserRole.STUDENT)
+      personalSidebar = studentSidebar;
+    return [...personalSidebar, ...userSidebar];
 
     // TODO: another user role
 

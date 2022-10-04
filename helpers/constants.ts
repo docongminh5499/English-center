@@ -53,6 +53,9 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
   },
+  students: {
+    getTimetable: "/api/students/timetable",
+  }
 };
 
 export const SocketBaseUrl = "ws://localhost:5000";
