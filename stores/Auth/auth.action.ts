@@ -41,7 +41,7 @@ export const loadUserFromLocalStorage =
             userId: response.userId,
             avatar: response.avatar,
           });
-          SocketStoreInstance.actions.emit("signin", { userId: response.userId });
+          SocketStoreInstance.actions.emit("signin", { userId: response.userId, token: tokenPayload.token });
         } catch (error: any) {
           localStorage.removeItem(LocalStorageKey.USER);
           setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
@@ -64,8 +64,10 @@ export const logIn =
 
 export const logOut =
   (): Action<State> =>
-    async ({ setState }) => {
+    async ({ getState, setState }) => {
       if (typeof window === "undefined") return;
+      const token = getState().token;
+
       localStorage.removeItem(LocalStorageKey.USER);
       setCookieHelper(CookieKey.USER, {});
       setState({
@@ -77,5 +79,5 @@ export const logOut =
         expireTime: undefined,
         avatar: undefined,
       });
-      SocketStoreInstance.actions.emit("signout", undefined);
+      SocketStoreInstance.actions.emit("signout", { token });
     };

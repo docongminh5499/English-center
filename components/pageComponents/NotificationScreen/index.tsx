@@ -27,7 +27,11 @@ const NotificationScreen = () => {
   const openNotificationModal = useCallback((notification: Notification) => {
     setCurrentNotification(notification);
     setIsOpenModal(true);
-    socketAction.emit("read_notification", { userId: authState.userId, id: notification.id })
+    socketAction.emit("read_notification", { 
+      userId: authState.userId, 
+      id: notification.id,
+      token: authState.token,
+    })
   }, [authState.userId]);
 
 

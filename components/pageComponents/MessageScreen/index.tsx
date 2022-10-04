@@ -124,6 +124,7 @@ const MessageScreen = () => {
       senderId: Number(authState.userId),
       receiverId: chatState.currentBox?.user.userId,
       message: message,
+      token: authState.token,
     };
     socketAction.emit("message", payload);
     setMessage("");
@@ -155,7 +156,7 @@ const MessageScreen = () => {
 
 
   const seenMessage = useCallback((senderId?: number) => {
-    socketAction.emit("seen_message", { sender: { userId: senderId } });
+    socketAction.emit("seen_message", { sender: { userId: senderId }, token: authState.token });
   }, [])
 
 
