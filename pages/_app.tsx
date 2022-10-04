@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
         return setAuthorized(true);
       else {
         setAuthorized(false);
-        return router.push({
+        return router.replace({
           pathname: "/login",
           query: { returnUrl: router.asPath },
         });
@@ -49,12 +49,12 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
     // Other actor hander
     if (!Component.allowUsers.includes(authState.role)) {
       setAuthorized(false);
-      return router.push({ pathname: "/not-found" });
+      return router.replace({ pathname: "/not-found" });
     }
     if (authState.expireTime && Date.now() >= authState.expireTime * 1000) {
       setAuthorized(false);
       authAction.logOut();
-      return router.push({
+      return router.replace({
         pathname: "/login",
         query: { returnUrl: router.asPath },
       });

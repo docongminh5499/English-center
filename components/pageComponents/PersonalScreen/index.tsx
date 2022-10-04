@@ -13,9 +13,9 @@ const PersonalScreen = (props: IProps) => {
   const router = useRouter();
   useEffect(() => {
     if (props.userRole === UserRole.TEACHER)
-      router.push("/teacher/personal");
+      router.replace("/teacher/personal");
     if (props.userRole === UserRole.EMPLOYEE)
-      router.push("/employee/personal");
+      router.replace("/employee/personal");
 
     // TODO: Another user role
 

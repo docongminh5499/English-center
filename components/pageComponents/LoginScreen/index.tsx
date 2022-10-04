@@ -36,7 +36,7 @@ const LoginScreen = (props: IProps) => {
       setLoggingIn(true);
       await authAction.logIn(data);
       const returnUrl = (router.query.returnUrl || "/") as string;
-      await router.push(returnUrl);
+      await router.replace(returnUrl);
       setLoggingIn(false);
     } catch (error: any) {
       setLoggingIn(false);

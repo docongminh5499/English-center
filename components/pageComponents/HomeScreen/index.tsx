@@ -13,9 +13,9 @@ const HomeScreen = (props: IProps) => {
   const router = useRouter();
   useEffect(() => {
     if (props.userRole === UserRole.TEACHER)
-      router.push("/teacher");
+      router.replace("/teacher");
     if (props.userRole === UserRole.EMPLOYEE)
-      router.push("/employee");
+      router.replace("/employee");
 
     // TODO: Another user role
 
