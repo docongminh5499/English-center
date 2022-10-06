@@ -87,6 +87,8 @@ export const Url = {
   students: {
     getTimetable: "/api/students/timetable",
     getCourse: "/api/students/courses/get-course",
+    getCourseDetail: "/api/students/courses/get-course/",
+    sendAssessCourse: "/api/students/courses/assess-course"
   }
 };
 

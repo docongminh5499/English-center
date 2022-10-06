@@ -285,66 +285,63 @@ const StudentCourseScreen = (props: IProps) => {
                   <div className={styles.courseContainer}>
                     {course[key].map((courseInfo: Course) => {
                       return (
-                        <Link
+                        <Card
                           key={courseInfo.id}
-                          href={`/student/course/${courseInfo.id}`}
+                          className={styles.courseCard}
+                          shadow="sm"
+                          p="lg"
+                          radius="md"
+                          withBorder
+                          onClick={() =>
+                            router.push(`/student/course/${courseInfo.slug}`)
+                          }
                         >
-                          <Card
-                            key={courseInfo.id}
-                            className={styles.courseCard}
-                            shadow="sm"
-                            p="lg"
-                            radius="md"
-                            withBorder
-                            onClick={() => console.log("CLICKED")}
-                          >
-                            <Card.Section>
-                              <Image
-                                src={getCourseImageUrl(courseInfo.image)}
-                                height={180}
-                                alt="image-course"
-                              />
-                            </Card.Section>
-                            <div className={styles.courseInfo}>
-                              <Text
-                                weight={600}
-                                align="center"
-                                className={styles.courseName}
-                                lineClamp={2}
-                              >
-                                {courseInfo.name}
-                              </Text>
-                              <Text
-                                style={{ fontSize: "1.2rem" }}
-                                color="dimmed"
-                                align="center"
-                              >
-                                Mã lớp:{" "}
-                                {courseInfo.id.toString().padStart(6, "0")}
-                              </Text>
-                              {getCourseStatus(courseInfo) ===
-                                CourseStatus.NotOpen && (
-                                <Badge color="gray" variant="light">
-                                  Sắp diễn ra
-                                </Badge>
-                              )}
+                          <Card.Section>
+                            <Image
+                              src={getCourseImageUrl(courseInfo.image)}
+                              height={180}
+                              alt="image-course"
+                            />
+                          </Card.Section>
+                          <div className={styles.courseInfo}>
+                            <Text
+                              weight={600}
+                              align="center"
+                              className={styles.courseName}
+                              lineClamp={2}
+                            >
+                              {courseInfo.name}
+                            </Text>
+                            <Text
+                              style={{ fontSize: "1.2rem" }}
+                              color="dimmed"
+                              align="center"
+                            >
+                              Mã lớp:{" "}
+                              {courseInfo.id.toString().padStart(6, "0")}
+                            </Text>
+                            {getCourseStatus(courseInfo) ===
+                              CourseStatus.NotOpen && (
+                              <Badge color="gray" variant="light">
+                                Sắp diễn ra
+                              </Badge>
+                            )}
 
-                              {getCourseStatus(courseInfo) ===
-                                CourseStatus.Opened && (
-                                <Badge color="green" variant="light">
-                                  Đang diễn ra
-                                </Badge>
-                              )}
+                            {getCourseStatus(courseInfo) ===
+                              CourseStatus.Opened && (
+                              <Badge color="green" variant="light">
+                                Đang diễn ra
+                              </Badge>
+                            )}
 
-                              {getCourseStatus(courseInfo) ===
-                                CourseStatus.Closed && (
-                                <Badge color="pink" variant="light">
-                                  Đã kết thúc
-                                </Badge>
-                              )}
-                            </div>
-                          </Card>
-                        </Link>
+                            {getCourseStatus(courseInfo) ===
+                              CourseStatus.Closed && (
+                              <Badge color="pink" variant="light">
+                                Đã kết thúc
+                              </Badge>
+                            )}
+                          </div>
+                        </Card>
                       );
                     })}
                   </div>
