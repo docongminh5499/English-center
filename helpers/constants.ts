@@ -53,6 +53,10 @@ export const TeacherConstants = {
   limitCourse: 12
 }
 
+export const StudentConstants = {
+  limitCourse: 12
+}
+
 export const ChatConstants = {
   limitMessage: 10
 }
@@ -82,6 +86,7 @@ export const Url = {
   },
   students: {
     getTimetable: "/api/students/timetable",
+    getCourse: "/api/students/courses/get-course",
   }
 };
 

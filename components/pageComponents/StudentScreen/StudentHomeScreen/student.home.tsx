@@ -140,19 +140,15 @@ const StudentHomeScreen = (props: any) =>{
   const tbodiesNowTimetable = createRowsTimetableFromCourses(nowCourse);
   const tbodiesPastTimetable = createRowsTimetableFromCourses(pastCourse);
 
-  // Init Data Removed
-
-  // let arrTimeTable = [];
-
   return (
     <>
       <Head>
-          <title>Trang chủ</title>
+          <title>Thời khóa biểu</title>
           <link rel="icon" href="/favicon.ico" />
       </Head>
       <Grid grow style={{width: "80%", overflowX: "auto"}}>
         <MediaQuery smallerThan={768} styles={{fontSize: "1rem"}}>
-          <Title order={1} align="center"  style={{width: "100%", margin: "20px 20px 0px"}}> Thời Khóa Biểu</Title>
+          <Title order={1} align="justify"  style={{width: "100%", margin: "20px 20px 0px", textAlign: "center"}}> Thời Khóa Biểu</Title>
         </MediaQuery>
 
         <MediaQuery smallerThan={768} styles={{fontSize: "0.6rem"}}>

@@ -11,7 +11,7 @@ import LoadingScreen from "../../pageComponents/LoadingScreen";
 import { createStyles, ActionIcon, Drawer, Group, MediaQuery, Indicator } from "@mantine/core";
 import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
 import { UserMenu } from "./user.menu";
-import { firstClickItem, studentSidebar, teacherSidebar } from "../Sidebar/links";
+import { studentSidebar, teacherSidebar } from "../Sidebar/links";
 import { useChat } from "../../../stores/Chat";
 import { useNotification } from "../../../stores/Notification";
 
