@@ -4,6 +4,7 @@ import { useForm, yupResolver } from '@mantine/form';
 import Button from "../../../commons/Button";
 
 interface IProps {
+  loading?: boolean;
   onCreate: (data: any) => void;
 }
 
@@ -107,7 +108,7 @@ const CreateDocumentModal = (props: IProps) => {
 
         <Space h={20} />
 
-        <Button type="submit">Tạo tài liệu</Button>
+        <Button type="submit" loading={props.loading}>Tạo tài liệu</Button>
       </form>
     </Container>
   );
