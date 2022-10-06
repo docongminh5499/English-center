@@ -6,8 +6,8 @@ import { Url } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import styles from "./student.module.css";
 
-function getKey(a: number, b: number){
-  return a.toString() + b.toString();
+function getKey(startHour: number, endHour: number, courseName: string){
+  return startHour.toString() + endHour.toString() + courseName;
 }
 
 function cvtWeekDay2Num(weekDay: string){
@@ -46,12 +46,14 @@ function createRowsTimetableFromCourses(courses: []){
     for(const schedule of course.schedules){
       const startTime = schedule.startShift.startTime.split(":");
       const endTime = schedule.endShift.endTime.split(":");
-      let key = course.name + getKey(startTime[0], endTime[0]);
+      let key = getKey(startTime[0], endTime[0], course.name);
+      const openingDate = new Date(course.openingDate);
+      const closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
       if(!timeTable.has(key)){
         timeTable.set(key, {
           name: course.name,
-          openingDate: new Date(course.openingDate),
-          closingDate: new Date(course.closingDate),
+          openingDate: openingDate,
+          closingDate: closingDate,
           startTime: startTime[0],
           endTime: endTime[0],
           room: new Map([[schedule.classroom.name, []]]),
@@ -118,7 +120,7 @@ const StudentHomeScreen = (props: any) =>{
       const nowCourseTemp = [];
       const pastCourseTemp = [];
       courses.forEach(course => {
-        const closingDate = new Date(course.closingDate);
+        const closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
         const now = new Date();
 
         

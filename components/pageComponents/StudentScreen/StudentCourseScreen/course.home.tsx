@@ -2,29 +2,47 @@ import moment from "moment";
 import Head from "next/head";
 import { useCallback, useState } from "react";
 import API from "../../../../helpers/api";
-import { StudentConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import {
+  CourseStatus,
+  StudentConstants,
+  TimeZoneOffset,
+  Url,
+  UserRole,
+} from "../../../../helpers/constants";
 import Course from "../../../../models/course.model";
 import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
-import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space, Group, Container, Grid, SimpleGrid } from '@mantine/core';
+import {
+  Card,
+  Pagination,
+  Image,
+  Text,
+  Badge,
+  Input,
+  Checkbox,
+  Space,
+  Group,
+  Container,
+  Grid,
+  SimpleGrid,
+} from "@mantine/core";
 import styles from "./course.module.css";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { getCourseImageUrl } from "../../../../helpers/image.helper";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 
 interface IProps {
-  courses?: Partial<Course>[],
-  pageable?: Pageable,
-  error?: Boolean,
-  userRole?: UserRole,
+  courses?: Partial<Course>[];
+  pageable?: Pageable;
+  error?: Boolean;
+  userRole?: UserRole;
 }
 
 const StudentCourseScreen = (props: IProps) => {
-
   const router = useRouter();
   console.log(router);
   const formatCourse = useCallback((courses: any) => {
@@ -267,7 +285,10 @@ const StudentCourseScreen = (props: IProps) => {
                   <div className={styles.courseContainer}>
                     {course[key].map((courseInfo: Course) => {
                       return (
-                        <Link key={courseInfo.id} href={`/student/course/${courseInfo.id}`}>
+                        <Link
+                          key={courseInfo.id}
+                          href={`/student/course/${courseInfo.id}`}
+                        >
                           <Card
                             key={courseInfo.id}
                             className={styles.courseCard}
@@ -301,13 +322,22 @@ const StudentCourseScreen = (props: IProps) => {
                                 Mã lớp:{" "}
                                 {courseInfo.id.toString().padStart(6, "0")}
                               </Text>
-                              {moment()
-                                .utc()
-                                .diff(moment(courseInfo.closingDate)) < 0 ? (
+                              {getCourseStatus(courseInfo) ===
+                                CourseStatus.NotOpen && (
+                                <Badge color="gray" variant="light">
+                                  Sắp diễn ra
+                                </Badge>
+                              )}
+
+                              {getCourseStatus(courseInfo) ===
+                                CourseStatus.Opened && (
                                 <Badge color="green" variant="light">
                                   Đang diễn ra
                                 </Badge>
-                              ) : (
+                              )}
+
+                              {getCourseStatus(courseInfo) ===
+                                CourseStatus.Closed && (
                                 <Badge color="pink" variant="light">
                                   Đã kết thúc
                                 </Badge>
