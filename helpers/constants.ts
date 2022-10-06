@@ -82,7 +82,9 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
     getCourseDetail: "/api/teachers/courses/get-course/",
-    deleteExercise: "/api/teachers/courses/delete-exercise/"
+    deleteExercise: "/api/teachers/courses/delete-exercise/",
+    deleteDocument: "/api/teachers/courses/delete-document/",
+    createDocument: "/api/teachers/courses/create-document"
   },
   students: {
     getTimetable: "/api/students/timetable",

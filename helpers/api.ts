@@ -18,8 +18,8 @@ const API = {
         return axiosApi.get(url, { httpsAgent, params: params || {} });
     },
 
-    post: (url: string, body?: Record<string, any>, params?: Record<string, any>): Promise<any> => {
-        return axiosApi.post(url, body || {}, { params: params || {} });
+    post: (url: string, body?: Record<string, any>, configs?: Record<string, any>): Promise<any> => {
+        return axiosApi.post(url, body || {}, configs || {});
     },
 
     put: (url: string, body?: Record<string, any>, params?: Record<string, any>): Promise<any> => {
