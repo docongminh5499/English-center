@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { UserRole } from "../../../helpers/constants";
-import { firstClickItem, studentSidebar, teacherSidebar } from "./links";
+import { studentSidebar, teacherSidebar } from "./links";
 import { useRouter } from "next/router";
 import { useState } from 'react';
 

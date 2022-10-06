@@ -29,22 +29,11 @@ export const studentSidebar: Array<SidebarItem> = [
   {
     src: IconCalendar,
     name: "Thời khóa biểu",
-    href: "#!",
+    href: "/student",
   },
   {
     src: IconNotebook,
     name: "Khóa học của tôi",
-    href: "#!",
+    href: "/student/course",
   },
 ];
-
-export function firstClickItem(role: UserRole | undefined){
-  switch (role){
-    case UserRole.STUDENT:
-      return "Thời khóa biểu";
-    case UserRole.TEACHER:
-      return "Khóa học";
-    default:
-      return "";
-  }
-}
