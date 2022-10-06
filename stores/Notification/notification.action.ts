@@ -66,7 +66,7 @@ export const receiveNotification = (notification: Notification): Action<State> =
 export const getUnreadNotificationCount =
   (token: string): Action<State> =>
     async ({ setState }) => {
-      const responses = await API.post(Url.users.getUnreadNotificationCount, { token });
+      const responses = await API.get(Url.users.getUnreadNotificationCount, { token });
       setState({ unreadNotificationCount: responses.notificationCount });
     }
 

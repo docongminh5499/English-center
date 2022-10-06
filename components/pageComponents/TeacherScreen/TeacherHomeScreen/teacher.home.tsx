@@ -2,7 +2,7 @@ import moment from "moment";
 import Head from "next/head";
 import { useCallback, useState } from "react";
 import API from "../../../../helpers/api";
-import { TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { CourseStatus, TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
 import Course from "../../../../models/course.model";
 import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
@@ -12,6 +12,8 @@ import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space, Group, Co
 import styles from "./teacher.module.css";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { getCourseImageUrl } from "../../../../helpers/image.helper";
+import { Router, useRouter } from "next/router";
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 
 interface IProps {
   courses?: Partial<Course>[],
@@ -21,7 +23,7 @@ interface IProps {
 }
 
 const TeacherHomeScreen = (props: IProps) => {
-
+  const router = useRouter();
   const formatCourse = useCallback((courses: any) => {
     const result: any = {};
     (courses || []).forEach((course: any) => {
@@ -106,7 +108,7 @@ const TeacherHomeScreen = (props: IProps) => {
               <SimpleGrid cols={isSmallerThan768 ? 2 : 4}>
                 <Checkbox
                   styles={{ label: { color: "#444" } }}
-                  label="Đang diễn ra"
+                  label="Đang - Sắp diễn ra"
                   checked={open}
                   onChange={setOpen}
                 />
@@ -207,7 +209,7 @@ const TeacherHomeScreen = (props: IProps) => {
                           key={courseInfo.id}
                           className={styles.courseCard}
                           shadow="sm" p="lg" radius="md" withBorder
-                          onClick={() => console.log("Clicked")}>
+                          onClick={() => router.push("/teacher/course/" + courseInfo.slug)}>
                           <Card.Section>
                             <Image
                               src={getCourseImageUrl(courseInfo.image)}
@@ -222,11 +224,19 @@ const TeacherHomeScreen = (props: IProps) => {
                             <Text style={{ fontSize: "1.2rem" }} color="dimmed" align="center">
                               Mã lớp: {courseInfo.id.toString().padStart(6, "0")}
                             </Text>
-                            {moment().utc().diff(moment(courseInfo.closingDate)) < 0 ? (
+                            {getCourseStatus(courseInfo) === CourseStatus.NotOpen && (
+                              <Badge color="gray" variant="light">
+                                Sắp diễn ra
+                              </Badge>
+                            )}
+
+                            {getCourseStatus(courseInfo) === CourseStatus.Opened && (
                               <Badge color="green" variant="light">
                                 Đang diễn ra
                               </Badge>
-                            ) : (
+                            )}
+
+                            {getCourseStatus(courseInfo) === CourseStatus.Closed && (
                               <Badge color="pink" variant="light">
                                 Đã kết thúc
                               </Badge>

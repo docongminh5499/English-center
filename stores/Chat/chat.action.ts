@@ -11,7 +11,7 @@ import ChatMessage from "../../models/chatMessage.model";
 export const getContacts =
   (token: string): Action<State> =>
     async ({ setState }) => {
-      const responses = await API.post(Url.users.getContacts, { token });
+      const responses = await API.get(Url.users.getContacts, { token });
       setState({ contacts: responses.contacts });
     };
 
@@ -254,7 +254,7 @@ export const recevingOwnSeenSignal = (incomingContact: Contact): Action<State> =
 
 export const getUnreadMessageCount = (token: string): Action<State> =>
   async ({ setState }) => {
-    const responses = await API.post(Url.users.getUnreadMessageCount, { token });
+    const responses = await API.get(Url.users.getUnreadMessageCount, { token });
     setState({ unreadMessageCount: responses.messageCount });
   }
 

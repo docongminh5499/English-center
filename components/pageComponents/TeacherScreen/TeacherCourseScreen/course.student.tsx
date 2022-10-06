@@ -1,10 +1,33 @@
 import { Avatar, Container, Grid, Group, Input, SimpleGrid, Space, Text } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { useInputState, useMediaQuery } from "@mantine/hooks";
+import moment from "moment";
+import { useCallback, useState } from "react";
+import { getAvatarImageUrl } from "../../../../helpers/image.helper";
+import StudentParticipateCourse from "../../../../models/studentParticipateCourse.model";
 import Button from "../../../commons/Button";
 
-const CourseStudent = () => {
+
+interface IProps {
+  studentParticipations?: StudentParticipateCourse[];
+}
+
+
+const CourseStudent = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
+  const [query, setQuery] = useInputState("");
+  const [listStudentParticipations, setListStudentParticipations] = useState(props.studentParticipations);
+
+
+  const queryStudentHandler = useCallback((query: string) => {
+    const formattedQuery = query.trim().toLocaleLowerCase();
+    if (formattedQuery === "")
+      return setListStudentParticipations(props.studentParticipations);
+    const queriesStudentParticipations = listStudentParticipations?.filter(item =>
+      item.student.user.fullName.toLocaleLowerCase().indexOf(formattedQuery) > -1 ||
+      item.student.user.id.toString().toLocaleLowerCase().indexOf(formattedQuery) > -1);
+    setListStudentParticipations(queriesStudentParticipations);
+  }, [listStudentParticipations]);
 
   return (
     <Container size="xl" p={0}>
@@ -12,86 +35,72 @@ const CourseStudent = () => {
         Danh sách học viên
       </Text>
       <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
-        Sĩ số: 20
+        Sĩ số: {props.studentParticipations?.length}
       </Text>
+
+      <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
+        <Button color="green" variant="light">Gửi thông báo tới lớp học</Button>
+      </Container>
+
       <Space h={20} />
       <Grid>
         {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
         <Grid.Col span={isTablet ? (isMobile ? 12 : 8) : 4}>
           <Input
             styles={{ input: { color: "#444" } }}
-            value={undefined}
+            value={query}
             placeholder="Tìm kiếm theo tên hoặc MSHV"
-            onChange={() => null}
+            onChange={setQuery}
           />
         </Grid.Col>
         <Grid.Col span={isTablet ? (isMobile ? 12 : 4) : 2}>
-          <Button fullWidth>Tìm kiếm</Button>
+          <Button fullWidth onClick={() => queryStudentHandler(query)}>Tìm kiếm</Button>
         </Grid.Col>
       </Grid>
 
       <Space h={20} />
 
-      <SimpleGrid cols={2} p="md" spacing="xl">
+      {listStudentParticipations?.length === 0 && (
+        <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px" }}>
+          <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>Không có học sinh</Text>
+        </Container>
 
-        <Group
-          onClick={() => console.log("A")}
-          style={{
-            cursor: "pointer",
-            flexDirection: isTablet ? "column" : "row"
-          }}>
-          <Avatar size={60} color="blue" radius='xl'>A</Avatar>
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: isTablet ? "center" : "flex-start"
-          }} >
-            <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">Đỗ Công Minh Long Name Text</Text>
-            <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSHV: 1</Text>
-            <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">Ngày sinh: 05/04/1999</Text>
-          </div>
-        </Group>
+      )}
 
-        <Group
-          onClick={() => console.log("B")}
-          style={{
-            cursor: "pointer",
-            flexDirection: isTablet ? "column" : "row"
-          }}>
-          <Avatar size={60} color="blue" radius='xl'>A</Avatar>
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: isTablet ? "center" : "flex-start"
-          }} >
-            <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">Đỗ Công Minh Long Name Text</Text>
-            <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSHV: 1</Text>
-            <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">Ngày sinh: 05/04/1999</Text>
-          </div>
-        </Group>
-
-        <Group
-          onClick={() => console.log("C")}
-          style={{
-            cursor: "pointer",
-            flexDirection: isTablet ? "column" : "row"
-          }}>
-          <Avatar size={60} color="blue" radius='xl'>A</Avatar>
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: isTablet ? "center" : "flex-start"
-          }} >
-            <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">Đỗ Công Minh Long Name Text</Text>
-            <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSHV: 1</Text>
-            <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">Ngày sinh: 05/04/1999</Text>
-          </div>
-        </Group>
-
-      </SimpleGrid>
+      {listStudentParticipations && listStudentParticipations?.length > 0 && (
+        <SimpleGrid cols={2} p="md" spacing="xl">
+          {listStudentParticipations?.map((item, index) => (
+            <Group
+              key={index}
+              onClick={() => console.log("A")}
+              style={{
+                cursor: "pointer",
+                flexDirection: isTablet ? "column" : "row"
+              }}>
+              <Avatar
+                size={60}
+                color="blue"
+                radius='xl'
+                src={getAvatarImageUrl(item.student.user.avatar)}
+              />
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: isTablet ? "center" : "flex-start"
+              }} >
+                <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">
+                  {item.student.user.fullName}
+                </Text>
+                <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSHV: {item.student.user.id}</Text>
+                <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">
+                  Ngày sinh: {moment(item.student.user.dateOfBirth).format("DD/MM/YYYY")}
+                </Text>
+              </div>
+            </Group>
+          ))}
+        </SimpleGrid>
+      )}
       <Space h={20} />
     </Container>
   );

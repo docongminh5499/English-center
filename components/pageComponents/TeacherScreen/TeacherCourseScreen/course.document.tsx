@@ -1,21 +1,33 @@
 import { Anchor, Container, Grid, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Button from "../../../commons/Button";
 import CreateDocumentModal from "../Modal/createDocument.modal";
 import DeleteExerciseModal from "../Modal/delete.modal";
+import Document from "../../../../models/document.models";
+import { getDocumentUrl } from "../../../../helpers/image.helper";
 
-const CourseDocument = () => {
+interface IProps {
+  documents?: Document[]
+}
+
+
+const CourseDocument = (props: IProps) => {
   const isLargeTablet = useMediaQuery('(max-width: 1024px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
-  const [currentDocument, setCurrentDocument] = useState();
+  const [currentDocument, setCurrentDocument] = useState<Document>();
+  const [listDocuments, setListDocuments] = useState(props.documents);
+
   const onDelete = useCallback(() => {
     setIsOpenDeleteModal(false);
   }, []);
+
+  
   const onCreate = useCallback((data: any) => {
     console.log(data);
     setIsOpenCreateModal(false);
@@ -32,8 +44,9 @@ const CourseDocument = () => {
         overlayOpacity={0.55}
         overlayBlur={3}>
         <DeleteExerciseModal
+          loading={isDeleting}
           title="Xóa tài liệu"
-          message={`Bạn có chắc muốn xóa tài liệu ${currentDocument ? "'<add here>'" : "này"} chứ?`}
+          message={`Bạn có chắc muốn xóa tài liệu ${currentDocument ? "'" + currentDocument.name.toLocaleUpperCase() + "'" : "này"} chứ?`}
           onDelete={onDelete}
         />
       </Modal>
@@ -50,44 +63,51 @@ const CourseDocument = () => {
         />
       </Modal>
 
-      <Container size="xl" p={isMobile ? 0 : 10}>
-        <Grid>
-          <Grid.Col span={isLargeTablet ? 12 : 8} style={{ display: "flex", alignItems: "center" }}>
-            <Text weight={600} color="#444">
-              Tài liệu 1: Book 1 Long title here Long title here Long title here here Long title here Long title here,  tác giả: Nguyễn Văn A, 2001
-              <Link href="#!" passHref>
-                <Anchor component="a" ml={20}>Tải về</Anchor>
-              </Link>
-            </Text>
-          </Grid.Col>
-          <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button fullWidth>Sửa tài liệu</Button>
-          </Grid.Col>
-          <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button onClick={() => setIsOpenDeleteModal(true)} color="red" fullWidth>Xóa tài liệu</Button>
-          </Grid.Col>
 
-          <Grid.Col span={12}>
-            <Space h={10} />
-          </Grid.Col>
+      {listDocuments && listDocuments.length === 0 && (
+        <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+          <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
+            Chưa có bài tập
+          </Text>
+        </Container>
+      )}
 
-          <Grid.Col span={isLargeTablet ? 12 : 8} style={{ display: "flex", alignItems: "center" }}>
-            <Text weight={600} color="#444">
-              Tài liệu 1: Book 1, tác giả: Nguyễn Văn A, 2001
-              <Link href="#!" passHref>
-                <Anchor component="a" ml={20}>Tải về</Anchor>
-              </Link>
-            </Text>
-          </Grid.Col>
-          <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button fullWidth>Sửa tài liệu</Button>
-          </Grid.Col>
-          <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <Button onClick={() => setIsOpenDeleteModal(true)} color="red" fullWidth>Xóa tài liệu</Button>
-          </Grid.Col>
-        </Grid>
-      </Container>
 
+      {listDocuments && listDocuments.length > 0 && (
+        <Container size="xl" p={isMobile ? 0 : 10}>
+          <Grid>
+            {listDocuments.map((item, index) => (
+              <React.Fragment key={index}>
+                <Grid.Col span={isLargeTablet ? 12 : 8} style={{ display: "flex", alignItems: "center" }}>
+                  <Text weight={600} color="#444">
+                    {item.name.toLocaleUpperCase()} {item.author && "- Tác giả: " + item.author}{item.author && ", " + item.pubYear}
+                    {item.src && (
+                      <Link href={getDocumentUrl(item.src)} passHref>
+                        <Anchor target="_blank" component="a" ml={20}>Tải về</Anchor>
+                      </Link>
+                    )}
+                  </Text>
+                </Grid.Col>
+                <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <Button fullWidth>Sửa tài liệu</Button>
+                </Grid.Col>
+                <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <Button onClick={() => {
+                    setCurrentDocument(item);
+                    setIsOpenDeleteModal(true);
+                  }} color="red" fullWidth>Xóa tài liệu</Button>
+                </Grid.Col>
+
+                <Grid.Col span={12}>
+                  <Space h={10} />
+                </Grid.Col>
+              </React.Fragment>
+            ))}
+
+          </Grid>
+        </Container>
+
+      )}
       <Space h={100} />
 
 

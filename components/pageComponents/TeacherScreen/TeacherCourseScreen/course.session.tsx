@@ -49,7 +49,7 @@ const CourseSession = () => {
           <CreateSessionCourseModal onCreate={onCreate} />
       </Modal>
 
-      <Container size="xl" p={isMobile ? "xs" : "md"}>
+      {/* <Container size="xl" p={isMobile ? "xs" : "md"}>
         <Text weight={600} color="#444">Buổi học 1: Thì hiện tại đơn</Text>
         <Space h={8} />
         <Grid>
@@ -127,7 +127,7 @@ const CourseSession = () => {
             <Button compact={isLargeTablet ? false : true} color="red" fullWidth size="xs" onClick={() => setIsOpenModal(true)}>Xóa buổi học</Button>
           </Grid.Col>
         </Grid>
-      </Container>
+      </Container> */}
 
       <Space h={100} />
 

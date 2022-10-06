@@ -1,4 +1,4 @@
-export const TimeZoneOffset =  new Date().getTimezoneOffset() * (-1);
+export const TimeZoneOffset = new Date().getTimezoneOffset() * (-1);
 
 export enum UserRole {
   GUEST = "guest",
@@ -15,6 +15,31 @@ export enum Gender {
   FEMALE = "female",
   UNDEFINE = "undefine",
 }
+
+export enum CourseType {
+  SHORT_TERM = "ShortTerm",
+  LONG_TERM = "LongTerm"
+}
+
+export enum StudySessionState {
+  Cancel = "Cancel",
+  Ready = "Ready",
+  Start = "Start",
+  Finish = "Finish",
+}
+
+export enum ExerciseStatus {
+  NotOpen = "NotOpen",
+  Opened = "Opened",
+  Closed = "Closed",
+}
+
+export enum CourseStatus {
+  NotOpen = "NotOpen",
+  Opened = "Opened",
+  Closed = "Closed",
+}
+
 
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
@@ -52,6 +77,8 @@ export const Url = {
   },
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
+    getCourseDetail: "/api/teachers/courses/get-course/",
+    deleteExercise: "/api/teachers/courses/delete-exercise/"
   },
   students: {
     getTimetable: "/api/students/timetable",
