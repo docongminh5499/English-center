@@ -92,7 +92,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Grid.Col>
           </Grid>
           <Space h={14} />
-          <Tabs defaultValue="curriculum" styles={{ tabLabel: { color: "#444" } }}>
+          <Tabs defaultValue="curriculum" styles={{ tabLabel: { color: "#444" } }} keepMounted={false}>
             <Tabs.List grow>
               <Tabs.Tab
                 value="curriculum"
@@ -134,7 +134,10 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="student" pt="xs">
-              <CourseStudent studentParticipations={props.course?.studentPaticipateCourses} />
+              <CourseStudent
+                studentParticipations={props.course?.studentPaticipateCourses}
+                courseId={props.course?.id}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="exercise" pt="xs">

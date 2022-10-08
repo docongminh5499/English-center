@@ -146,15 +146,16 @@ const CourseDocument = (props: IProps) => {
                 <Grid.Col span={isLargeTablet ? 12 : 8} style={{ display: "flex", alignItems: "center" }}>
                   <Text weight={600} color="#444">
                     {item.name.toLocaleUpperCase()} {item.author && "- Tác giả: " + item.author}{item.pubYear && ", " + item.pubYear}
-                    {item.src && (
-                      <Link href={getDocumentUrl(item.src)} passHref>
-                        <Anchor target="_blank" component="a" ml={20}>Tải về</Anchor>
-                      </Link>
-                    )}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <Button fullWidth>Sửa tài liệu</Button>
+                  {item.src && (
+                    <a href={getDocumentUrl(item.src)} target="_blank" style={{ color: "white", width: "100%" }}>
+                      <Button fullWidth>
+                        Xem tài liệu
+                      </Button>
+                    </a>
+                  )}
                 </Grid.Col>
                 <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <Button onClick={() => {
