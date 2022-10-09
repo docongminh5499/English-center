@@ -149,7 +149,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="rating" pt="xs">
-              <CourseRating studentParticipations={props.course?.studentPaticipateCourses} />
+              <CourseRating maskedComments={props.course?.maskedComments} />
             </Tabs.Panel>
           </Tabs>
         </Container>

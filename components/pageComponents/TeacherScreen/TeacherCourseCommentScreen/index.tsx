@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { TimeZoneOffset, UserRole } from "../../../../helpers/constants";
 import Course from "../../../../models/course.model";
-import StudentParticipateCourse from "../../../../models/studentParticipateCourse.model";
+import MaskedComment from "../../../../models/maskedComment.model";
 import Comment from "../../../commons/Comment";
 import Rating from "../../../commons/Rating";
 import RatingProgress from "../../../commons/RatingProgress";
@@ -31,17 +31,17 @@ const TeacherCourseCommentScreen = (props: IProps) => {
 
 
   const totalScore = useMemo(() => {
-    const totalScore = props.course?.studentPaticipateCourses?.reduce((total, current) =>
+    const totalScore = props.course?.maskedComments?.reduce((total, current) =>
       total += (current.starPoint ? current.starPoint : 0), 0) || 0;
     return totalScore;
-  }, [props.course?.studentPaticipateCourses]);
+  }, [props.course?.maskedComments]);
 
 
   const totalCount = useMemo(() => {
-    const totalCount = props.course?.studentPaticipateCourses?.reduce((total, current) =>
+    const totalCount = props.course?.maskedComments?.reduce((total, current) =>
       total += (current.starPoint ? 1 : 0), 0) || 0;
     return totalCount;
-  }, [props.course?.studentPaticipateCourses]);
+  }, [props.course?.maskedComments]);
 
 
   const average = useMemo(() => {
@@ -52,7 +52,7 @@ const TeacherCourseCommentScreen = (props: IProps) => {
 
   const eachScoreCount = useMemo(() => {
     const result: any = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    props.course?.studentPaticipateCourses?.forEach(item => {
+    props.course?.maskedComments?.forEach(item => {
       if (item.starPoint) result[item.starPoint] += 1;
     })
     const total = result[1] + result[2] + result[3] + result[4] + result[5];
@@ -64,16 +64,16 @@ const TeacherCourseCommentScreen = (props: IProps) => {
       result[5] = Math.round(result[5] / total * 100);
     }
     return result;
-  }, [props.course?.studentPaticipateCourses]);
+  }, [props.course?.maskedComments]);
 
 
   const comments = useMemo(() => {
-    const result: StudentParticipateCourse[] = [];
-    props.course?.studentPaticipateCourses?.forEach(item => {
+    const result: MaskedComment[] = [];
+    props.course?.maskedComments?.forEach(item => {
       if (item.starPoint) result.push(item);
     })
     return result;
-  }, [props.course?.studentPaticipateCourses]);
+  }, [props.course?.maskedComments]);
 
   return (
     <>
@@ -126,7 +126,7 @@ const TeacherCourseCommentScreen = (props: IProps) => {
               {comments.map((item, index) => (
                 <Comment
                   key={index}
-                  name={item.student.user.fullName}
+                  name={item.userFullName || ""}
                   score={item.starPoint || 0}
                   date={moment(item.commentDate).utcOffset(TimeZoneOffset).format("HH:mm DD/MM/YYYY")}
                   comment={item.comment || ""}
