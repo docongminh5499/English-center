@@ -22,7 +22,7 @@ interface IProps {
   inNotificationScreen: boolean;
   unreadMessageCount: number;
   inMessageScreen: boolean;
-  userRole?: UserRole
+  userRole?: UserRole | null;
 }
 
 const useStyles = createStyles((theme, _params, getRef) => {

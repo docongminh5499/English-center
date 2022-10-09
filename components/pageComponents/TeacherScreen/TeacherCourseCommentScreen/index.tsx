@@ -12,7 +12,7 @@ import Rating from "../../../commons/Rating";
 import RatingProgress from "../../../commons/RatingProgress";
 
 interface IProps {
-  userRole: UserRole | null;
+  userRole?: UserRole | null;
   course: Course | null;
 }
 

@@ -84,7 +84,8 @@ export const Url = {
     getCourseDetail: "/api/teachers/courses/get-course/",
     deleteExercise: "/api/teachers/courses/delete-exercise/",
     deleteDocument: "/api/teachers/courses/delete-document/",
-    createDocument: "/api/teachers/courses/create-document"
+    createDocument: "/api/teachers/courses/create-document",
+    getPersonalInformation: "/api/teachers/personal/get-personal-information"
   },
   students: {
     getTimetable: "/api/students/timetable",

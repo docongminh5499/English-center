@@ -39,7 +39,7 @@ interface IProps {
   courses?: Partial<Course>[];
   pageable?: Pageable;
   error?: Boolean;
-  userRole?: UserRole;
+  userRole?: UserRole | null;
 }
 
 const StudentCourseScreen = (props: IProps) => {
@@ -62,7 +62,7 @@ const StudentCourseScreen = (props: IProps) => {
   const [maxPage, setMaxPage] = useState(
     Math.ceil(
       (props.pageable?.total || 1) /
-        (props.pageable?.limit || StudentConstants.limitCourse)
+      (props.pageable?.limit || StudentConstants.limitCourse)
     )
   );
   const [currentPage, setCurrentPage] = useState(1);
@@ -322,24 +322,24 @@ const StudentCourseScreen = (props: IProps) => {
                             </Text>
                             {getCourseStatus(courseInfo) ===
                               CourseStatus.NotOpen && (
-                              <Badge color="gray" variant="light">
-                                Sắp diễn ra
-                              </Badge>
-                            )}
+                                <Badge color="gray" variant="light">
+                                  Sắp diễn ra
+                                </Badge>
+                              )}
 
                             {getCourseStatus(courseInfo) ===
                               CourseStatus.Opened && (
-                              <Badge color="green" variant="light">
-                                Đang diễn ra
-                              </Badge>
-                            )}
+                                <Badge color="green" variant="light">
+                                  Đang diễn ra
+                                </Badge>
+                              )}
 
                             {getCourseStatus(courseInfo) ===
                               CourseStatus.Closed && (
-                              <Badge color="pink" variant="light">
-                                Đã kết thúc
-                              </Badge>
-                            )}
+                                <Badge color="pink" variant="light">
+                                  Đã kết thúc
+                                </Badge>
+                              )}
                           </div>
                         </Card>
                       );

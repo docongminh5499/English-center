@@ -19,7 +19,7 @@ interface IProps {
   courses?: Partial<Course>[],
   pageable?: Pageable,
   error?: Boolean,
-  userRole?: UserRole,
+  userRole?: UserRole | null,
 }
 
 const TeacherHomeScreen = (props: IProps) => {

@@ -16,7 +16,7 @@ import CourseSession from "./course.session";
 import CourseStudent from "./course.student";
 
 interface IProps {
-  userRole: UserRole | null;
+  userRole?: UserRole | null;
   course: Course | null;
 }
 
