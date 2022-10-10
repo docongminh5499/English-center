@@ -10,4 +10,5 @@ export default interface User {
     address: string | null;
     avatar: string | null;
     role: UserRole;
+    version: number;
 }

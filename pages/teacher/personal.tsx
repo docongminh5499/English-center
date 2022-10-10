@@ -7,7 +7,7 @@ import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import API from "../../helpers/api";
 
 const TeacherPersonalInformationPage: CustomNextPage = (props) => {
-    return <TeacherPersonalScreen {...props} />;
+    return <TeacherPersonalScreen userTeacher={null} {...props} />;
 };
 
 TeacherPersonalInformationPage.allowUsers = [

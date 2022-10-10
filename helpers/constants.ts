@@ -85,7 +85,8 @@ export const Url = {
     deleteExercise: "/api/teachers/courses/delete-exercise/",
     deleteDocument: "/api/teachers/courses/delete-document/",
     createDocument: "/api/teachers/courses/create-document",
-    getPersonalInformation: "/api/teachers/personal/get-personal-information"
+    getPersonalInformation: "/api/teachers/personal/get-personal-information",
+    modifyPersonalInformation: "/api/teachers/personal/modify-personal-information"
   },
   students: {
     getTimetable: "/api/students/timetable",

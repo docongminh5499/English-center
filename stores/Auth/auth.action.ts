@@ -93,3 +93,11 @@ export const endLoggingOut = (): Action<State> =>
   async ({ setState }) => {
     setState({ loggingOut: false });
   }
+
+
+export const reload = (token: string): Action<State> =>
+  async ({ dispatch }) => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(LocalStorageKey.USER, JSON.stringify({ token }));
+    await dispatch(loadUserFromLocalStorage());
+  }
