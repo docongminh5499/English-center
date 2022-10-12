@@ -11,7 +11,7 @@ import Loading from "../../../commons/Loading";
 import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space, Group, Container, Grid, SimpleGrid } from '@mantine/core';
 import styles from "./teacher.module.css";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
-import { getCourseImageUrl } from "../../../../helpers/image.helper";
+import { getImageUrl } from "../../../../helpers/image.helper";
 import { Router, useRouter } from "next/router";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 
@@ -19,7 +19,7 @@ interface IProps {
   courses?: Partial<Course>[],
   pageable?: Pageable,
   error?: Boolean,
-  userRole?: UserRole,
+  userRole?: UserRole | null,
 }
 
 const TeacherHomeScreen = (props: IProps) => {
@@ -212,7 +212,7 @@ const TeacherHomeScreen = (props: IProps) => {
                           onClick={() => router.push("/teacher/course/" + courseInfo.slug)}>
                           <Card.Section>
                             <Image
-                              src={getCourseImageUrl(courseInfo.image)}
+                              src={getImageUrl(courseInfo.image)}
                               height={180}
                               alt="image-course"
                             />

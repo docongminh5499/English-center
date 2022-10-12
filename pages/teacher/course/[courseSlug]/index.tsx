@@ -22,7 +22,7 @@ export default CourseDetail;
 
 export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context) => {
     const cookies = CookieParser.parse(context.req.headers.cookie);
-    const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : {};
+    const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
 
     try {
         const responses = await API.get(Url.teachers.getCourseDetail + context.params?.courseSlug, {

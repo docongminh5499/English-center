@@ -7,9 +7,9 @@ import { Store as SocketStore } from "../Socket";
 
 const SocketStoreInstance = defaultRegistry.getStore(SocketStore);
 
-const setCookieHelper = (key: string, value: any) => {
+const setCookieHelper = (key: string, value: any, expireTime: Date | number) => {
   const valueString = JSON.stringify(value);
-  Cookies.set(key, valueString, { expires: 1 });
+  Cookies.set(key, valueString, { expires: expireTime });
 }
 
 
@@ -31,7 +31,7 @@ export const loadUserFromLocalStorage =
             expireTime: response.exp,
             userId: response.userId,
             avatar: response.avatar,
-          });
+          }, new Date(response.exp * 1000));
           setState({
             token: tokenPayload.token,
             fullName: response.fullName,
@@ -44,11 +44,11 @@ export const loadUserFromLocalStorage =
           SocketStoreInstance.actions.emit("signin", { userId: response.userId, token: tokenPayload.token });
         } catch (error: any) {
           localStorage.removeItem(LocalStorageKey.USER);
-          setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
+          setCookieHelper(CookieKey.USER, null, 0);
           setState({ role: UserRole.GUEST });
         }
       } else {
-        setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
+        setCookieHelper(CookieKey.USER, null, 0);
         setState({ role: UserRole.GUEST });
       }
     };
@@ -69,7 +69,7 @@ export const logOut =
       const token = getState().token;
 
       localStorage.removeItem(LocalStorageKey.USER);
-      setCookieHelper(CookieKey.USER, { role: UserRole.GUEST });
+      setCookieHelper(CookieKey.USER, null, 0);
       setState({
         userId: undefined,
         fullName: undefined,
@@ -92,4 +92,12 @@ export const startLoggingOut = (): Action<State> =>
 export const endLoggingOut = (): Action<State> =>
   async ({ setState }) => {
     setState({ loggingOut: false });
+  }
+
+
+export const reload = (token: string): Action<State> =>
+  async ({ dispatch }) => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(LocalStorageKey.USER, JSON.stringify({ token }));
+    await dispatch(loadUserFromLocalStorage());
   }

@@ -7,7 +7,7 @@ import LoadingScreen from "../LoadingScreen";
 import { useAuth } from "../../../stores/Auth";
 
 interface IProps {
-  userRole?: UserRole
+  userRole?: UserRole | null;
 }
 
 const HomeScreen = (props: IProps) => {

@@ -19,9 +19,9 @@ TeacherHomePage.allowUsers = [
 export default TeacherHomePage;
 
 
-export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context) : Promise<any> => {
+export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context): Promise<any> => {
     const cookies = CookieParser.parse(context.req.headers.cookie);
-    const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : {};
+    const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
 
     // Server side rendering for actor teacher
     if (user.role === UserRole.TEACHER) {

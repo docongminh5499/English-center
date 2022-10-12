@@ -16,7 +16,7 @@ import CourseSession from "./course.session";
 import CourseStudent from "./course.student";
 
 interface IProps {
-  userRole: UserRole | null;
+  userRole?: UserRole | null;
   course: Course | null;
 }
 
@@ -92,7 +92,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Grid.Col>
           </Grid>
           <Space h={14} />
-          <Tabs defaultValue="curriculum" styles={{ tabLabel: { color: "#444" } }}>
+          <Tabs defaultValue="curriculum" styles={{ tabLabel: { color: "#444" } }} keepMounted={false}>
             <Tabs.List grow>
               <Tabs.Tab
                 value="curriculum"
@@ -134,7 +134,10 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="student" pt="xs">
-              <CourseStudent studentParticipations={props.course?.studentPaticipateCourses} />
+              <CourseStudent
+                studentParticipations={props.course?.studentPaticipateCourses}
+                courseId={props.course?.id}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="exercise" pt="xs">
@@ -146,7 +149,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="rating" pt="xs">
-              <CourseRating studentParticipations={props.course?.studentPaticipateCourses} />
+              <CourseRating maskedComments={props.course?.maskedComments} />
             </Tabs.Panel>
           </Tabs>
         </Container>

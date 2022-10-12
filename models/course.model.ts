@@ -1,6 +1,7 @@
 import Curriculum from "./cirriculum.model"
 import Document from "./document.models"
 import Exercise from "./exercise.model"
+import MaskedComment from "./maskedComment.model"
 import StudentParticipateCourse from "./studentParticipateCourse.model"
 import StudySession from "./studySession.model"
 
@@ -18,6 +19,7 @@ export default interface Course {
   documents: Document[],
   studySessions: StudySession[],
   exercises: Exercise[],
-  curriculum: Curriculum
-  studentPaticipateCourses: StudentParticipateCourse[]
+  curriculum: Curriculum,
+  studentPaticipateCourses: StudentParticipateCourse[],
+  maskedComments: MaskedComment[],
 }

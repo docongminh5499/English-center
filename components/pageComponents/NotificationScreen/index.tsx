@@ -27,8 +27,8 @@ const NotificationScreen = () => {
   const openNotificationModal = useCallback((notification: Notification) => {
     setCurrentNotification(notification);
     setIsOpenModal(true);
-    socketAction.emit("read_notification", { 
-      userId: authState.userId, 
+    socketAction.emit("read_notification", {
+      userId: authState.userId,
       id: notification.id,
       token: authState.token,
     })
@@ -159,7 +159,7 @@ const NotificationScreen = () => {
         {!loading && notificationState.notifications && notificationState.notifications.length > 0 &&
           (
             <ScrollArea
-              style={{ flex: 1 }}
+              style={{ flex: 1, width: "100%" }}
               type="never"
               viewportRef={viewport}
               onScrollPositionChange={onScrollPositionChange}>
@@ -173,7 +173,7 @@ const NotificationScreen = () => {
                         </Container>
                       )}
                       <Container
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: "pointer", width: "100%" }}
                         p={isMobile ? "xs" : "md"}
                         onClick={() => openNotificationModal(notification)}>
                         <Text color="#444" align="justify" lineClamp={3}>

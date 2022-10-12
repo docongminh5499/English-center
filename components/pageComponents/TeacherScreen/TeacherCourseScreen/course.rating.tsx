@@ -4,13 +4,13 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { TimeZoneOffset } from "../../../../helpers/constants";
-import StudentParticipateCourse from "../../../../models/studentParticipateCourse.model";
+import MaskedComment from "../../../../models/maskedComment.model";
 import Comment from "../../../commons/Comment";
 import Rating from "../../../commons/Rating";
 import RatingProgress from "../../../commons/RatingProgress";
 
 interface IProps {
-  studentParticipations?: StudentParticipateCourse[]
+  maskedComments?: MaskedComment[]
 }
 
 const CourseRating = (props: IProps) => {
@@ -20,17 +20,17 @@ const CourseRating = (props: IProps) => {
 
 
   const totalScore = useMemo(() => {
-    const totalScore = props.studentParticipations?.reduce((total, current) =>
+    const totalScore = props.maskedComments?.reduce((total, current) =>
       total += (current.starPoint ? current.starPoint : 0), 0) || 0;
     return totalScore;
-  }, [props.studentParticipations]);
+  }, [props.maskedComments]);
 
 
   const totalCount = useMemo(() => {
-    const totalCount = props.studentParticipations?.reduce((total, current) =>
+    const totalCount = props.maskedComments?.reduce((total, current) =>
       total += (current.starPoint ? 1 : 0), 0) || 0;
     return totalCount;
-  }, [props.studentParticipations]);
+  }, [props.maskedComments]);
 
 
   const average = useMemo(() => {
@@ -41,7 +41,7 @@ const CourseRating = (props: IProps) => {
 
   const eachScoreCount = useMemo(() => {
     const result: any = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    props.studentParticipations?.forEach(item => {
+    props.maskedComments?.forEach(item => {
       if (item.starPoint) result[item.starPoint] += 1;
     })
     const total = result[1] + result[2] + result[3] + result[4] + result[5];
@@ -53,16 +53,16 @@ const CourseRating = (props: IProps) => {
       result[5] = Math.round(result[5] / total * 100);
     }
     return result;
-  }, [props.studentParticipations]);
+  }, [props.maskedComments]);
 
 
   const topThreeLatestComments = useMemo(() => {
-    const result: StudentParticipateCourse[] = [];
-    props.studentParticipations?.forEach(item => {
+    const result: MaskedComment[] = [];
+    props.maskedComments?.forEach(item => {
       if (item.starPoint && result.length < 3) result.push(item);
     })
     return result;
-  }, [props.studentParticipations]);
+  }, [props.maskedComments]);
 
   return (
     <Container size="xl" p={isMobile ? 0 : 10}>
@@ -101,7 +101,7 @@ const CourseRating = (props: IProps) => {
           {topThreeLatestComments.map((item, index) => (
             <Comment
               key={index}
-              name={item.student.user.fullName}
+              name={item.userFullName || ""}
               score={item.starPoint || 0}
               date={moment(item.commentDate).utcOffset(TimeZoneOffset).format("HH:mm DD/MM/YYYY")}
               comment={item.comment || ""}

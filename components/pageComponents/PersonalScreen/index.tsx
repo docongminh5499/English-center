@@ -6,7 +6,7 @@ import { UserRole } from "../../../helpers/constants";
 import LoadingScreen from "../LoadingScreen";
 
 interface IProps {
-  userRole?: UserRole
+  userRole?: UserRole | null;
 }
 
 const PersonalScreen = (props: IProps) => {
