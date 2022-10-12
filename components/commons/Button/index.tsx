@@ -3,7 +3,7 @@ import React from 'react';
 import styles from "./button.module.css";
 
 interface IProps {
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, React.PropsWithChildren<IProps & ButtonProps>>((props, ref) => {

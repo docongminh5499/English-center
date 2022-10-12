@@ -6,7 +6,7 @@ export const getAvatarImageUrl = (url?: string | null): string => {
     return Url.baseUrl + url;
 }
 
-export const getCourseImageUrl = (url?: string | null): string => {
+export const getImageUrl = (url?: string | null): string => {
     if (url === undefined || url === null || url.trim() === "")
         return "/assets/images/no_image.png";
     return Url.baseUrl + url;

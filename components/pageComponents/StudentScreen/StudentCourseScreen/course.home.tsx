@@ -30,7 +30,7 @@ import {
 } from "@mantine/core";
 import styles from "./course.module.css";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
-import { getCourseImageUrl } from "../../../../helpers/image.helper";
+import { getImageUrl } from "../../../../helpers/image.helper";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
@@ -298,7 +298,7 @@ const StudentCourseScreen = (props: IProps) => {
                         >
                           <Card.Section>
                             <Image
-                              src={getCourseImageUrl(courseInfo.image)}
+                              src={getImageUrl(courseInfo.image)}
                               height={180}
                               alt="image-course"
                             />

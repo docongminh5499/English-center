@@ -1,0 +1,12 @@
+.curriculumCard {
+    cursor: pointer;
+}
+
+
+.curriculumCard .curriculumName {
+    transition: all 0.3s ease-in-out;
+}
+
+.curriculumCard:hover .curriculumName {
+    color: #228BE6;
+}
