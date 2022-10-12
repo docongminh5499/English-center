@@ -40,6 +40,11 @@ export enum CourseStatus {
   Closed = "Closed",
 }
 
+export enum AttendanceStatus {
+  Attendance = "Attendance",
+  AbsenceWithPermission = "AbsenceWithPermission",
+  AbsenceWithoutPermission = "AbsenceWithoutPermission",
+}
 
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
@@ -97,7 +102,8 @@ export const Url = {
     getTimetable: "/api/students/timetable",
     getCourse: "/api/students/courses/get-course",
     getCourseDetail: "/api/students/courses/get-course/",
-    sendAssessCourse: "/api/students/courses/assess-course"
+    sendAssessCourse: "/api/students/courses/assess-course",
+    getAttendance: "/api/students/courses/attendance-course/",
   }
 };
 

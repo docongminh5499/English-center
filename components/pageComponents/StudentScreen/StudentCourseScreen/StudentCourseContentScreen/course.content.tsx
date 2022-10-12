@@ -1,4 +1,5 @@
 import { Tabs, Text, Title } from "@mantine/core";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { CourseStatus } from "../../../../../helpers/constants";
@@ -19,13 +20,25 @@ function translateCourseStatus2String(courseStatus: CourseStatus){
 }
 
 const StudentCourseContentScreen = (props: any) => {
+  const [loading, setLoading] = useState(false);
+
   const course = props.course;
+  if(course === null){
+    setLoading(true);
+  }
+  // console.log("===========================================");
+  // console.log(course);
+  // console.log(props.attendance);
 
   const openingDate = new Date(course.openingDate);
   const closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
 
   return (
     <>
+      <Head>
+          <title>{course.slug}</title>
+          <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div style={{width: "100%", margin: "0px 0px 0px 20px"}}>
         <Title
           order={3}
@@ -70,7 +83,7 @@ const StudentCourseContentScreen = (props: any) => {
           </Tabs.List>
 
           <Tabs.Panel value="attendance">
-            <CourseAttendanceTab />
+            <CourseAttendanceTab {...props} />
           </Tabs.Panel>
           <Tabs.Panel value="document">
             <CourseDocumentTab />

@@ -148,61 +148,76 @@ const StudentHomeScreen = (props: any) =>{
           <title>Thời khóa biểu</title>
           <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Grid grow style={{width: "80%", overflowX: "auto"}}>
+
+      <Container style={{width: "100%", margin: "0px"}} className={styles.timetableContainer}>
         <MediaQuery smallerThan={768} styles={{fontSize: "1rem"}}>
-          <Title order={1} align="justify"  style={{width: "100%", margin: "20px 20px 0px", textAlign: "center"}}> Thời Khóa Biểu</Title>
+          <Title order={1} align="justify"  style={{width: "100%", margin: "20px 20px 0px", textAlign: "center"}}>Thời Khóa Biểu</Title>
         </MediaQuery>
 
         <MediaQuery smallerThan={768} styles={{fontSize: "0.6rem"}}>
           <Title order={5} align="center"  style={{width: "100%", margin: "0px"}}> {(new Date()).toLocaleDateString('pt-PT')}</Title>
         </MediaQuery>
-        <MediaQuery smallerThan={768} styles={{fontSize: "0.8rem"}}>
-          <Title order={3} align="left" transform="full-width" style={{width: "100%", marginLeft: "50px"}}> Đang diễn ra</Title>
-        </MediaQuery>
 
-        <MediaQuery smallerThan={768} styles={{margin: "10px 10px"}}>
-          <div style={{margin: "20px 50px", width: "100%", overflowX:"auto"}}>
-            <table  className={styles.timeTable}>
-              <thead>
-                <tr>
-                  <th>Tên</th>
-                  <th>Giờ</th>
-                  <th>Thứ</th>
-                  <th>Phòng</th>
-                  <th>Ngày bắt đầu</th>
-                  <th>Ngày kết thúc</th>
-                </tr>
-              </thead>
-              {tbodiesNowTimetable}
-            </table>
-          </div>
-        </MediaQuery>
-        <MediaQuery smallerThan={768} styles={{margin: "10px 10px"}}>
-          <Divider my="xl" style={{width: "100%", margin: "10px 10px"}}/>
-        </MediaQuery>
+        {nowCourse.length === 0 && pastCourse.length === 0 &&
+          <MediaQuery smallerThan={768} styles={{fontSize: "1rem", margin: "50px 20px 0px"}}>
+            <Title order={1} align="justify"  style={{width: "100%", margin: "100px 20px 0px", textAlign: "center"}}>Bạn chưa tham gia khóa học nào.</Title>
+          </MediaQuery>
+        }
+        {nowCourse.length !== 0 &&
+          <>
+            <MediaQuery smallerThan={768} styles={{fontSize: "0.8rem"}}>
+              <Title order={3} align="left" transform="full-width" style={{width: "100%", marginLeft: "50px"}}> Đang diễn ra</Title>
+            </MediaQuery>
+
+            <MediaQuery smallerThan={768} styles={{margin: "10px 10px"}}>
+              <div style={{margin: "20px 50px", width: "100%", overflowX:"auto"}}>
+                <table  className={styles.timeTable}>
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th>Giờ</th>
+                      <th>Thứ</th>
+                      <th>Phòng</th>
+                      <th>Ngày bắt đầu</th>
+                      <th>Ngày kết thúc</th>
+                    </tr>
+                  </thead>
+                  {tbodiesNowTimetable}
+                </table>
+              </div>
+            </MediaQuery>
+            <MediaQuery smallerThan={768} styles={{margin: "10px 10px"}}>
+              <Divider my="xl" style={{width: "100%", margin: "50px 10px"}}/>
+            </MediaQuery>
+          </>
+        }
         {/* ======================================================================================= */}
-        <MediaQuery smallerThan={768} styles={{fontSize: "0.8rem"}}>
-          <Title order={3} align="left" transform="full-width" style={{width: "100%", marginLeft: "50px"}}>Đã kết thúc</Title>
-        </MediaQuery>
+        {pastCourse.length !== 0 &&
+          <>
+            <MediaQuery smallerThan={768} styles={{fontSize: "0.8rem"}}>
+              <Title order={3} align="left" transform="full-width" style={{width: "100%", marginLeft: "50px"}}>Đã kết thúc</Title>
+            </MediaQuery>
 
-        <MediaQuery smallerThan={768} styles={{margin: "10px 10px"}}>
-          <div style={{margin: "20px 50px", width: "100%", overflowX:"auto"}}>
-            <table  className={styles.timeTable}>
-              <thead>
-                <tr>
-                  <th>Tên</th>
-                  <th>Giờ</th>
-                  <th>Thứ</th>
-                  <th>Phòng</th>
-                  <th>Ngày bắt đầu</th>
-                  <th>Ngày kết thúc</th>
-                </tr>
-              </thead>
-              {tbodiesPastTimetable}
-            </table>
-          </div>
-        </MediaQuery>
-      </Grid>
+            <MediaQuery smallerThan={768} styles={{margin: "10px 10px"}}>
+              <div style={{margin: "20px 50px", width: "100%", overflowX:"auto"}}>
+                <table  className={styles.timeTable}>
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th>Giờ</th>
+                      <th>Thứ</th>
+                      <th>Phòng</th>
+                      <th>Ngày bắt đầu</th>
+                      <th>Ngày kết thúc</th>
+                    </tr>
+                  </thead>
+                  {tbodiesPastTimetable}
+                </table>
+              </div>
+            </MediaQuery>
+          </>
+        }
+      </Container>
     </>
   )
 };
