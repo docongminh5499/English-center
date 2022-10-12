@@ -128,7 +128,7 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
       }}
       key={item.href}
     >
-      <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
+      <a className={cx(classes.link, { [classes.linkActive]: router.asPath.startsWith(item.href) })}>
         <Group position="apart">
           {item.name === "Trò chuyện"
             && chatState.unreadMessageCount > 0

@@ -17,7 +17,7 @@ const HomeScreen = (props: IProps) => {
     if (authState.loggingOut) return;
 
     if (props.userRole === UserRole.TEACHER)
-      router.replace("/teacher");
+      router.replace("/teacher/course");
     else if (props.userRole === UserRole.EMPLOYEE)
       router.replace("/employee");
     else if (props.userRole === UserRole.STUDENT)
