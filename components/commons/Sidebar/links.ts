@@ -29,7 +29,7 @@ export const studentSidebar: Array<SidebarItem> = [
   {
     src: IconCalendar,
     name: "Thời khóa biểu",
-    href: "/student",
+    href: "/student/timetable",
   },
   {
     src: IconNotebook,

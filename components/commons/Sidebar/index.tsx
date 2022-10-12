@@ -132,7 +132,7 @@ const Sidebar = (props: IProps) => {
   const links = sideBarList.map((item) => (
     <Link href={item.href}
       key={item.href}>
-      <a className={cx(classes.link, { [classes.linkActive]: item.href === router.asPath })}>
+      <a className={cx(classes.link, { [classes.linkActive]: router.asPath.startsWith(item.href) })}>
         <Group position="apart" spacing={8}>
           {item.name === "Trò chuyện" && props.unreadMessageCount > 0 && !props.inMessageScreen ? (
             <Indicator size={8} offset={5} className={classes.linkIcon}>
