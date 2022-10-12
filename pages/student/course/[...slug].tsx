@@ -1,6 +1,5 @@
 import { CustomNextPage } from "../../../interfaces/page.interface";
 import StudentCourseContentScreen from "../../../components/pageComponents/StudentScreen/StudentCourseScreen/StudentCourseContentScreen/course.content";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
 import { CookieParser } from "../../../helpers/cookieParser";
 import API from "../../../helpers/api";
@@ -22,8 +21,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const responses = await API.get(Url.students.getCourseDetail + context.params?.slug, {
             token: user.token,
         });
-        return { props: { userRole: user.role || null, course: responses } };
+        const attendance = await API.get(Url.students.getAttendance + context.params?.slug, {
+            token: user.token,
+        });
+        return { props: { userRole: user.role || null, course: responses, attendance:  attendance} };
     } catch (error: any) {
-        return { props: { userRole: user.role || null, course: null } }
+        return { props: { userRole: user.role || null, course: null, attendance: null } }
     };
 };

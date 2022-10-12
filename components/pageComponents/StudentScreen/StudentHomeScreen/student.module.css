@@ -25,4 +25,8 @@
     font-size: 0.6rem;
     text-align: left;
   }
+
+  .timetableContainer {
+    overflow-x: auto;
+  }
 }
