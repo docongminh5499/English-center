@@ -9,6 +9,7 @@ import { getGenderName } from "../../../../helpers/getGenderName";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import UserTeacher from "../../../../models/userTeacher.model";
 import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
 
 
 interface IProps {
@@ -37,6 +38,21 @@ const TeacherPersonalScreen = (props: IProps) => {
         <title>Tài khoản cá nhân</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+
+      {!didMount && (
+        <Container style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <Loading />
+        </Container>
+      )}
+
+
       {didMount && (
         <Container size="xl" style={{ width: "100%" }} p={isMobile ? 8 : 20}>
           <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { CourseStatus, TimeZoneOffset, UserRole } from "../../../../helpers/constants";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import Course from "../../../../models/course.model";
+import Loading from "../../../commons/Loading";
 import CourseCurriculum from "./course.curriculum";
 import CourseDocument from "./course.document";
 import CourseExercise from "./course.exercise";
@@ -40,6 +41,19 @@ const TeacherCourseDetailScreen = (props: IProps) => {
         <title>Chi tiết khóa học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {!didMount && (
+        <Container style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <Loading />
+        </Container>
+      )}
+
       {didMount && (
         <Container p={isMobile ? "xs" : "md"} size="xl" style={{ width: "100%" }}>
           <Title size="2.6rem" color="#444">{props.course?.name}</Title>

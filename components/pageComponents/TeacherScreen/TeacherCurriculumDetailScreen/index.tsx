@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getImageUrl } from "../../../../helpers/image.helper";
 import Curriculum from "../../../../models/cirriculum.model";
 import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
 
 
 interface IProps {
@@ -34,6 +35,19 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
         <title>Chi tiết chương trình học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {!didMount && (
+        <Container style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <Loading />
+        </Container>
+      )}
+
       {didMount && (
         <Container size="xl" style={{ width: "100%" }}>
           <Title transform="uppercase" color="#444" size="2.6rem" my={20} align="center">
