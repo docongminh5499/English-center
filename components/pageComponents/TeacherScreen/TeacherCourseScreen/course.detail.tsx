@@ -135,21 +135,21 @@ const TeacherCourseDetailScreen = (props: IProps) => {
 
             <Tabs.Panel value="student" pt="xs">
               <CourseStudent
-                studentParticipations={props.course?.studentPaticipateCourses}
                 courseId={props.course?.id}
+                courseSlug={props.course?.slug}
               />
             </Tabs.Panel>
 
             <Tabs.Panel value="exercise" pt="xs">
-              <CourseExercise exercises={props.course?.exercises} />
+              <CourseExercise courseSlug={props.course?.slug} />
             </Tabs.Panel>
 
             <Tabs.Panel value="document" pt="xs">
-              <CourseDocument documents={props.course?.documents} courseSlug={props.course?.slug} />
+              <CourseDocument courseSlug={props.course?.slug} />
             </Tabs.Panel>
 
             <Tabs.Panel value="rating" pt="xs">
-              <CourseRating maskedComments={props.course?.maskedComments} />
+              <CourseRating courseSlug={props.course?.slug} />
             </Tabs.Panel>
           </Tabs>
         </Container>

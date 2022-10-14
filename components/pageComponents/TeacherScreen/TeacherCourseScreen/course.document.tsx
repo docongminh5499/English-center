@@ -1,21 +1,21 @@
-import { Anchor, Container, Grid, Modal, Space, Text } from "@mantine/core";
+import { Anchor, Container, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "../../../commons/Button";
 import CreateDocumentModal from "../Modal/createDocument.modal";
 import DeleteExerciseModal from "../Modal/delete.modal";
 import Document from "../../../../models/document.models";
 import { getDocumentUrl } from "../../../../helpers/image.helper";
 import API from "../../../../helpers/api";
-import { Url } from "../../../../helpers/constants";
+import { TeacherConstants, Url } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Loading from "../../../commons/Loading";
 
 interface IProps {
   courseSlug?: string;
-  documents?: Document[]
 }
 
 
@@ -31,8 +31,20 @@ const CourseDocument = (props: IProps) => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [currentDocument, setCurrentDocument] = useState<Document>();
-  const [listDocuments, setListDocuments] = useState(props.documents);
+  const [listDocuments, setListDocuments] = useState<Document[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [seeMoreLoading, setSeeMoreLoading] = useState(false);
 
+
+  const getDocuments = useCallback(async (limit: number, skip: number) => {
+    return await API.post(Url.teachers.getDocuments + props.courseSlug, {
+      token: authState.token,
+      limit: limit,
+      skip: skip,
+      courseSlug: props.courseSlug
+    });
+  }, [authState.token, props.courseSlug]);
 
 
   const onDelete = useCallback(async () => {
@@ -45,6 +57,7 @@ const CourseDocument = (props: IProps) => {
         setListDocuments(updatedListExercises);
         setIsOpenDeleteModal(false);
         setIsDeleting(false);
+        setTotal(total - 1);
         toast.success("Xóa tài liệu thành công.")
       } else {
         setIsOpenDeleteModal(false);
@@ -86,6 +99,7 @@ const CourseDocument = (props: IProps) => {
         const updatedListDocuments = (listDocuments || []).concat(responses.document);
         updatedListDocuments.sort((prev, nex) => prev.name.localeCompare(nex.name));
         setListDocuments(updatedListDocuments);
+        setTotal(total + 1);
         toast.success("Thêm tài liệu thành công.");
       }
       setIsCreating(false);
@@ -96,6 +110,40 @@ const CourseDocument = (props: IProps) => {
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, listDocuments, props.courseSlug]);
+
+
+
+  const seeMoreDocuments = useCallback(async () => {
+    try {
+      setSeeMoreLoading(true);
+      const responses = await getDocuments(TeacherConstants.limitDocument, listDocuments.length);
+      setTotal(responses.total);
+      setListDocuments(listDocuments.concat(responses.documents));
+      setSeeMoreLoading(false);
+    } catch (error) {
+      setSeeMoreLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [TeacherConstants.limitStudent, listDocuments]);
+
+
+
+  useEffect(() => {
+    const didMountFunc = async () => {
+      try {
+        setLoading(true);
+        const responses = await getDocuments(TeacherConstants.limitDocument, 0);
+        setTotal(responses.total);
+        setListDocuments(responses.documents);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      }
+    }
+    didMountFunc();
+  }, []);
+
 
 
   return (
@@ -128,8 +176,27 @@ const CourseDocument = (props: IProps) => {
         />
       </Modal>
 
+      <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
+        Danh sách tài liệu
+      </Text>
+      <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
+        <Button variant="light" onClick={() => setIsOpenCreateModal(true)}>Tạo tài liệu mới</Button>
+      </Container>
 
-      {listDocuments && listDocuments.length === 0 && (
+      {loading && (
+        <Container style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: 'center',
+          flexGrow: 1,
+          height: "200px"
+        }}>
+          <Loading />
+        </Container>
+      )}
+
+
+      {!loading && listDocuments && listDocuments.length === 0 && (
         <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
           <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
             Chưa có tài liệu
@@ -138,7 +205,7 @@ const CourseDocument = (props: IProps) => {
       )}
 
 
-      {listDocuments && listDocuments.length > 0 && (
+      {!loading && listDocuments && listDocuments.length > 0 && (
         <Container size="xl" p={isMobile ? 0 : 10}>
           <Grid>
             {listDocuments.map((item, index) => (
@@ -172,14 +239,21 @@ const CourseDocument = (props: IProps) => {
 
           </Grid>
         </Container>
-
       )}
-      <Space h={100} />
 
-
-      <Container style={{ display: "flex", justifyContent: "center" }}>
-        <Button onClick={() => setIsOpenCreateModal(true)}>Tạo tài liệu mới</Button>
+      <Space h={20} />
+      <Container style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: 'center',
+        flexGrow: 1,
+      }}>
+        {seeMoreLoading && <Loader variant="dots" />}
+        {!seeMoreLoading && listDocuments.length < total && <Button
+          onClick={() => seeMoreDocuments()}
+        >Xem thêm</Button>}
       </Container>
+      <Space h={20} />
     </>
   );
 }

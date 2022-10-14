@@ -1,16 +1,21 @@
-import { Button, Container, Grid, Space, Stack, Text } from "@mantine/core";
+import { Button, Container, Grid, Loader, Space, Stack, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useCallback, useMemo } from "react";
-import { TimeZoneOffset } from "../../../../helpers/constants";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import API from "../../../../helpers/api";
+import { TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
+import StarPointTypeCount from "../../../../interfaces/starPointTypeCount.interface";
 import MaskedComment from "../../../../models/maskedComment.model";
+import { useAuth } from "../../../../stores/Auth";
 import Comment from "../../../commons/Comment";
 import Rating from "../../../commons/Rating";
 import RatingProgress from "../../../commons/RatingProgress";
 
+
 interface IProps {
-  maskedComments?: MaskedComment[]
+  courseSlug?: string
 }
 
 const CourseRating = (props: IProps) => {
@@ -18,51 +23,43 @@ const CourseRating = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
-
-  const totalScore = useMemo(() => {
-    const totalScore = props.maskedComments?.reduce((total, current) =>
-      total += (current.starPoint ? current.starPoint : 0), 0) || 0;
-    return totalScore;
-  }, [props.maskedComments]);
-
-
-  const totalCount = useMemo(() => {
-    const totalCount = props.maskedComments?.reduce((total, current) =>
-      total += (current.starPoint ? 1 : 0), 0) || 0;
-    return totalCount;
-  }, [props.maskedComments]);
+  const [authState] = useAuth();
+  const [total, setTotal] = useState(0);
+  const [avg, setAvg] = useState(0);
+  const [commentList, setCommentList] = useState<MaskedComment[]>([]);
+  const [starPointTypeCount, setStarPointCount] = useState<StarPointTypeCount>({ "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 });
+  const [loading, setLoading] = useState(true);
 
 
-  const average = useMemo(() => {
-    if (totalCount == 0) return 0;
-    return Math.round(totalScore / totalCount * 10) / 10
-  }, [totalCount, totalScore]);
+  const getComments = useCallback(async (limit: number, skip: number) => {
+    return await API.post(Url.teachers.getComments + props.courseSlug, {
+      token: authState.token,
+      limit: limit,
+      skip: skip,
+      courseSlug: props.courseSlug
+    });
+  }, [authState.token, props.courseSlug]);
 
 
-  const eachScoreCount = useMemo(() => {
-    const result: any = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    props.maskedComments?.forEach(item => {
-      if (item.starPoint) result[item.starPoint] += 1;
-    })
-    const total = result[1] + result[2] + result[3] + result[4] + result[5];
-    if (total > 0) {
-      result[1] = Math.round(result[1] / total * 100);
-      result[2] = Math.round(result[2] / total * 100);
-      result[3] = Math.round(result[3] / total * 100);
-      result[4] = Math.round(result[4] / total * 100);
-      result[5] = Math.round(result[5] / total * 100);
+  useEffect(() => {
+    const didMountFunc = async () => {
+      try {
+        setLoading(true);
+        const responses = await getComments(TeacherConstants.maxTopComments, 0);
+        setTotal(responses.total);
+        setCommentList(responses.comments);
+        setAvg(responses.average);
+        setStarPointCount(responses.starTypeCount);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      }
     }
-    return result;
-  }, [props.maskedComments]);
+    didMountFunc();
+  }, []);
 
 
-  const topThreeLatestComments = useMemo(() => {
-    const result: MaskedComment[] = [];
-    props.maskedComments?.forEach(item => {
-      if (item.starPoint && result.length < 3) result.push(item);
-    })
-    return result;
-  }, [props.maskedComments]);
 
   return (
     <Container size="xl" p={isMobile ? 0 : 10}>
@@ -76,29 +73,41 @@ const CourseRating = (props: IProps) => {
           gap: "1rem"
         }}>
           <Text style={{ fontSize: "4rem" }} weight={600} align='center' color="#444">
-            {average}
+            {Math.round(avg * 10) / 10}
           </Text>
-          <Rating score={Math.round(average)} size="2.8rem" />
+          <Rating score={Math.round(avg)} size="2.8rem" />
           <Text color="dimmed" align="center">
-            ({totalCount} bình luận)
+            ({total} bình luận)
           </Text>
         </Grid.Col>
         <Grid.Col span={isMobile ? 12 : 6}>
           <Stack spacing="xs" justify="center">
-            <RatingProgress score={5} value={eachScoreCount[5]} />
-            <RatingProgress score={4} value={eachScoreCount[4]} />
-            <RatingProgress score={3} value={eachScoreCount[3]} />
-            <RatingProgress score={2} value={eachScoreCount[2]} />
-            <RatingProgress score={1} value={eachScoreCount[1]} />
+            <RatingProgress score={5} value={starPointTypeCount[5] / total * 100} />
+            <RatingProgress score={4} value={starPointTypeCount[4] / total * 100} />
+            <RatingProgress score={3} value={starPointTypeCount[3] / total * 100} />
+            <RatingProgress score={2} value={starPointTypeCount[2] / total * 100} />
+            <RatingProgress score={1} value={starPointTypeCount[1] / total * 100} />
           </Stack>
         </Grid.Col>
       </Grid>
 
       <Space h={40} />
 
-      {topThreeLatestComments && topThreeLatestComments.length > 0 && (
+      {loading && (
+        <Container style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: 'center',
+          flexGrow: 1,
+          height: "80px"
+        }}>
+          <Loader variant="dots" />
+        </Container>
+      )}
+
+      {commentList && commentList.length > 0 && (
         <Stack spacing="xl" justify="center">
-          {topThreeLatestComments.map((item, index) => (
+          {commentList.map((item, index) => (
             <Comment
               key={index}
               name={item.userFullName || ""}
@@ -112,7 +121,7 @@ const CourseRating = (props: IProps) => {
 
       <Space h={40} />
 
-      {totalCount > 3 && (
+      {total > TeacherConstants.maxTopComments && (
         <Container style={{ display: "flex", justifyContent: "center" }}>
           <Button onClick={() => router.push(router.asPath + "/allComments")}>
             Xem tất cả

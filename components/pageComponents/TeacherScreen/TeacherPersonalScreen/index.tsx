@@ -22,7 +22,7 @@ const TeacherPersonalScreen = (props: IProps) => {
   const isMobile = useMediaQuery('(max-width: 480px)');
   const [didMount, setDidMount] = useState(false);
   const router = useRouter();
-  
+
 
   useEffect(() => {
     if (props.userTeacher === null)
@@ -110,6 +110,24 @@ const TeacherPersonalScreen = (props: IProps) => {
               </Group>
             </Grid.Col>
           </Grid>
+
+          <Space h={40} />
+          <Text color="#444" weight={700} style={{ fontSize: "1.8rem" }}>Chi nhánh làm việc</Text>
+          <Divider />
+          <Group position="apart">
+            <Text weight={600} color="#444" mr={5}>Tên chi nhánh: </Text>
+            <Text color="#444">{props.userTeacher?.worker.branch.name}</Text>
+          </Group>
+          <Space h={10} />
+          <Group position="apart">
+            <Text weight={600} color="#444" mr={5}>Địa chỉ: </Text>
+            <Text color="#444">{props.userTeacher?.worker.branch.address}</Text>
+          </Group>
+          <Space h={10} />
+          <Group position="apart">
+            <Text weight={600} color="#444" mr={5}>Số điện thoại: </Text>
+            <Text color="#444">{props.userTeacher?.worker.branch.phoneNumber}</Text>
+          </Group>
 
           <Space h={40} />
           <Text color="#444" weight={700} style={{ fontSize: "1.8rem" }}>Kỹ năng chuyên môn</Text>

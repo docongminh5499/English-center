@@ -55,7 +55,12 @@ export const CookieKey = {
 };
 
 export const TeacherConstants = {
-  limitCourse: 12
+  limitCourse: 12,
+  limitStudent: 12,
+  limitExercise: 12,
+  limitDocument: 12,
+  limitComments: 12,
+  maxTopComments: 3,
 }
 
 export const StudentConstants = {
@@ -87,7 +92,10 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
     getCourseDetail: "/api/teachers/courses/get-course/",
+    getStudents: "/api/teachers/courses/get-students/",
+    getExercises: "/api/teachers/courses/get-exercises/",
     deleteExercise: "/api/teachers/courses/delete-exercise/",
+    getDocuments: "/api/teachers/courses/get-documents/",
     deleteDocument: "/api/teachers/courses/delete-document/",
     createDocument: "/api/teachers/courses/create-document",
     getPersonalInformation: "/api/teachers/personal/get-personal-information",
@@ -96,7 +104,8 @@ export const Url = {
     getCurriculum: "/api/teachers/curriculum/get-curriculum/",
     modifyCurriculum: "/api/teachers/curriculum/modify-curriculum",
     createCurriculum: "/api/teachers/curriculum/create-curriculum",
-    deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/"
+    deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/",
+    getComments: "/api/teachers/courses/get-comments/",
   },
   students: {
     getTimetable: "/api/students/timetable",

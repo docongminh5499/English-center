@@ -1,18 +1,19 @@
-import { Container, Grid, Modal, Space, Text } from "@mantine/core";
+import { Container, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { ExerciseStatus, TimeZoneOffset, Url } from "../../../../helpers/constants";
+import { ExerciseStatus, TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
 import { getExerciseStatus } from "../../../../helpers/getExerciseStatus";
 import Exercise from "../../../../models/exercise.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
 import DeleteExerciseModal from "../Modal/delete.modal";
 
 interface IProps {
-  exercises?: Exercise[];
+  courseSlug?: string;
 }
 
 const CourseExercise = (props: IProps) => {
@@ -24,7 +25,21 @@ const CourseExercise = (props: IProps) => {
   const [currentExercise, setCurrentExercise] = useState<Exercise>();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [listExercises, setListExercises] = useState(props.exercises);
+  const [listExercises, setListExercises] = useState<Exercise[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [seeMoreLoading, setSeeMoreLoading] = useState(false);
+
+
+  const getExercises = useCallback(async (limit: number, skip: number) => {
+    return await API.post(Url.teachers.getExercises + props.courseSlug, {
+      token: authState.token,
+      limit: limit,
+      skip: skip,
+      courseSlug: props.courseSlug
+    });
+  }, [authState.token, props.courseSlug]);
+
 
 
   const onDelete = useCallback(async () => {
@@ -35,6 +50,7 @@ const CourseExercise = (props: IProps) => {
       if (responses.success) {
         const updatedListExercises = listExercises?.filter(item => item.id !== currentExercise?.id);
         setListExercises(updatedListExercises);
+        setTotal(total - 1);
         setIsOpenDeleteModal(false);
         setIsDeleting(false);
         toast.success("Xóa bài tập thành công.")
@@ -49,6 +65,40 @@ const CourseExercise = (props: IProps) => {
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, currentExercise, listExercises]);
+
+
+
+  const seeMoreExercises = useCallback(async () => {
+    try {
+      setSeeMoreLoading(true);
+      const responses = await getExercises(TeacherConstants.limitExercise, listExercises.length);
+      setTotal(responses.total);
+      setListExercises(listExercises.concat(responses.exercises));
+      setSeeMoreLoading(false);
+    } catch (error) {
+      setSeeMoreLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [TeacherConstants.limitStudent, listExercises]);
+
+
+
+  useEffect(() => {
+    const didMountFunc = async () => {
+      try {
+        setLoading(true);
+        const responses = await getExercises(TeacherConstants.limitExercise, 0);
+        setTotal(responses.total);
+        setListExercises(responses.exercises);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      }
+    }
+    didMountFunc();
+  }, []);
+
 
   return (
     <>
@@ -67,7 +117,26 @@ const CourseExercise = (props: IProps) => {
         />
       </Modal>
 
-      {listExercises && listExercises.length === 0 && (
+      <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
+        Danh sách bài tập
+      </Text>
+      <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
+        <Button variant="light">Tạo bài tập mới</Button>
+      </Container>
+
+      {loading && (
+        <Container style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: 'center',
+          flexGrow: 1,
+          height: "200px"
+        }}>
+          <Loading />
+        </Container>
+      )}
+
+      {!loading && listExercises && listExercises.length === 0 && (
         <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
           <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
             Chưa có bài tập
@@ -75,7 +144,7 @@ const CourseExercise = (props: IProps) => {
         </Container>
       )}
 
-      {listExercises && listExercises.length > 0 && (
+      {!loading && listExercises && listExercises.length > 0 && (
         listExercises.map((item, index) => (
           <Container key={index} size="xl" p={isLargeTablet ? 0 : 10} mb={20}>
             <Grid>
@@ -156,11 +225,19 @@ const CourseExercise = (props: IProps) => {
         ))
       )}
 
-      <Space h={80} />
-
-      <Container style={{ display: "flex", justifyContent: "center" }}>
-        <Button>Tạo bài tập mới</Button>
+      <Space h={20} />
+      <Container style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: 'center',
+        flexGrow: 1,
+      }}>
+        {seeMoreLoading && <Loader variant="dots" />}
+        {!seeMoreLoading && listExercises.length < total && <Button
+          onClick={() => seeMoreExercises()}
+        >Xem thêm</Button>}
       </Container>
+      <Space h={20} />
     </>
   );
 }
