@@ -1,11 +1,13 @@
-import { Container, Grid, Loader, Modal, Space, Text } from "@mantine/core";
+import { Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { ExerciseStatus, TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
+import { CourseStatus, ExerciseStatus, TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import { getExerciseStatus } from "../../../../helpers/getExerciseStatus";
+import Course from "../../../../models/course.model";
 import Exercise from "../../../../models/exercise.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
@@ -14,6 +16,7 @@ import DeleteExerciseModal from "../Modal/delete.modal";
 
 interface IProps {
   courseSlug?: string;
+  course: Course | null;
 }
 
 const CourseExercise = (props: IProps) => {
@@ -120,9 +123,11 @@ const CourseExercise = (props: IProps) => {
       <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
         Danh sách bài tập
       </Text>
-      <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="light">Tạo bài tập mới</Button>
-      </Container>
+      {getCourseStatus(props.course) !== CourseStatus.Closed && (
+        <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
+          <Button variant="light">Tạo bài tập mới</Button>
+        </Container>
+      )}
 
       {loading && (
         <Container style={{
@@ -146,82 +151,97 @@ const CourseExercise = (props: IProps) => {
 
       {!loading && listExercises && listExercises.length > 0 && (
         listExercises.map((item, index) => (
-          <Container key={index} size="xl" p={isLargeTablet ? 0 : 10} mb={20}>
-            <Grid>
-              <Grid.Col span={isLargeTablet ? 12 : 10}>
-                <Text weight={600} color="#444">{item.name.toUpperCase()}</Text>
-                <Space h={8} />
-                <Grid>
-                  <Grid.Col span={isMobile ? 12 : 4}>
-                    <Text color="#444">
-                      Ngày diễn ra:
-                      <Text component={!isLargeTablet || isMobile ? 'span' : 'p'}> {
-                        item.openTime === null
-                          ? "--:--   --/--/----"
-                          : moment(item.openTime).utcOffset(TimeZoneOffset).format("HH:mm - DD/MM/YYYY")}
+          <React.Fragment key={index}>
+            <Container size="xl" p={isLargeTablet ? 0 : 10} my={10}>
+              <Grid>
+                <Grid.Col span={isLargeTablet ? 12 : 10}>
+                  <Text weight={600} color="#444">{item.name.toUpperCase()}</Text>
+                  <Space h={8} />
+                  <Grid>
+                    <Grid.Col span={isMobile ? 12 : 4}>
+                      <Text color="#444">
+                        Ngày diễn ra:
+                        <Text component={!isLargeTablet || isMobile ? 'span' : 'p'}> {
+                          item.openTime === null
+                            ? "--:--   --/--/----"
+                            : moment(item.openTime).utcOffset(TimeZoneOffset).format("HH:mm - DD/MM/YYYY")}
+                        </Text>
                       </Text>
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={isMobile ? 12 : 4}>
-                    <Text color="#444">
-                      Ngày kết thúc:
-                      <Text component={!isLargeTablet || isMobile ? 'span' : 'p'}> {
-                        item.endTime === null
-                          ? "--:--   --/--/----"
-                          : moment(item.endTime).utcOffset(TimeZoneOffset).format("HH:mm - DD/MM/YYYY")
-                      }
+                    </Grid.Col>
+                    <Grid.Col span={isMobile ? 12 : 4}>
+                      <Text color="#444">
+                        Ngày kết thúc:
+                        <Text component={!isLargeTablet || isMobile ? 'span' : 'p'}> {
+                          item.endTime === null
+                            ? "--:--   --/--/----"
+                            : moment(item.endTime).utcOffset(TimeZoneOffset).format("HH:mm - DD/MM/YYYY")
+                        }
+                        </Text>
                       </Text>
-                    </Text>
-                  </Grid.Col>
-                  <Grid.Col span={isMobile ? 12 : 4}>
-                    {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.Closed && (
-                      <Text color="#444">Tình trạng:
-                        <Text color="pink" component={!isLargeTablet || isMobile ? 'span' : 'p'}> Đã đóng</Text>
-                      </Text>
-                    )}
-                    {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.Opened && (
-                      <Text color="#444">Tình trạng:
-                        <Text color="green" component={!isLargeTablet || isMobile ? 'span' : 'p'}> Đang mở</Text>
-                      </Text>
-                    )}
-                    {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.NotOpen && (
-                      <Text color="#444">Tình trạng:
-                        <Text color="grape" component={!isLargeTablet || isMobile ? 'span' : 'p'}> Chưa mở</Text>
-                      </Text>
-                    )}
-                  </Grid.Col>
-                </Grid>
-              </Grid.Col>
+                    </Grid.Col>
+                    <Grid.Col span={isMobile ? 12 : 4}>
+                      {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.Closed && (
+                        <Text color="#444">Tình trạng:
+                          <Text color="pink" component={!isLargeTablet || isMobile ? 'span' : 'p'}> Đã đóng</Text>
+                        </Text>
+                      )}
+                      {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.Opened && (
+                        <Text color="#444">Tình trạng:
+                          <Text color="green" component={!isLargeTablet || isMobile ? 'span' : 'p'}> Đang mở</Text>
+                        </Text>
+                      )}
+                      {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.NotOpen && (
+                        <Text color="#444">Tình trạng:
+                          <Text color="grape" component={!isLargeTablet || isMobile ? 'span' : 'p'}> Chưa mở</Text>
+                        </Text>
+                      )}
+                    </Grid.Col>
+                  </Grid>
+                </Grid.Col>
 
-              {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.Opened ? (
-                <Grid.Col span={isLargeTablet ? 12 : 2}>
-                  <Button compact={isLargeTablet ? false : true} fullWidth>
-                    Xem chi tiết
-                  </Button>
-                </Grid.Col>
-              ) : (
-                <Grid.Col
-                  span={isLargeTablet ? 12 : 2}
-                  style={{
-                    display: "flex",
-                    flexDirection: isLargeTablet ? (isMobile ? "column" : "row") : "column",
-                    alignItems: "flex-start",
-                    gap: "0.5rem"
-                  }}>
-                  <Button compact={isLargeTablet ? false : true} fullWidth size="xs">Xem chi tiết</Button>
-                  <Button
-                    onClick={() => {
-                      setCurrentExercise(item)
-                      setIsOpenDeleteModal(true);
-                    }}
-                    compact={isLargeTablet ? false : true}
-                    color="red" fullWidth size="xs">
-                    Xóa bài tập
-                  </Button>
-                </Grid.Col>
-              )}
-            </Grid>
-          </Container>
+                {getExerciseStatus(item.openTime, item.endTime) === ExerciseStatus.Opened ||
+                  getCourseStatus(props.course) === CourseStatus.Closed ? (
+                  <Grid.Col
+                    span={isLargeTablet ? 12 : 2}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}>
+                    <Button compact={isLargeTablet ? false : true} fullWidth variant="light">
+                      Xem chi tiết
+                    </Button>
+                  </Grid.Col>
+                ) : (
+                  <Grid.Col
+                    span={isLargeTablet ? 12 : 2}
+                    style={{
+                      display: "flex",
+                      flexDirection: isLargeTablet ? (isMobile ? "column" : "row") : "column",
+                      alignItems: "flex-start",
+                      gap: "0.5rem"
+                    }}>
+                    <Button compact={isLargeTablet ? false : true} fullWidth size="xs" variant="light">
+                      Xem chi tiết
+                    </Button>
+                    <Button
+                      variant="light"
+                      onClick={() => {
+                        setCurrentExercise(item)
+                        setIsOpenDeleteModal(true);
+                      }}
+                      compact={isLargeTablet ? false : true}
+                      color="red" fullWidth size="xs">
+                      Xóa bài tập
+                    </Button>
+                  </Grid.Col>
+                )}
+              </Grid>
+            </Container>
+
+            {index !== listExercises.length - 1 && (
+              <Divider />
+            )}
+          </React.Fragment>
         ))
       )}
 

@@ -1,21 +1,24 @@
-import { Anchor, Container, Grid, Loader, Modal, Space, Text } from "@mantine/core";
+import { Anchor, Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "../../../commons/Button";
 import CreateDocumentModal from "../Modal/createDocument.modal";
 import DeleteExerciseModal from "../Modal/delete.modal";
 import Document from "../../../../models/document.models";
 import { getDocumentUrl } from "../../../../helpers/image.helper";
 import API from "../../../../helpers/api";
-import { TeacherConstants, Url } from "../../../../helpers/constants";
+import { CourseStatus, TeacherConstants, Url } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "../../../commons/Loading";
+import Course from "../../../../models/course.model";
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 
 interface IProps {
   courseSlug?: string;
+  course: Course | null;
 }
 
 
@@ -127,7 +130,6 @@ const CourseDocument = (props: IProps) => {
   }, [TeacherConstants.limitStudent, listDocuments]);
 
 
-
   useEffect(() => {
     const didMountFunc = async () => {
       try {
@@ -179,9 +181,12 @@ const CourseDocument = (props: IProps) => {
       <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
         Danh sách tài liệu
       </Text>
-      <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="light" onClick={() => setIsOpenCreateModal(true)}>Tạo tài liệu mới</Button>
-      </Container>
+
+      {getCourseStatus(props.course) !== CourseStatus.Closed && (
+        <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
+          <Button variant="light" onClick={() => setIsOpenCreateModal(true)}>Tạo tài liệu mới</Button>
+        </Container>
+      )}
 
       {loading && (
         <Container style={{
@@ -205,41 +210,42 @@ const CourseDocument = (props: IProps) => {
       )}
 
 
-      {!loading && listDocuments && listDocuments.length > 0 && (
-        <Container size="xl" p={isMobile ? 0 : 10}>
-          <Grid>
-            {listDocuments.map((item, index) => (
-              <React.Fragment key={index}>
-                <Grid.Col span={isLargeTablet ? 12 : 8} style={{ display: "flex", alignItems: "center" }}>
-                  <Text weight={600} color="#444">
-                    {item.name.toLocaleUpperCase()} {item.author && "- Tác giả: " + item.author}{item.pubYear && ", " + item.pubYear}
-                  </Text>
-                </Grid.Col>
-                <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  {item.src && (
-                    <a href={getDocumentUrl(item.src)} target="_blank" style={{ color: "white", width: "100%" }}>
-                      <Button fullWidth>
-                        Xem tài liệu
-                      </Button>
-                    </a>
-                  )}
-                </Grid.Col>
+      {!loading && listDocuments && listDocuments.length > 0 && listDocuments.map((item, index) => (
+        <React.Fragment key={index}>
+          <Container size="xl" p={0} px={isMobile ? 10 : 0}>
+            <Grid my={20}>
+              <Grid.Col span={isLargeTablet ? 12 : (getCourseStatus(props.course) !== CourseStatus.Closed ? 8 : 10)} p={0} style={{ display: "flex", alignItems: "center" }}>
+                <Text weight={600} color="#444" p={8}>
+                  {item.name.toLocaleUpperCase()} {item.author && "- Tác giả: " + item.author}{item.pubYear && ", " + item.pubYear}
+                </Text>
+              </Grid.Col>
+              <Grid.Col span={isLargeTablet ? (isMobile ? 12 : (getCourseStatus(props.course) !== CourseStatus.Closed ? 6 : 12)) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                {item.src && (
+                  <a href={getDocumentUrl(item.src)} target="_blank" style={{ color: "white", width: "100%" }}>
+                    <Button fullWidth variant="light">
+                      Xem tài liệu
+                    </Button>
+                  </a>
+                )}
+              </Grid.Col>
+
+              {getCourseStatus(props.course) !== CourseStatus.Closed && (
                 <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 2} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <Button onClick={() => {
                     setCurrentDocument(item);
                     setIsOpenDeleteModal(true);
-                  }} color="red" fullWidth>Xóa tài liệu</Button>
+                  }} color="red" fullWidth variant="light">Xóa tài liệu</Button>
                 </Grid.Col>
-
-                <Grid.Col span={12}>
-                  <Space h={10} />
+              )}
+              {index !== listDocuments.length - 1 && (
+                <Grid.Col span={12} p={0} mt={20}>
+                  <Divider />
                 </Grid.Col>
-              </React.Fragment>
-            ))}
-
-          </Grid>
-        </Container>
-      )}
+              )}
+            </Grid>
+          </Container>
+        </React.Fragment>
+      ))}
 
       <Space h={20} />
       <Container style={{

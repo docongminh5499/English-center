@@ -82,6 +82,8 @@ const TeacherCourseCommentScreen = (props: IProps) => {
 
     if (props.course === null)
       router.replace('/not-found');
+    else if (props.course.closingDate === undefined || props.course.closingDate === null)
+      router.replace('/not-found');
     else didMountFunc();
   }, []);
 

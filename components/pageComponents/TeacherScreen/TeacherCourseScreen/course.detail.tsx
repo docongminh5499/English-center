@@ -132,11 +132,15 @@ const TeacherCourseDetailScreen = (props: IProps) => {
                 icon={<IconBook size={14} />}>
                 Tài liệu
               </Tabs.Tab>
-              <Tabs.Tab
-                value="rating"
-                icon={<IconStar size={14} />}>
-                Đánh giá
-              </Tabs.Tab>
+
+              {getCourseStatus(props.course) === CourseStatus.Closed && (
+                <Tabs.Tab
+                  value="rating"
+                  icon={<IconStar size={14} />}>
+                  Đánh giá
+                </Tabs.Tab>
+              )}
+
             </Tabs.List>
 
             <Tabs.Panel value="curriculum" pt="xs">
@@ -155,16 +159,23 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="exercise" pt="xs">
-              <CourseExercise courseSlug={props.course?.slug} />
+              <CourseExercise
+                courseSlug={props.course?.slug}
+                course={props.course}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="document" pt="xs">
-              <CourseDocument courseSlug={props.course?.slug} />
+              <CourseDocument
+                courseSlug={props.course?.slug}
+                course={props.course}
+              />
             </Tabs.Panel>
-
-            <Tabs.Panel value="rating" pt="xs">
-              <CourseRating courseSlug={props.course?.slug} />
-            </Tabs.Panel>
+            {getCourseStatus(props.course) === CourseStatus.Closed && (
+              <Tabs.Panel value="rating" pt="xs">
+                <CourseRating courseSlug={props.course?.slug} />
+              </Tabs.Panel>
+            )}
           </Tabs>
         </Container>
       )}
