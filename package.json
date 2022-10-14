@@ -21,6 +21,7 @@
     "@next-safe/middleware": "^0.10.0",
     "@tabler/icons": "^1.95.1",
     "axios": "^0.26.1",
+    "dayjs": "^1.11.5",
     "js-cookie": "^3.0.1",
     "moment": "^2.29.2",
     "next": "^12.1.4",
