@@ -1,0 +1,66 @@
+.wrapRowInfoTeacher {
+    width: 100%;
+    display: flex;
+    gap: 5rem;
+    flex-wrap: wrap;
+}
+
+.colInfoTeacher {
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: 5rem;
+}
+
+.colDateLesson {
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 5rem;
+}
+
+.buttonChangeTeacher {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    text-decoration: underline;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #221D94;
+    flex-shrink: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .wrapRowInfoTeacher {
+        gap: 1rem;
+    }
+    
+    .colDateLesson,
+    .colInfoTeacher {
+        width: 100%;
+    }
+}
+
+.wrapRowTimeLesson {
+    width: 100%;
+    display: flex;
+    gap: 3.5rem;
+}
+
+.colTimeLesson {
+    display: flex;
+    align-items: center;
+    gap: 3.5rem;
+}
+
+.colTimeLesson .txt {
+    flex-shrink: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .colTimeLesson,
+    .wrapRowTimeLesson {
+        gap: 1rem;
+    }
+}
