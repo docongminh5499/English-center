@@ -1,13 +1,13 @@
-import { Grid, Space, Text, Title } from '@mantine/core'
+import { Grid, Space, Text, Title, Image, Container, Loader } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks';
 import React from 'react'
-
+import { getAvatarImageUrl } from "../../../../../helpers/image.helper";
+import { _User } from '../../_models_'
 
 interface IProps {
     title : string,
-    data : any
+    data : _User
 }
-
 const InfoUser = (props : IProps) => {
     const isLargeTablet = useMediaQuery('(max-width: 1024px)');
     return (
@@ -16,24 +16,36 @@ const InfoUser = (props : IProps) => {
                 { props.title }
             </Title>
             <Space h={30} />
-            <Grid>
+            <Grid  align="center" >
                 <Grid.Col span={isLargeTablet ? 12 : 6}>
-                    <Grid>
+                    <Grid align="center" justify="center">
                         <Grid.Col span={isLargeTablet ? 12 : 4}>
-                            Ảnh đại diện
+                            <Image
+                                withPlaceholder
+                                placeholder={
+                                <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", maxWidth: "300px" }}>
+                                    <Loader variant="dots" />
+                                </Container>
+                                }
+                                // imageRef={avatarImgRef}
+                                style={{ maxWidth: "300px", marginLeft:'auto', marginRight: 'auto' }}
+                                radius="md"
+                                src={getAvatarImageUrl(props.data.avatar)}
+                                alt="Hình đại diện"
+                            />
                         </Grid.Col>
                         <Grid.Col span={isLargeTablet ? 12 : 8}>
                             <Grid>
                                 <Grid.Col span={4}><Text color="#222222" weight={500} mr={5}>Họ tên:</Text></Grid.Col>
-                                <Grid.Col span={8}><Text color="#222222" >{ props.data.fullname || '' }</Text></Grid.Col>
+                                <Grid.Col span={8}><Text color="#222222" >{ props.data.fullName || '' }</Text></Grid.Col>
                             </Grid>
                             <Grid>
                                 <Grid.Col span={4}><Text color="#222222" weight={500} mr={5}>Giới tính:</Text></Grid.Col>
-                                <Grid.Col span={8}><Text color="#222222" >{ props.data.gender || '' }</Text></Grid.Col>
+                                <Grid.Col span={8}><Text color="#222222" >{ props.data.sex || '' }</Text></Grid.Col>
                             </Grid>
                             <Grid>
                                 <Grid.Col span={4}><Text color="#222222" weight={500} mr={5}>Ngày sinh:</Text></Grid.Col>
-                                <Grid.Col span={8}><Text color="#222222">{ props.data.birthday || '' }</Text></Grid.Col>
+                                <Grid.Col span={8}><Text color="#222222">{ props.data.dateOfBirth || '' }</Text></Grid.Col>
                             </Grid>
                         </Grid.Col>
                     </Grid>

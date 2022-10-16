@@ -5,12 +5,13 @@ import styles from "./studentDetailsScreen.module.module.css";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 import InfoUser from './components/InfoUser'
-import Timekeeping from './components/Timekeeping'
+import Attendance from './components/Attendance'
 import Exercise from './components/Exercise'
+
 import {
   infoStudent_mock,
   infoParents_mock,
-  dataTimeKeeping_mock,
+  dataAttendance_mock,
   dataExercise_mock
 } from './_mock_'
 
@@ -24,7 +25,7 @@ const TempleteScreen = (props: IProps) => {
   const isLargeTablet = useMediaQuery('(max-width: 1024px)');
   const [infoStudent, setInfoStudent] = useState(infoStudent_mock);
   const [infoParents, setInfoParents] = useState(infoParents_mock);
-  const [dataTimeKeeping, setDataTimeKeeping] = useState(dataTimeKeeping_mock);
+  const [dataAttendance, setDataAttendance] = useState(dataAttendance_mock);
   const [dataExercise, setDataExercise] = useState(dataExercise_mock);
 
   useEffect(() => {
@@ -54,13 +55,13 @@ const TempleteScreen = (props: IProps) => {
           </Title>
           <Space h={30} />
           {
-            !dataTimeKeeping || dataTimeKeeping.length === 0 ?
+            !dataAttendance || dataAttendance.length === 0 ?
             <Text color="#222222">Không có thông tin</Text> :
             <Grid gutter={40}>
               { 
-                dataTimeKeeping.map((e, i)=> (
+                dataAttendance.map((e, i)=> (
                   <Grid.Col  key={i} span={isLargeTablet ? 12 : 6}>
-                      <Timekeeping {...e} />
+                      <Attendance data={e} />
                   </Grid.Col>
                 )) 
               }
@@ -78,7 +79,7 @@ const TempleteScreen = (props: IProps) => {
               { 
                 dataExercise.map((e, i)=> (
                   <Grid.Col  key={i} span={isLargeTablet ? 12 : 6}>
-                      <Exercise {...e} />
+                      <Exercise data={e} />
                   </Grid.Col>
                 )) 
               }

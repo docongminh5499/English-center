@@ -1,55 +1,60 @@
-export const infoStudent_mock = {
-    fullname : 'Nguyễn Văn A',
-    gender : 'Nam',
-    birthday : '01/01/2000',
+import { _User, _Exercise } from "../_models_"
+import { Gender } from "../../../../helpers/constants";
+
+export const infoStudent_mock : _User = {
+    fullName : 'Nguyễn Văn A',
+    sex : Gender.MALE,
+    dateOfBirth : '01/01/2000',
     email : 'admin@gmail.com',
     address : 'Gia Kiệm, Thống Nhất, Đồng Nai',
-    phone : '0123456789'
+    phone : '0123456789',
+    avatar : null
 }
 
-export const infoParents_mock = {
-    fullname : 'Nguyễn Văn Phụ Huynh',
-    gender : 'Nam',
-    birthday : '01/01/2000',
+export const infoParents_mock : _User = {
+    fullName : 'Nguyễn Văn Phụ Huynh',
+    sex : Gender.FEMALE,
+    dateOfBirth : '01/01/2000',
     email : 'admin@gmail.com',
     address : 'Gia Kiệm, Thống Nhất, Đồng Nai',
-    phone : '0123456789'
+    phone : '0123456789',
+    avatar : null
 }
 
-export const dataTimeKeeping_mock = [
+export const dataAttendance_mock = [
     {
-        name : 'Family',
-        time : '10:00 - 12:00 - 01/01/2022',
-        status : 1
+        studySessionId : {
+            name : 'Family',
+            shifts : {
+                time : '10:00 - 12:00 - 01/01/2022'
+            }
+        },
+        isAbsent : true,
+        isMakeUpStudy : false
     },
     {
-        name : 'Family',
-        time : '10:00 - 12:00 - 01/01/2022',
-        status : -1
+        studySessionId : {
+            name : 'Family 2',
+            shifts : {
+                time : '10:00 - 12:00 - 01/01/2022'
+            }
+        },
+        isAbsent : true,
+        isMakeUpStudy : true
     },
     {
-        name : 'Family',
-        time : '10:00 - 12:00 - 01/01/2022',
-        status : 1
-    },
-    {
-        name : 'Family',
-        time : '10:00 - 12:00 - 01/01/2022',
-        status : -1
-    },
-    {
-        name : 'Family',
-        time : '10:00 - 12:00 - 01/01/2022',
-        status : 1
-    },
-    {
-        name : 'Family',
-        time : '10:00 - 12:00 - 01/01/2022',
-        status : -1
-    },
+        studySessionId : {
+            name : 'Family 3',
+            shifts : {
+                time : '10:00 - 12:00 - 01/01/2022'
+            }
+        },
+        isAbsent : false,
+        isMakeUpStudy : true
+    }
 ]
 
-export const dataExercise_mock = [
+export const dataExercise_mock : Array<_Exercise> = [
     {
         name : 'FAMILY',
         time: '10:00 - 12:00 - 01/01/2022 ',
@@ -61,8 +66,8 @@ export const dataExercise_mock = [
         scores : 10
     },
     {
-        name : 'FAMILY 2',
+        name : 'FAMILY 5',
         time: '10:00 - 12:00 - 01/01/2022 ',
-        scores : 8
+        scores : 10
     }
 ]
