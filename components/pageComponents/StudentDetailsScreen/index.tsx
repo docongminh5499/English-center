@@ -59,8 +59,8 @@ const TempleteScreen = (props: IProps) => {
             <Grid gutter={40}>
               { 
                 dataTimeKeeping.map((e, i)=> (
-                  <Grid.Col span={isLargeTablet ? 12 : 6}>
-                      <Timekeeping key={i} {...e} />
+                  <Grid.Col  key={i} span={isLargeTablet ? 12 : 6}>
+                      <Timekeeping {...e} />
                   </Grid.Col>
                 )) 
               }
@@ -77,8 +77,8 @@ const TempleteScreen = (props: IProps) => {
             <Grid gutter={40}>
               { 
                 dataExercise.map((e, i)=> (
-                  <Grid.Col span={isLargeTablet ? 12 : 6}>
-                      <Exercise key={i} {...e} />
+                  <Grid.Col  key={i} span={isLargeTablet ? 12 : 6}>
+                      <Exercise {...e} />
                   </Grid.Col>
                 )) 
               }
