@@ -244,7 +244,7 @@ const TeacherCurriculumAddScreen = () => {
         overlayBlur={3}>
         <SaveCurriculumModal
           loading={isSaving}
-          title="Xác nhân lưu chương trình dạy"
+          title="Xác nhận lưu chương trình dạy"
           message={`Bạn có chắc muốn lưu chương trình dạy chứ?`}
           onSave={() => onSave(currentData)}
         />

@@ -7,7 +7,6 @@ export default interface StudySession {
     isTeacherAbsent: boolean
     notes: string | null;
     state: StudySessionState;
-    isSystemCreated: boolean | null;
     // shifts: Shift[];
     // tutor: UserTutor;
     // teacher: UserTeacher;
