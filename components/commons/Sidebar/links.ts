@@ -9,9 +9,9 @@ import { UserRole } from "../../../helpers/constants";
 
 export const teacherSidebar: Array<SidebarItem> = [
   {
-    src: IconCertificate ,
+    src: IconCertificate,
     name: "Khóa học",
-    href: "/teacher",
+    href: "/teacher/course",
   },
   {
     src: IconNotebook,
@@ -19,7 +19,7 @@ export const teacherSidebar: Array<SidebarItem> = [
     href: "/teacher/teaching-history",
   },
   {
-    src: IconSchool ,
+    src: IconSchool,
     name: "Chương trình dạy",
     href: "/teacher/curriculum",
   },

@@ -1,10 +1,10 @@
-import TeacherHomeScreen from "../../components/pageComponents/TeacherScreen/TeacherHomeScreen/teacher.home";
-import API from "../../helpers/api";
-import { CookieKey, TeacherConstants, Url, UserRole } from "../../helpers/constants";
-import { CookieParser } from "../../helpers/cookieParser";
-import { CustomNextPage } from "../../interfaces/page.interface";
+import TeacherHomeScreen from "../../../components/pageComponents/TeacherScreen/TeacherHomeScreen/teacher.home";
+import API from "../../../helpers/api";
+import { CookieKey, TeacherConstants, Url, UserRole } from "../../../helpers/constants";
+import { CookieParser } from "../../../helpers/cookieParser";
+import { CustomNextPage } from "../../../interfaces/page.interface";
 import { GetServerSideProps } from "next";
-import Pageable from "../../models/pageable.model";
+import Pageable from "../../../models/pageable.model";
 import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 
 const TeacherHomePage: CustomNextPage = (props) => {
