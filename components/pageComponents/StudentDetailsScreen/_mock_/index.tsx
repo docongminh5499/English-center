@@ -4,7 +4,7 @@ import { Gender } from "../../../../helpers/constants";
 export const infoStudent_mock : _User = {
     fullName : 'Nguyễn Văn A',
     sex : Gender.MALE,
-    dateOfBirth : '01/01/2000',
+    dateOfBirth : new Date(),
     email : 'admin@gmail.com',
     address : 'Gia Kiệm, Thống Nhất, Đồng Nai',
     phone : '0123456789',
@@ -14,7 +14,7 @@ export const infoStudent_mock : _User = {
 export const infoParents_mock : _User = {
     fullName : 'Nguyễn Văn Phụ Huynh',
     sex : Gender.FEMALE,
-    dateOfBirth : '01/01/2000',
+    dateOfBirth : new Date(),
     email : 'admin@gmail.com',
     address : 'Gia Kiệm, Thống Nhất, Đồng Nai',
     phone : '0123456789',

@@ -4,7 +4,7 @@ export interface _User {
     email: string | null;
     fullName: string;
     phone: string | null;
-    dateOfBirth: string,
+    dateOfBirth: Date,
     sex: Gender;
     address: string | null;
     avatar: string | null;

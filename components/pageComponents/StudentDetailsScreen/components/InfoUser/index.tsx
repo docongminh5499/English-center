@@ -2,6 +2,8 @@ import { Grid, Space, Text, Title, Image, Container, Loader } from '@mantine/cor
 import { useMediaQuery } from '@mantine/hooks';
 import React from 'react'
 import { getAvatarImageUrl } from "../../../../../helpers/image.helper";
+import { TimeZoneOffset } from "../../../../../helpers/constants";
+import moment from "moment";
 import { _User } from '../../_models_'
 
 interface IProps {
@@ -45,7 +47,7 @@ const InfoUser = (props : IProps) => {
                             </Grid>
                             <Grid>
                                 <Grid.Col span={4}><Text color="#222222" weight={500} mr={5}>Ngày sinh:</Text></Grid.Col>
-                                <Grid.Col span={8}><Text color="#222222">{ props.data.dateOfBirth || '' }</Text></Grid.Col>
+                                <Grid.Col span={8}><Text color="#222222">{ moment(props.data.dateOfBirth).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") || '' }</Text></Grid.Col>
                             </Grid>
                         </Grid.Col>
                     </Grid>

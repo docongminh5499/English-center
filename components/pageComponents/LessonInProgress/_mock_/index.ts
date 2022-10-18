@@ -43,3 +43,10 @@ export const dataAttendanceStudent_mock : Array<_AttendanceStudent> = [
         isMakeUpStudy : true,
     }
 ]
+
+export const dataStartShiftId_mock = [
+    { value: 1, label: '7:00' },
+    { value: 2, label: '8:00' },
+    { value: 3, label: '9:00' },
+    { value: 4, label: '10:00' },
+]

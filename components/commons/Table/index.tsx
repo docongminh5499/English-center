@@ -77,7 +77,7 @@ const TableScrollArea = (props: ITableScroll) => {
         <ScrollArea sx={{ height: props.heightTable || 300 }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
             <Table sx={{ minWidth: props.minWidthTable || 800 }} >
                 <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-                    <tr>{ props.columnTable.map((column, index) => <th key={index}><div style={{ width: column.widthColumn || 'auto' }}>{ column.titleColumn }</div></th>) }</tr>
+                    <tr>{ props.columnTable.map((column, index) => <th style={{ width: column.widthColumn || 'auto' }} key={index}>{ column.titleColumn }</th>) }</tr>
                 </thead>
                 <tbody>{rows}</tbody>
             </Table>

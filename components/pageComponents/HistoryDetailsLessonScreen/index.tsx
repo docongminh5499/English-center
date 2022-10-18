@@ -1,11 +1,13 @@
 import Head from "next/head";
 import { Container, Title, Text, Space, Grid, Group, Checkbox } from "@mantine/core";
 import styles from "./historyDetailsLesson.module.module.css";
+import { TimeZoneOffset } from "../../../helpers/constants";
 import { useEffect, useState } from "react";
 import Button from "../../commons/Button";
 import Table from "../../commons/Table";
 import { useMediaQuery } from "@mantine/hooks";
 import { infoStudySession_mock, dataAttendanceStudent_mock } from './_mock_/index'
+import moment from "moment";
 
 const COLUMN_ATTENDANCE = {
   HO_TEN : 'col_1',
@@ -15,11 +17,11 @@ const COLUMN_ATTENDANCE = {
   GHI_CHU : 'col_5',
 }
 const columnTable = [
-  { _idColumn: COLUMN_ATTENDANCE.HO_TEN, titleColumn : 'Họ và tên', widthColumn : '150px' },
-  { _idColumn: COLUMN_ATTENDANCE.MSHV, titleColumn : 'MSHV', widthColumn : '100px' },
-  { _idColumn: COLUMN_ATTENDANCE.HOC_BU, titleColumn : 'Học bù', widthColumn : '100px' },
-  { _idColumn: COLUMN_ATTENDANCE.VANG, titleColumn : 'Vắng', widthColumn : '50px' },
-  { _idColumn: COLUMN_ATTENDANCE.GHI_CHU, titleColumn : 'Ghi chú' },
+  { _idColumn: COLUMN_ATTENDANCE.HO_TEN, titleColumn : 'Họ và tên', widthColumn : '20%' },
+  { _idColumn: COLUMN_ATTENDANCE.MSHV, titleColumn : 'MSHV', widthColumn : '10%' },
+  { _idColumn: COLUMN_ATTENDANCE.HOC_BU, titleColumn : 'Học bù', widthColumn : '10%' },
+  { _idColumn: COLUMN_ATTENDANCE.VANG, titleColumn : 'Vắng', widthColumn : '10%' },
+  { _idColumn: COLUMN_ATTENDANCE.GHI_CHU, titleColumn : 'Ghi chú', widthColumn : '50%' },
 ]
 
 interface IProps {
@@ -94,7 +96,7 @@ const TempleteScreen = (props: IProps) => {
             <Grid.Col span={isSmallTablet ? 12 : 4}>
               <Group position={isSmallTablet ? 'apart' : 'center'}>
                 <Text color="#222222" mr={5}>Ngày: </Text>
-                <Text color="#222222">{ infoStudySession.dateStart || 'Không có thông tin' }</Text>
+                <Text color="#222222">{ moment(infoStudySession.dateStart).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") || 'Không có thông tin' }</Text>
               </Group>
             </Grid.Col>
             <Grid.Col span={isSmallTablet ? 12 : 4}>
