@@ -46,6 +46,33 @@ export enum AttendanceStatus {
   AbsenceWithoutPermission = "AbsenceWithoutPermission",
 }
 
+export enum CurriculumLevel {
+  Beginer = "Beginer",
+  Intermediate = "Intermediate",
+  Advance = "Advance",
+}
+
+export enum TagsType {
+  Question = "question",
+  Curriculum = "curriculum"
+}
+
+export enum Weekday {
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+  Sunday = "Sunday",
+}
+
+export enum ClassroomFunction {
+  MEETING_ROOM = "Phòng họp",
+  WAREHOUSE_ROOM = "Phòng vật dụng",
+  CLASSROOM = "Phòng học",
+}
+
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
 };
@@ -113,6 +140,16 @@ export const Url = {
     getCourseDetail: "/api/students/courses/get-course/",
     sendAssessCourse: "/api/students/courses/assess-course",
     getAttendance: "/api/students/courses/attendance-course/",
+  },
+  employees: {
+    getPersonalInformation: "/api/employees/personal/get-personal-information",
+    getCurriculumList: "/api/employees/curriculum/get-curriculum",
+    getBranches: "/api/employees/courses/get-branches",
+    getTeachers: "/api/employees/courses/get-teachers",
+    getTeacherFreeShift: "/api/employees/courses/get-teacher-free-shift",
+    getAvailableTutors: "/api/employees/courses/get-available-tutors",
+    getAvailableClassroom: "/api/employees/courses/get-available-classrooms",
+    createCourse: "/api/employees/courses/create-course",
   }
 };
 
