@@ -1,10 +1,9 @@
-import { createStyles, Grid, HoverCard, Indicator, MediaQuery, Popover, Text, Title, Tooltip } from "@mantine/core";
+import { createStyles, Grid, Indicator, MediaQuery, Popover, Text, Title } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import "dayjs/locale/vi";
-import { forwardRef, useState } from "react";
 import { AttendanceStatus } from "../../../../../helpers/constants";
 
-function getKeyByDate(date: Date){
+function getKeyFromDate(date: Date){
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
@@ -13,7 +12,7 @@ function formatAttendanceData(attendances: any){
   const formatedAttendance = new Map();
   for(const attendance of attendances){
     const studySessionDate = new Date(attendance.studySession.date);
-    const key = getKeyByDate(studySessionDate);
+    const key = getKeyFromDate(studySessionDate);
     if(!formatedAttendance.has(key)){
       formatedAttendance.set(key, [{commentOfTeacher: attendance.commentOfTeacher, isAttend: attendance.isAttend}]);
     }else{
@@ -97,8 +96,8 @@ const CourseAttendanceTab = (props: any) => {
               let dayJSX = (
                   <div>{day}</div>
               );
-              if (attendances.has(getKeyByDate(date))){
-                attendances.get(getKeyByDate(date)).forEach((studenAttendStudySession: any, idx: number) => {
+              if (attendances.has(getKeyFromDate(date))){
+                attendances.get(getKeyFromDate(date)).forEach((studenAttendStudySession: any, idx: number) => {
                   if (studenAttendStudySession.isAttend === AttendanceStatus.Attendance)
                     indicatorColor = 'green';
                   else if (studenAttendStudySession.isAttend === AttendanceStatus.AbsenceWithPermission)
@@ -119,7 +118,7 @@ const CourseAttendanceTab = (props: any) => {
                       </Popover.Target>
                       <Popover.Dropdown>
                         <Text size="sm">
-                          {attendances.get(getKeyByDate(date))[0].commentOfTeacher}
+                          {attendances.get(getKeyFromDate(date))[0].commentOfTeacher}
                         </Text>
                       </Popover.Dropdown>
                     </Popover>
