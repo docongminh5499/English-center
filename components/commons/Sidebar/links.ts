@@ -25,6 +25,14 @@ export const teacherSidebar: Array<SidebarItem> = [
   },
 ];
 
+export const employeeSidebar: Array<SidebarItem> = [
+  {
+    src: IconCertificate,
+    name: "Khóa học",
+    href: "/employee/course",
+  },
+];
+
 export const studentSidebar: Array<SidebarItem> = [
   {
     src: IconCalendar,

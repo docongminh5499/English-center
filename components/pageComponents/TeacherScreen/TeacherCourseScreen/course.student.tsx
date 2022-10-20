@@ -35,7 +35,7 @@ const CourseStudent = (props: IProps) => {
 
 
   const getStudents = useCallback(async (limit: number, skip: number, query: string) => {
-    return await API.post(Url.teachers.getStudents + props.courseSlug, {
+    return await API.post(Url.teachers.getStudents, {
       token: authState.token,
       limit: limit,
       skip: skip,

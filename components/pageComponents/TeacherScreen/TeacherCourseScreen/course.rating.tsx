@@ -32,7 +32,7 @@ const CourseRating = (props: IProps) => {
 
 
   const getComments = useCallback(async (limit: number, skip: number) => {
-    return await API.post(Url.teachers.getComments + props.courseSlug, {
+    return await API.post(Url.teachers.getComments, {
       token: authState.token,
       limit: limit,
       skip: skip,

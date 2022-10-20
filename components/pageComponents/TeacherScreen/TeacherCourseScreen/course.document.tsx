@@ -13,7 +13,7 @@ import { useAuth } from "../../../../stores/Auth";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "../../../commons/Loading";
-import Course from "../../../../models/course.model";
+import { Course } from "../../../../models/course.model";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 
 interface IProps {
@@ -41,7 +41,7 @@ const CourseDocument = (props: IProps) => {
 
 
   const getDocuments = useCallback(async (limit: number, skip: number) => {
-    return await API.post(Url.teachers.getDocuments + props.courseSlug, {
+    return await API.post(Url.teachers.getDocuments, {
       token: authState.token,
       limit: limit,
       skip: skip,

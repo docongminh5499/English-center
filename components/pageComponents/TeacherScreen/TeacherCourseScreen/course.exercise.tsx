@@ -7,7 +7,7 @@ import API from "../../../../helpers/api";
 import { CourseStatus, ExerciseStatus, TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import { getExerciseStatus } from "../../../../helpers/getExerciseStatus";
-import Course from "../../../../models/course.model";
+import { Course } from "../../../../models/course.model";
 import Exercise from "../../../../models/exercise.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
@@ -35,7 +35,7 @@ const CourseExercise = (props: IProps) => {
 
 
   const getExercises = useCallback(async (limit: number, skip: number) => {
-    return await API.post(Url.teachers.getExercises + props.courseSlug, {
+    return await API.post(Url.teachers.getExercises, {
       token: authState.token,
       limit: limit,
       skip: skip,

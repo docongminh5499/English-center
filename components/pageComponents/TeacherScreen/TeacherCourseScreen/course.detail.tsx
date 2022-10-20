@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { CourseStatus, TimeZoneOffset, UserRole } from "../../../../helpers/constants";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
-import Course from "../../../../models/course.model";
+import { Course } from "../../../../models/course.model";
 import Loading from "../../../commons/Loading";
 import CourseCurriculum from "./course.curriculum";
 import CourseDocument from "./course.document";

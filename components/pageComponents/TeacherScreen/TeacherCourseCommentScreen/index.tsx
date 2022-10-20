@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
 import StarPointTypeCount from "../../../../interfaces/starPointTypeCount.interface";
-import Course from "../../../../models/course.model";
+import { Course } from "../../../../models/course.model";
 import MaskedComment from "../../../../models/maskedComment.model";
 import { useAuth } from "../../../../stores/Auth";
 import Comment from "../../../commons/Comment";
@@ -37,7 +37,7 @@ const TeacherCourseCommentScreen = (props: IProps) => {
 
 
   const getComments = useCallback(async (limit: number, skip: number) => {
-    return await API.post(Url.teachers.getComments + props.course?.slug, {
+    return await API.post(Url.teachers.getComments, {
       token: authState.token,
       limit: limit,
       skip: skip,

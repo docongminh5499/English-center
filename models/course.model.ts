@@ -1,11 +1,13 @@
+import Branch from "./branch.model"
 import Curriculum from "./cirriculum.model"
 import Document from "./document.models"
 import Exercise from "./exercise.model"
 import MaskedComment from "./maskedComment.model"
 import StudentParticipateCourse from "./studentParticipateCourse.model"
 import StudySession from "./studySession.model"
+import UserTeacher from "./userTeacher.model"
 
-export default interface Course {
+export interface Course {
   version: number,
   id: number,
   slug: string,
@@ -22,4 +24,6 @@ export default interface Course {
   curriculum: Curriculum,
   studentPaticipateCourses: StudentParticipateCourse[],
   maskedComments: MaskedComment[],
+  branch: Branch,
+  teacher: UserTeacher,
 }

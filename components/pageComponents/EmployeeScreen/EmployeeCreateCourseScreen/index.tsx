@@ -158,7 +158,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
       if (responses.success) {
         setIsSaveModalOpen(false);
         setIsSaving(false);
-        // await router.push("/teacher/personal");
+        await router.push("/employee/course/" + responses.course.slug);
         toast.success("Cập nhật thông tin thành công");
       } else {
         setIsSaveModalOpen(false);

@@ -1,5 +1,5 @@
 import moment from "moment";
-import Course from "../models/course.model";
+import { Course } from "../models/course.model";
 import { CourseStatus } from "./constants";
 
 export function getCourseStatus(course: Course | null): CourseStatus {

@@ -90,6 +90,11 @@ export const TeacherConstants = {
   maxTopComments: 3,
 }
 
+export const EmployeeConstants = {
+  limitCourse: 12,
+  limitStudySession: 12,
+}
+
 export const StudentConstants = {
   limitCourse: 12
 }
@@ -119,10 +124,10 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
     getCourseDetail: "/api/teachers/courses/get-course/",
-    getStudents: "/api/teachers/courses/get-students/",
-    getExercises: "/api/teachers/courses/get-exercises/",
+    getStudents: "/api/teachers/courses/get-students",
+    getExercises: "/api/teachers/courses/get-exercises",
     deleteExercise: "/api/teachers/courses/delete-exercise/",
-    getDocuments: "/api/teachers/courses/get-documents/",
+    getDocuments: "/api/teachers/courses/get-documents",
     deleteDocument: "/api/teachers/courses/delete-document/",
     createDocument: "/api/teachers/courses/create-document",
     getPersonalInformation: "/api/teachers/personal/get-personal-information",
@@ -132,7 +137,7 @@ export const Url = {
     modifyCurriculum: "/api/teachers/curriculum/modify-curriculum",
     createCurriculum: "/api/teachers/curriculum/create-curriculum",
     deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/",
-    getComments: "/api/teachers/courses/get-comments/",
+    getComments: "/api/teachers/courses/get-comments",
   },
   students: {
     getTimetable: "/api/students/timetable",
@@ -150,6 +155,9 @@ export const Url = {
     getAvailableTutors: "/api/employees/courses/get-available-tutors",
     getAvailableClassroom: "/api/employees/courses/get-available-classrooms",
     createCourse: "/api/employees/courses/create-course",
+    getCourse: "/api/employees/courses/get-course",
+    getCourseDetail: "/api/employees/courses/get-course/",
+    getStudySessions: "/api/employees/courses/get-study-sessions",
   }
 };
 

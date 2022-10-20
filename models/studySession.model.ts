@@ -1,4 +1,8 @@
-import { StudySessionState } from "../helpers/constants";
+import Classroom from "./classroom";
+import { Course } from "./course.model";
+import Shift from "./shift.model";
+import UserTeacher from "./userTeacher.model";
+import UserTutor from "./userTutor";
 
 export default interface StudySession {
     id: number;
@@ -6,9 +10,10 @@ export default interface StudySession {
     date: Date;
     isTeacherAbsent: boolean
     notes: string | null;
-    state: StudySessionState;
-    // shifts: Shift[];
-    // tutor: UserTutor;
-    // teacher: UserTeacher;
-    // classroom: Classroom;
+    cancelled: boolean | null;
+    course: Course;
+    shifts: Shift[];
+    tutor: UserTutor;
+    teacher: UserTeacher;
+    classroom: Classroom;
 }

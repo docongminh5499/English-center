@@ -9,7 +9,7 @@ import {
   Url,
   UserRole,
 } from "../../../../helpers/constants";
-import Course from "../../../../models/course.model";
+import { Course } from "../../../../models/course.model";
 import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
