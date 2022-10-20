@@ -1,0 +1,11 @@
+.buttonEditNotes {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    text-decoration: underline;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #2457C5;
+    flex-shrink: 0;
+}
