@@ -88,6 +88,7 @@ export const TeacherConstants = {
   limitDocument: 12,
   limitComments: 12,
   maxTopComments: 3,
+  limitStudySession: 12,
 }
 
 export const EmployeeConstants = {
@@ -138,6 +139,7 @@ export const Url = {
     createCurriculum: "/api/teachers/curriculum/create-curriculum",
     deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/",
     getComments: "/api/teachers/courses/get-comments",
+    getStudySessions: "/api/teachers/courses/get-study-sessions",
   },
   students: {
     getTimetable: "/api/students/timetable",
