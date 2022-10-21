@@ -3,7 +3,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
-import Classroom from "../../../../models/classroom";
+import Classroom from "../../../../models/classroom.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
 import styles from './employeeCreateCourse.module.css';

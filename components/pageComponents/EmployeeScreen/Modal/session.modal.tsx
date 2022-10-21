@@ -2,9 +2,9 @@ import { Avatar, Button, Container, Group, Input, Space, Text, Title } from "@ma
 import moment from "moment";
 import { useCallback, useState } from "react";
 import { getWeekdayName } from "../../../../helpers/getWeekdayName";
-import Classroom from "../../../../models/classroom";
+import Classroom from "../../../../models/classroom.model";
 import Shift from "../../../../models/shift.model";
-import UserTutor from "../../../../models/userTutor";
+import UserTutor from "../../../../models/userTutor.model";
 import * as yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";

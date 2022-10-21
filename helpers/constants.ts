@@ -126,6 +126,7 @@ export const Url = {
     getCourse: "/api/teachers/courses/get-course",
     getCourseDetail: "/api/teachers/courses/get-course/",
     getStudents: "/api/teachers/courses/get-students",
+    getStudentDetails: "/api/teachers/courses/get-student-detail",
     getExercises: "/api/teachers/courses/get-exercises",
     deleteExercise: "/api/teachers/courses/delete-exercise/",
     getDocuments: "/api/teachers/courses/get-documents",

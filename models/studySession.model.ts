@@ -1,8 +1,8 @@
-import Classroom from "./classroom";
+import Classroom from "./classroom.model";
 import { Course } from "./course.model";
 import Shift from "./shift.model";
 import UserTeacher from "./userTeacher.model";
-import UserTutor from "./userTutor";
+import UserTutor from "./userTutor.model";
 
 export default interface StudySession {
     id: number;

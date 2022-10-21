@@ -5,7 +5,7 @@ import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import Branch from "../../../../models/branch.model";
-import UserTutor from "../../../../models/userTutor";
+import UserTutor from "../../../../models/userTutor.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
 import BranchSelectItem from "../ItemComponent/branchSelectItem";

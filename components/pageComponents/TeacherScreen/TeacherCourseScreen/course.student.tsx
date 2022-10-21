@@ -1,6 +1,7 @@
 import { Avatar, Container, Grid, Group, Input, Loader, Modal, SimpleGrid, Space, Text } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
@@ -32,6 +33,8 @@ const CourseStudent = (props: IProps) => {
   const [queriedTotal, setQueriedTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [seeMoreLoading, setSeeMoreLoading] = useState(false);
+  const router = useRouter();
+
 
 
   const getStudents = useCallback(async (limit: number, skip: number, query: string) => {
@@ -180,7 +183,7 @@ const CourseStudent = (props: IProps) => {
             {listStudents.map((item, index) => (
               <Group
                 key={index}
-                onClick={() => console.log("A")}
+                onClick={() => router.push(router.asPath + "/" + item.user.id)}
                 style={{
                   cursor: "pointer",
                   flexDirection: isTablet ? "column" : "row"
