@@ -80,7 +80,7 @@ const TempleteScreen = (props: IProps) => {
                   Không có dữ liệu
                 </Text>
               </Container> :
-              <Grid gutter={40}>
+              <Grid gutter={40} style={{ overflowX: "hidden", maxWidth: "100%" }}>
                 {
                   props.attendences.map((e, i) => {
                     const makeUpLesson = props.makeUpLessons.find(makeup => makeup.studySession.id === e.studySession.id)
@@ -111,7 +111,7 @@ const TempleteScreen = (props: IProps) => {
                   Không có dữ liệu
                 </Text>
               </Container> :
-              <Grid gutter={40}>
+              <Grid gutter={40} style={{ overflowX: "hidden", maxWidth: "100%" }}>
                 {
                   props.doExercises.map((e, i) => (
                     <Grid.Col key={i} span={isLargeTablet ? 12 : 6}>
