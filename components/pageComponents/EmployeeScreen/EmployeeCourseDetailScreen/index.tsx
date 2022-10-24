@@ -254,9 +254,6 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                           <Text>{studySession.classroom.name}</Text>
                           <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
                         </td>
-                        {/* <td>
-                          {studySession.cancelled && <Badge color="pink" variant="light">Đã hủy</Badge>}
-                        </td> */}
                       </tr>
                     ))}
                   </tbody>

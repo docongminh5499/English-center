@@ -10,7 +10,6 @@ export default interface StudySession {
     date: Date;
     isTeacherAbsent: boolean
     notes: string | null;
-    cancelled: boolean | null;
     course: Course;
     shifts: Shift[];
     tutor: UserTutor;
