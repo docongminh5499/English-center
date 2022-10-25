@@ -44,7 +44,7 @@ const CourseSession = (props: IProps) => {
 
 
 
-  const seeMoreExercises = useCallback(async () => {
+  const seeMoreStudySessions = useCallback(async () => {
     try {
       setSeeMoreLoading(true);
       const responses = await getStudySessions(TeacherConstants.limitStudySession, listStudySessions.length);
@@ -129,9 +129,6 @@ const CourseSession = (props: IProps) => {
                   </Text>
                   <Space h={8} />
                   <Text color="#444">Tình trạng:
-                    {getStudySessionState(item) === StudySessionState.Cancel && (
-                      <Text weight={600} component="span" color="red"> Đã hủy</Text>
-                    )}
                     {getStudySessionState(item) === StudySessionState.Finish && (
                       <Text weight={600} component="span" color="pink"> Đã kết thúc</Text>
                     )}
@@ -144,9 +141,6 @@ const CourseSession = (props: IProps) => {
                   </Text>
                 </Grid.Col>
                 <Grid.Col span={isLargeTablet ? 12 : 2}>
-                  {getStudySessionState(item) === StudySessionState.Cancel && (
-                    <Badge color="red" variant='light'>ĐÃ HỦY</Badge>
-                  )}
                   {(getStudySessionState(item) === StudySessionState.Finish ||
                     getStudySessionState(item) === StudySessionState.Start) && (
                       <Button compact={isLargeTablet ? false : true} fullWidth>Xem chi tiết</Button>
@@ -172,7 +166,7 @@ const CourseSession = (props: IProps) => {
       }}>
         {seeMoreLoading && <Loader variant="dots" />}
         {!seeMoreLoading && listStudySessions.length < total && <Button
-          onClick={() => seeMoreExercises()}
+          onClick={() => seeMoreStudySessions()}
         >Xem thêm</Button>}
       </Container>
       <Space h={20} />
