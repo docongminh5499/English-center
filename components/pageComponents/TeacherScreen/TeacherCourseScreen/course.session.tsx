@@ -1,6 +1,7 @@
 import { Badge, Container, Divider, Grid, Loader, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -23,7 +24,7 @@ const CourseSession = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
-
+  const router = useRouter();
   const [authState] = useAuth();
   const [listStudySessions, setListStudySessions] = useState<StudySession[]>([]);
   const [total, setTotal] = useState(0);
@@ -111,8 +112,8 @@ const CourseSession = (props: IProps) => {
                   <Text color="#444">Ngày diễn ra: {moment(item.date).utcOffset(TimeZoneOffset).format("DD/MM/YYYY")}</Text>
                   <Text color="dimmed" style={{ fontSize: "1rem" }}>
                     Ca học: {
-                      moment(item.shifts[0].startTime).format("HH:mm")
-                      + "-" + moment(item.shifts[item.shifts.length - 1].endTime).format("HH:mm")
+                      moment(item.shifts[0].startTime).utcOffset(TimeZoneOffset).format("HH:mm")
+                      + "-" + moment(item.shifts[item.shifts.length - 1].endTime).utcOffset(TimeZoneOffset).format("HH:mm")
                     }
                   </Text>
 
@@ -143,7 +144,10 @@ const CourseSession = (props: IProps) => {
                 <Grid.Col span={isLargeTablet ? 12 : 2}>
                   {(getStudySessionState(item) === StudySessionState.Finish ||
                     getStudySessionState(item) === StudySessionState.Start) && (
-                      <Button compact={isLargeTablet ? false : true} fullWidth>Xem chi tiết</Button>
+                      <Button compact={isLargeTablet ? false : true} fullWidth
+                        onClick={() => router.push(router.asPath + "/study-session/" + item.id)}>
+                        Xem chi tiết
+                      </Button>
                     )}
                   {getStudySessionState(item) === StudySessionState.Ready && (
                     <Button color="pink" compact={isLargeTablet ? false : true} fullWidth>Xin nghỉ</Button>

@@ -183,7 +183,7 @@ const CourseStudent = (props: IProps) => {
             {listStudents.map((item, index) => (
               <Group
                 key={index}
-                onClick={() => router.push(router.asPath + "/" + item.user.id)}
+                onClick={() => router.push(router.asPath + "/student/" + item.user.id)}
                 style={{
                   cursor: "pointer",
                   flexDirection: isTablet ? "column" : "row"

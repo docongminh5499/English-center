@@ -123,7 +123,7 @@ const CourseRating = (props: IProps) => {
 
       {total > TeacherConstants.maxTopComments && (
         <Container style={{ display: "flex", justifyContent: "center" }}>
-          <Button onClick={() => router.push(router.asPath + "/allComments")}>
+          <Button onClick={() => router.push(router.asPath + "/all-comments")}>
             Xem tất cả
           </Button>
         </Container>

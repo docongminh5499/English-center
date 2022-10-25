@@ -1,10 +1,10 @@
-import StudentDetailsScreen from "../../../../components/pageComponents/TeacherScreen/StudentDetailsScreen";
+import StudentDetailsScreen from "../../../../../components/pageComponents/TeacherScreen/StudentDetailsScreen";
 import { GetServerSideProps } from "next";
-import { CookieKey, Url, UserRole } from "../../../../helpers/constants";
-import { CustomNextPage } from "../../../../interfaces/page.interface";
-import { CookieParser } from "../../../../helpers/cookieParser";
+import { CookieKey, Url, UserRole } from "../../../../../helpers/constants";
+import { CustomNextPage } from "../../../../../interfaces/page.interface";
+import { CookieParser } from "../../../../../helpers/cookieParser";
 import { gsspWithNonce } from "@next-safe/middleware/dist/document";
-import API from "../../../../helpers/api";
+import API from "../../../../../helpers/api";
 
 const StudentDetailCourseScreen: CustomNextPage = (props) => {
   return <StudentDetailsScreen makeUpLessons={[]} student={null} doExercises={[]} attendences={[]} {...props} />;
