@@ -1,4 +1,4 @@
-import { Card, Container, SimpleGrid, Text, Image, Title, Group, Space, Modal } from "@mantine/core"
+import { Card, Container, SimpleGrid, Text, Image, Title, Group, Space, Modal, Badge } from "@mantine/core"
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSchool } from "@tabler/icons";
 import Head from "next/head";
@@ -18,6 +18,7 @@ import styles from "./curriculum.module.css";
 
 interface IProps {
   curriculums: Curriculum[];
+  preferredCurriculums: Curriculum[];
 }
 
 const TeacherCurriculumListScreen = (props: IProps) => {
@@ -34,6 +35,7 @@ const TeacherCurriculumListScreen = (props: IProps) => {
   const [shortTermCurriculums, setShortTermCurriculums] = useState<Curriculum[]>();
   const [longTermCurriculums, setLongTermCurriculums] = useState<Curriculum[]>();
   const [didMount, setDidMount] = useState(false);
+  const [preferredCurriculums, setPreferredCurriculums] = useState(props.preferredCurriculums);
 
 
   const onDelete = useCallback(async () => {
@@ -153,7 +155,6 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                   shadow="sm" p="lg" radius="md" withBorder
                   className={styles.curriculumCard}
                   onClick={() => {
-                    console.log("X")
                     router.push("/teacher/curriculum/" + curriculum.id)
                   }}>
                   <Card.Section>
@@ -162,6 +163,17 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       height={180}
                       alt="curriculum-course"
                     />
+                    {preferredCurriculums.find(cur => cur.id === curriculum.id) && (
+                      <Container style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                      }} p={0}>
+                        <Badge color="green" variant="filled">
+                          Đã đăng ký
+                        </Badge>
+                      </Container>
+                    )}
                   </Card.Section>
                   <Container p={0}>
                     <Text
@@ -223,6 +235,17 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       height={180}
                       alt="curriculum-course"
                     />
+                    {preferredCurriculums.find(cur => cur.id === curriculum.id) && (
+                      <Container style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                      }} p={0}>
+                        <Badge color="green" variant="filled">
+                          Đã đăng ký
+                        </Badge>
+                      </Container>
+                    )}
                   </Card.Section>
                   <Container p={0}>
                     <Text
