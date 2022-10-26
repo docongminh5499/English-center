@@ -24,9 +24,13 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
       token: user.token,
       studySessionId: context.params?.studySessionId
     });
-    if (responses.studySession !== null && 
+    if (responses.studySession !== null &&
       getCourseStatus(responses.studySession.course) === CourseStatus.Closed) {
-        throw "Course is already closed!";
+      throw "Course is already closed!";
+    }
+    if (responses.studySession !== null &&
+      responses.studySession.teacher.worker.user.id.toString() != user.userId) {
+      throw "Not enough permission!";
     }
     return {
       props: {

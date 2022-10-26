@@ -163,32 +163,39 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       height={180}
                       alt="curriculum-course"
                     />
+                  </Card.Section>
+                  <Container style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    flexGrow: 1
+                  }} p={0}>
+                    <Container p={0} style={{ flexGrow: 1 }}>
+                      <Text
+                        weight={600}
+                        align="center"
+                        lineClamp={2}
+                        my={5}
+                        color="#444" className={styles.curriculumName}>
+                        {curriculum.name}
+                      </Text>
+                    </Container>
                     {preferredCurriculums.find(cur => cur.id === curriculum.id) && (
                       <Container style={{
-                        position: "absolute",
-                        top: 10,
-                        right: 10,
-                      }} p={0}>
-                        <Badge color="green" variant="filled">
-                          Đã đăng ký
+                        display: "flex",
+                        justifyContent: "center"
+                      }} p={0} my={10}>
+                        <Badge>
+                          <Text style={{ fontSize: "1.1rem" }}>Đã đăng ký</Text>
                         </Badge>
                       </Container>
                     )}
-                  </Card.Section>
-                  <Container p={0}>
-                    <Text
-                      weight={600}
-                      align="center"
-                      lineClamp={2}
-                      my={5}
-                      color="#444" className={styles.curriculumName}>
-                      {curriculum.name}
-                    </Text>
                     <Container
                       p={0}
                       style={{
                         display: "flex",
                         flexDirection: isTablet ? "column" : "row",
+                        width: "100%",
                         gap: "0.5rem"
                       }}>
                       <Button compact fullWidth
@@ -235,31 +242,38 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       height={180}
                       alt="curriculum-course"
                     />
+                  </Card.Section>
+                  <Container style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    flexGrow: 1
+                  }} p={0}>
+                    <Container p={0} style={{ flexGrow: 1 }}>
+                      <Text
+                        weight={600}
+                        align="center"
+                        lineClamp={2}
+                        my={5}
+                        color="#444" className={styles.curriculumName}>
+                        {curriculum.name}
+                      </Text>
+                    </Container>
                     {preferredCurriculums.find(cur => cur.id === curriculum.id) && (
                       <Container style={{
-                        position: "absolute",
-                        top: 10,
-                        right: 10,
-                      }} p={0}>
-                        <Badge color="green" variant="filled">
-                          Đã đăng ký
+                        display: "flex",
+                        justifyContent: "center"
+                      }} p={0} my={10}>
+                        <Badge>
+                          <Text style={{ fontSize: "1.1rem" }}>Đã đăng ký</Text>
                         </Badge>
                       </Container>
                     )}
-                  </Card.Section>
-                  <Container p={0}>
-                    <Text
-                      weight={600}
-                      align="center"
-                      lineClamp={2}
-                      my={5}
-                      color="#444" className={styles.curriculumName}>
-                      {curriculum.name}
-                    </Text>
                     <Container
                       p={0}
                       style={{
                         display: "flex",
+                        width: "100%",
                         flexDirection: isTablet ? "column" : "row",
                         gap: "0.5rem"
                       }}>

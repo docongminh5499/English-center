@@ -143,14 +143,12 @@ const TeacherHomeScreen = (props: IProps) => {
                   height: "100%"
                 }}>
                 <Button
-                  // compact={!isSmallerThan768}
                   onClick={() => {
                     setCurrentPage(1);
                     onClickPaginationPage(1, name, closed, open, longTerm, shortTerm);
                   }}
                 >Lọc khóa học</Button>
                 <Button
-                  // compact={!isSmallerThan768}
                   color="gray"
                   onClick={() => {
                     setCurrentPage(1);
@@ -216,6 +214,19 @@ const TeacherHomeScreen = (props: IProps) => {
                               height={180}
                               alt="image-course"
                             />
+                            {authState.userId != courseInfo.teacher.worker.user.id.toString() && (
+                              <Container style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                background: "#339AF0"
+                              }} p={10}>
+                                <Text align="center" color="white" transform="uppercase" weight={700}>
+                                  Dạy thay
+                                </Text>
+                              </Container>
+                            )}
                           </Card.Section>
                           <div className={styles.courseInfo}>
                             <Text weight={600} align="center" className={styles.courseName} lineClamp={2}>

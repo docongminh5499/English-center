@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import Loading from "../../../commons/Loading";
 import { getStudySessionState } from "../../../../helpers/getStudySessionState";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
+import { useAuth } from "../../../../stores/Auth";
 
 const COLUMN_ATTENDANCE = {
   HO_TEN: 'col_1',
@@ -38,6 +39,7 @@ interface IProps {
 }
 
 const StudySessionDetailScreen = (props: IProps) => {
+  const [authState] = useAuth();
   const [didMount, setDidMount] = useState(false);
   const isMobile = useMediaQuery('(max-width: 480px)');
   const isSmallTablet = useMediaQuery('(max-width: 768px)');
@@ -244,12 +246,13 @@ const StudySessionDetailScreen = (props: IProps) => {
 
           <Space h={20} />
 
-          {props.studySession && getCourseStatus(props.studySession.course) !== CourseStatus.Closed && (
-            <Container my={20} style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button onClick={() => router.push(router.asPath + "/modify")}
-              >Chỉnh sửa</Button>
-            </Container>
-          )}
+          {props.studySession && getCourseStatus(props.studySession.course) !== CourseStatus.Closed &&
+            props.studySession.teacher.worker.user.id.toString() == authState.userId && (
+              <Container my={20} style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button onClick={() => router.push(router.asPath + "/modify")}
+                >Chỉnh sửa</Button>
+              </Container>
+            )}
         </Container>
       )}
     </>

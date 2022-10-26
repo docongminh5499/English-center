@@ -144,14 +144,30 @@ const CourseSession = (props: IProps) => {
                 <Grid.Col span={isLargeTablet ? 12 : 2}>
                   {(getStudySessionState(item) === StudySessionState.Finish ||
                     getStudySessionState(item) === StudySessionState.Start) && (
-                      <Button compact={isLargeTablet ? false : true} fullWidth
-                        onClick={() => router.push(router.asPath + "/study-session/" + item.id)}>
-                        Xem chi tiết
-                      </Button>
+                      <>
+                        <Button compact={isLargeTablet ? false : true} fullWidth
+                          onClick={() => router.push(router.asPath + "/study-session/" + item.id)}>
+                          Xem chi tiết
+                        </Button>
+                        {authState.userId != item.teacher.worker.user.id.toString() && (
+                          <Container p={0} mt={5} style={{ background: "#FFE3E3", borderRadius: 5 }}>
+                            <Text color="pink" weight={600} align="center" style={{ fontSize: "1.1rem" }}>
+                              Vắng
+                            </Text>
+                            <Text weight={600} align="center" style={{ fontSize: "1.1rem" }}>
+                              Người dạy thay
+                            </Text>
+                            <Text align="center" style={{ fontSize: "1.1rem" }}>
+                              {item.teacher.worker.user.fullName} - MSGV: {item.teacher.worker.user.id}
+                            </Text>
+                          </Container>
+                        )}
+                      </>
                     )}
-                  {getStudySessionState(item) === StudySessionState.Ready && (
-                    <Button color="pink" compact={isLargeTablet ? false : true} fullWidth>Xin nghỉ</Button>
-                  )}
+                  {getStudySessionState(item) === StudySessionState.Ready &&
+                    authState.userId == item.teacher.worker.user.id.toString() && (
+                      <Button color="pink" compact={isLargeTablet ? false : true} fullWidth>Xin nghỉ</Button>
+                    )}
                 </Grid.Col>
               </Grid>
             </Container>

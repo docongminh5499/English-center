@@ -18,6 +18,7 @@ import SendNotificationCourseModal from "../Modal/sendNotificationCourse";
 interface IProps {
   courseSlug?: string;
   courseId?: number;
+  courseTeacherId?: number;
 }
 
 
@@ -129,14 +130,16 @@ const CourseStudent = (props: IProps) => {
           Sĩ số: {total}
         </Text>
 
-        <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
-          <Button
-            color="green" variant="light"
-            disabled={loading || seeMoreLoading}
-            onClick={() => setIsNotificationModalOpen(true)}>
-            Gửi thông báo tới lớp học
-          </Button>
-        </Container>
+        {props.courseId == authState.userId && (
+          <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
+            <Button
+              color="green" variant="light"
+              disabled={loading || seeMoreLoading}
+              onClick={() => setIsNotificationModalOpen(true)}>
+              Gửi thông báo tới lớp học
+            </Button>
+          </Container>
+        )}
 
         <Space h={20} />
         <Grid>

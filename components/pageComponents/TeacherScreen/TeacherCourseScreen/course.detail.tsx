@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { CourseStatus, TimeZoneOffset, UserRole } from "../../../../helpers/constants";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import { Course } from "../../../../models/course.model";
+import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
 import CourseCurriculum from "./course.curriculum";
 import CourseDocument from "./course.document";
@@ -25,6 +26,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
   const isLargeTablet = useMediaQuery('(max-width: 1024px)');
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
+  const [authState] = useAuth();
   const [didMount, setDidMount] = useState(false);
   const router = useRouter();
 
@@ -33,6 +35,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
       router.replace('/not-found');
     else setDidMount(true);
   }, []);
+
 
 
   return (
@@ -122,25 +125,28 @@ const TeacherCourseDetailScreen = (props: IProps) => {
                 icon={<IconUsers size={14} />}>
                 Học viên
               </Tabs.Tab>
-              <Tabs.Tab
-                value="exercise"
-                icon={<IconBallpen size={14} />}>
-                Bài tập
-              </Tabs.Tab>
-              <Tabs.Tab
-                value="document"
-                icon={<IconBook size={14} />}>
-                Tài liệu
-              </Tabs.Tab>
 
-              {getCourseStatus(props.course) === CourseStatus.Closed && (
-                <Tabs.Tab
-                  value="rating"
-                  icon={<IconStar size={14} />}>
-                  Đánh giá
-                </Tabs.Tab>
+              {props.course?.teacher.worker.user.id == authState.userId && (
+                <>
+                  <Tabs.Tab
+                    value="exercise"
+                    icon={<IconBallpen size={14} />}>
+                    Bài tập
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    value="document"
+                    icon={<IconBook size={14} />}>
+                    Tài liệu
+                  </Tabs.Tab>
+                  {getCourseStatus(props.course) === CourseStatus.Closed && (
+                    <Tabs.Tab
+                      value="rating"
+                      icon={<IconStar size={14} />}>
+                      Đánh giá
+                    </Tabs.Tab>
+                  )}
+                </>
               )}
-
             </Tabs.List>
 
             <Tabs.Panel value="curriculum" pt="xs">
@@ -155,26 +161,30 @@ const TeacherCourseDetailScreen = (props: IProps) => {
               <CourseStudent
                 courseId={props.course?.id}
                 courseSlug={props.course?.slug}
+                courseTeacherId={props.course?.teacher.worker.user.id}
               />
             </Tabs.Panel>
 
-            <Tabs.Panel value="exercise" pt="xs">
-              <CourseExercise
-                courseSlug={props.course?.slug}
-                course={props.course}
-              />
-            </Tabs.Panel>
-
-            <Tabs.Panel value="document" pt="xs">
-              <CourseDocument
-                courseSlug={props.course?.slug}
-                course={props.course}
-              />
-            </Tabs.Panel>
-            {getCourseStatus(props.course) === CourseStatus.Closed && (
-              <Tabs.Panel value="rating" pt="xs">
-                <CourseRating courseSlug={props.course?.slug} />
-              </Tabs.Panel>
+            {props.course?.teacher.worker.user.id == authState.userId && (
+              <>
+                <Tabs.Panel value="exercise" pt="xs">
+                  <CourseExercise
+                    courseSlug={props.course?.slug}
+                    course={props.course}
+                  />
+                </Tabs.Panel>
+                <Tabs.Panel value="document" pt="xs">
+                  <CourseDocument
+                    courseSlug={props.course?.slug}
+                    course={props.course}
+                  />
+                </Tabs.Panel>
+                {getCourseStatus(props.course) === CourseStatus.Closed && (
+                  <Tabs.Panel value="rating" pt="xs">
+                    <CourseRating courseSlug={props.course?.slug} />
+                  </Tabs.Panel>
+                )}
+              </>
             )}
           </Tabs>
         </Container>
