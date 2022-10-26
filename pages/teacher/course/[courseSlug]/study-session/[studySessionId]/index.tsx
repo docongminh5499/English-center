@@ -1,10 +1,10 @@
-import StudySessionDetailScreen from "../../../../../components/pageComponents/TeacherScreen/StudySessionDetailScreen";
+import StudySessionDetailScreen from "../../../../../../components/pageComponents/TeacherScreen/StudySessionDetailScreen";
 import { GetServerSideProps } from "next";
-import { CookieKey, Url, UserRole } from "../../../../../helpers/constants";
-import { CustomNextPage } from "../../../../../interfaces/page.interface";
-import { CookieParser } from "../../../../../helpers/cookieParser";
+import { CookieKey, Url, UserRole } from "../../../../../../helpers/constants";
+import { CustomNextPage } from "../../../../../../interfaces/page.interface";
+import { CookieParser } from "../../../../../../helpers/cookieParser";
 import { gsspWithNonce } from "@next-safe/middleware/dist/document";
-import API from "../../../../../helpers/api";
+import API from "../../../../../../helpers/api";
 
 const StudySessionDetailPage: CustomNextPage = (props) => {
   return <StudySessionDetailScreen ownMakeups={[]} userRole={null} studySession={null} attendences={[]} makeups={[]} {...props} />;
@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
     return {
       props: {
         userRole: user.role || null,
-        studySession: [],
+        studySession: null,
         attendences: [],
         makeups: [],
         ownMakeups: [],

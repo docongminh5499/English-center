@@ -15,4 +15,5 @@ export default interface StudySession {
     tutor: UserTutor;
     teacher: UserTeacher;
     classroom: Classroom;
+    version: number;
 }

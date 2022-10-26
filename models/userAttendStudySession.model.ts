@@ -6,4 +6,5 @@ export default interface UserAttendStudySession {
   studySession: StudySession;
   isAttend: boolean;
   commentOfTeacher: string;
+  version: number;
 }

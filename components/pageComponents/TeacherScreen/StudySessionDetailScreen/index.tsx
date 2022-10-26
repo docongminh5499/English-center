@@ -55,16 +55,6 @@ const StudySessionDetailScreen = (props: IProps) => {
         if (!columnTable || columnTable.length == 0) return [];
 
         const foundOwnMakeUps = props.ownMakeups.find(makeup => makeup.student.user.id === e.student.user.id);
-        const additionalInfo = foundOwnMakeUps ?
-          " - " +
-          "Khóa học: " + +
-          "Giáo viên: " + +
-          "Ngày: " + moment(foundOwnMakeUps.targetStudySession.date).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") +
-          moment(foundOwnMakeUps.targetStudySession.shifts[0].startTime).utcOffset(TimeZoneOffset).format("HH:mm") +
-          "-" +
-          moment(foundOwnMakeUps.targetStudySession.shifts[foundOwnMakeUps.targetStudySession.shifts.length - 1].endTime).utcOffset(TimeZoneOffset).format("HH:mm")
-          : "";
-
         return columnTable.map(_e => {
           if (_e._idColumn === COLUMN_ATTENDANCE.HO_TEN) return { _idColumn: COLUMN_ATTENDANCE.HO_TEN, valueRow: e.student.user.fullName }
           if (_e._idColumn === COLUMN_ATTENDANCE.MSHV) return { _idColumn: COLUMN_ATTENDANCE.MSHV, valueRow: e.student.user.id }
@@ -117,9 +107,15 @@ const StudySessionDetailScreen = (props: IProps) => {
           {makeupLesson.targetStudySession.course.name}
         </Text>
       </Text>
-      <Divider />
-      <Text>{makeupLesson.commentOfTeacher}</Text>
-      <Text style={{ fontSize: "1.1rem" }} align="right" color="dimmed" mr={8}> -- GV: {makeupLesson.targetStudySession.teacher.worker.user.fullName}</Text>
+      {makeupLesson.commentOfTeacher && makeupLesson.commentOfTeacher.trim().length > 0 && (
+        <Divider />
+      )}
+      {makeupLesson.commentOfTeacher && makeupLesson.commentOfTeacher.trim().length > 0 && (
+        <Text>{makeupLesson.commentOfTeacher}</Text>
+      )}
+      {makeupLesson.commentOfTeacher && makeupLesson.commentOfTeacher.trim().length > 0 && (
+        <Text style={{ fontSize: "1.1rem" }} align="right" color="dimmed" mr={8}> -- GV: {makeupLesson.targetStudySession.teacher.worker.user.fullName}</Text>
+      )}
     </Container>
   }
 
@@ -250,7 +246,7 @@ const StudySessionDetailScreen = (props: IProps) => {
 
           {props.studySession && getCourseStatus(props.studySession.course) !== CourseStatus.Closed && (
             <Container my={20} style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button onClick={() => { }}
+              <Button onClick={() => router.push(router.asPath + "/modify")}
               >Chỉnh sửa</Button>
             </Container>
           )}

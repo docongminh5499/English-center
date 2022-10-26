@@ -7,4 +7,5 @@ export default interface MakeUpLession {
   targetStudySession: StudySession;    // Buổi dùng để bù
   isAttend: boolean;
   commentOfTeacher: string;
+  version: number;
 }

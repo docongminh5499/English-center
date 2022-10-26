@@ -141,6 +141,7 @@ export const Url = {
     getComments: "/api/teachers/courses/get-comments",
     getStudySessions: "/api/teachers/courses/get-study-sessions",
     getStudySessionDetail: "/api/teachers/courses/get-study-session-detail",
+    modifyStudySessionDetail: "/api/teachers/courses/modify-study-session-detail",
     getPreferredCurriculums: "/api/teachers/curriculum/get-prefered-curriculums",
     checkPreferredCurriculums: "/api/teachers/curriculum/check-prefered-curriculums",
     addPreferredCurriculums: "/api/teachers/curriculum/add-prefered-curriculums",
