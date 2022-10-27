@@ -88,6 +88,7 @@ export const TeacherConstants = {
   limitComments: 12,
   maxTopComments: 3,
   limitStudySession: 12,
+  limitSchedule: 12,
 }
 
 export const EmployeeConstants = {
@@ -146,7 +147,8 @@ export const Url = {
     getPreferredCurriculums: "/api/teachers/curriculum/get-prefered-curriculums",
     checkPreferredCurriculums: "/api/teachers/curriculum/check-prefered-curriculums",
     addPreferredCurriculums: "/api/teachers/curriculum/add-prefered-curriculums",
-    removePreferredCurriculums: "/api/teachers/curriculum/remove-prefered-curriculums"
+    removePreferredCurriculums: "/api/teachers/curriculum/remove-prefered-curriculums",
+    getSchedules: "/api/teachers/schedule",
   },
   students: {
     getTimetable: "/api/students/timetable",
