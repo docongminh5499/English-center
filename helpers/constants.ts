@@ -124,6 +124,7 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
     getCourseDetail: "/api/teachers/courses/get-course/",
+    closeCourse: "/api/teachers/courses/close-course",
     getStudents: "/api/teachers/courses/get-students",
     getStudentDetails: "/api/teachers/courses/get-student-detail",
     getExercises: "/api/teachers/courses/get-exercises",
@@ -165,6 +166,7 @@ export const Url = {
     createCourse: "/api/employees/courses/create-course",
     getCourse: "/api/employees/courses/get-course",
     getCourseDetail: "/api/employees/courses/get-course/",
+    reopenCourse: "/api/employees/courses/reopen-course",
     getStudySessions: "/api/employees/courses/get-study-sessions",
   }
 };

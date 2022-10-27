@@ -1,4 +1,4 @@
-import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge } from "@mantine/core";
+import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head"
@@ -13,6 +13,7 @@ import { Course } from "../../../../models/course.model";
 import StudySession from "../../../../models/studySession.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
+import OpenCourseModal from "../../TeacherScreen/Modal/openCourse.modal";
 
 
 interface IProps {
@@ -32,6 +33,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const [total, setTotal] = useState(0);
   const [seeMoreLoading, setSeeMoreLoading] = useState(true);
   const [didMount, setDidMount] = useState(false);
+  const [course, setCourse] = useState(props.course);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isSendingRequest, setIsSendingRequest] = useState(false);
   const router = useRouter();
 
 
@@ -40,9 +44,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       token: authState.token,
       limit: limit,
       skip: skip,
-      courseSlug: props.course?.slug
+      courseSlug: course?.slug
     });
-  }, [authState.token, props.course?.slug]);
+  }, [authState.token, course?.slug]);
 
 
 
@@ -60,6 +64,27 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
     }
   }, [EmployeeConstants.limitStudySession, listStudySessions]);
 
+
+
+  const onOpenCourse = useCallback(async () => {
+    try {
+      setIsSendingRequest(true);
+      const responses = await API.post(Url.employees.reopenCourse, {
+        token: authState.token,
+        courseSlug: course?.slug
+      });
+      if (responses !== null) {
+        toast.success("Mở khóa học thành công");
+        setCourse(responses);
+      } else toast.error("Mở khóa học thất bại. Vui lòng thử lại sau.");
+      setIsSendingRequest(false);
+      setIsOpenModal(false);
+    } catch (error) {
+      setIsSendingRequest(false);
+      setIsOpenModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, course?.slug]);
 
 
 
@@ -90,6 +115,19 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Modal
+        opened={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <OpenCourseModal
+          loading={isSendingRequest}
+          callBack={onOpenCourse}
+        />
+      </Modal>
+
       {!didMount && (
         <Container style={{
           display: "flex",
@@ -107,7 +145,18 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           <Title align="center" size="2.6rem" color="#444" transform="uppercase" my={20}>
             Chi tiết khóa học
           </Title>
-
+          {course?.closingDate !== null && (
+            <Container style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%"
+            }} p={0} mb={30}>
+              <Button color="green" onClick={() => setIsOpenModal(true)}>
+                Mở khóa học
+              </Button>
+            </Container>
+          )}
           <Container
             style={{
               display: "flex",
@@ -118,41 +167,41 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
             <SimpleGrid cols={isTablet ? 1 : 2}>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Tên khóa học</Text>
-                <Text align="center">{props.course?.name}</Text>
+                <Text align="center">{course?.name}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Chương trình dạy</Text>
-                <Text align="center">{props.course?.curriculum.name}</Text>
+                <Text align="center">{course?.curriculum.name}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Ngày khai giảng</Text>
-                <Text align="center">{moment(props.course?.openingDate).utcOffset(TimeZoneOffset).format('DD/MM/YYYY')}</Text>
+                <Text align="center">{moment(course?.openingDate).utcOffset(TimeZoneOffset).format('DD/MM/YYYY')}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Ngày dự kiến kết thúc</Text>
-                <Text align="center">{moment(props.course?.expectedClosingDate).utcOffset(TimeZoneOffset).format('DD/MM/YYYY')}</Text>
+                <Text align="center">{moment(course?.expectedClosingDate).utcOffset(TimeZoneOffset).format('DD/MM/YYYY')}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Ngày kết thúc</Text>
                 <Text align="center">
-                  {props.course?.closingDate
-                    ? moment(props.course?.closingDate).utcOffset(TimeZoneOffset).format('HH:mm DD-MM-YYYY')
+                  {course?.closingDate
+                    ? moment(course?.closingDate).utcOffset(TimeZoneOffset).format('HH:mm DD-MM-YYYY')
                     : "--:-- --/--/----"}
                 </Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Trạng thái khoá học</Text>
-                {getCourseStatus(props.course) === CourseStatus.NotOpen && (
+                {getCourseStatus(course) === CourseStatus.NotOpen && (
                   <Text color="gray" align="center">
                     Sắp diễn ra
                   </Text>
                 )}
-                {getCourseStatus(props.course) === CourseStatus.Opened && (
+                {getCourseStatus(course) === CourseStatus.Opened && (
                   <Text color="green" align="center">
                     Đang diễn ra
                   </Text>
                 )}
-                {getCourseStatus(props.course) === CourseStatus.Closed && (
+                {getCourseStatus(course) === CourseStatus.Closed && (
                   <Text color="pink" align="center">
                     Đã kết thúc
                   </Text>
@@ -160,11 +209,11 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Số lượng học viên tối đa</Text>
-                <Text align="center">{props.course?.maxNumberOfStudent}</Text>
+                <Text align="center">{course?.maxNumberOfStudent}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Giá tiền</Text>
-                <Text align="center">{props.course?.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</Text>
+                <Text align="center">{course?.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Chi nhánh</Text>
@@ -176,8 +225,8 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                     justifyContent: "center",
                     height: isMobile ? "40px" : "60px"
                   }} p={0}>
-                  <Text align="center">{props.course?.branch.name}</Text>
-                  <Text align="center" color="dimmed" style={{ fontSize: "1.2rem" }}>{props.course?.branch.address}</Text>
+                  <Text align="center">{course?.branch.name}</Text>
+                  <Text align="center" color="dimmed" style={{ fontSize: "1.2rem" }}>{course?.branch.address}</Text>
                 </Container>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
@@ -187,7 +236,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                     size={isMobile ? 40 : 60}
                     color="blue"
                     radius='xl'
-                    src={getAvatarImageUrl(props.course?.teacher.worker.user.avatar)}
+                    src={getAvatarImageUrl(course?.teacher.worker.user.avatar)}
                   />
                   <Container style={{
                     display: "flex",
@@ -196,9 +245,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                     alignItems: "center"
                   }} p={0}>
                     <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">
-                      {props.course?.teacher.worker.user.fullName}
+                      {course?.teacher.worker.user.fullName}
                     </Text>
-                    <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSGV: {props.course?.teacher.worker.user.id}</Text>
+                    <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSGV: {course?.teacher.worker.user.id}</Text>
                   </Container>
                 </Group>
               </Container>
@@ -214,7 +263,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                 }
                 style={{ maxWidth: "300px", margin: "auto" }}
                 radius="md"
-                src={getImageUrl(props.course?.image)}
+                src={getImageUrl(course?.image)}
                 alt="Hình minh họa chương trình dạy"
               />
             </Container>
