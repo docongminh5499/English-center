@@ -5,18 +5,18 @@ interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
   label: string;
   avatar: string;
   name: string;
-  tutorId: string;
+  id: string;
 }
 
 const SelectItem = forwardRef<HTMLDivElement, ItemProps>(
-  ({ avatar, name, tutorId, ...others }: ItemProps, ref) => (
+  ({ avatar, name, id, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
       <Group noWrap>
         <Avatar src={avatar} />
         <div>
           <Text style={{ fontSize: "1.2rem" }}>{name}</Text>
           <Text style={{ fontSize: "1rem" }} color="dimmed">
-            Mã số: {tutorId}
+            Mã số: {id}
           </Text>
         </div>
       </Group>

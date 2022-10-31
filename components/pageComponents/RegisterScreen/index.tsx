@@ -9,6 +9,8 @@ import {
   PasswordInput,
   Loader,
   Table,
+  Title,
+  Container,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -21,11 +23,12 @@ import API from "../../../helpers/api";
 import { Gender, Url, UserRole } from "../../../helpers/constants";
 import 'dayjs/locale/vi';
 import styles from "./register.module.css";
+import { useMediaQuery } from "@mantine/hooks";
 
-interface IProps {}
+interface IProps { }
 
 const RegisterScreen = (props: IProps) => {
-
+  const isTablet = useMediaQuery('(max-width: 768px)');
   //Stepper
   const [active, setActive] = useState(0);
   const [loadingStep, setLoadingStep] = useState(false);
@@ -132,14 +135,18 @@ const RegisterScreen = (props: IProps) => {
         <title>Đăng ký</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div style={{ width: "100%" }}>
+      <Container style={{ width: "100%", minWidth: 0 }} size="xl" px={10} py={20}>
+        <Title transform="uppercase" size="2.4rem" align="center" color="#444" my={20}>
+          Đăng ký tài khoản
+        </Title>
         <Stepper
           className={styles.stepperContainer}
           active={active}
           onStepClick={setActive}
           breakpoint="sm"
           completedIcon={<IconCircleCheck />}
-          style={{ maxWidth: "700px", margin: "auto", paddingTop: "100px" }}
+          style={{ minWidth: 0, margin: "auto" }}
+          styles={{ steps: { maxWidth: isTablet ? 200 : "100%", margin: "auto" } }}
         >
           <Stepper.Step
             className={styles.step}
@@ -266,9 +273,9 @@ const RegisterScreen = (props: IProps) => {
         {!completed && (
           <Group position="center" mt="xl">
             <Button variant="default" onClick={prevStep}>
-              Back
+              Quay lại
             </Button>
-            <Button onClick={nextStep}>Next step</Button>
+            <Button onClick={nextStep}>Tiếp theo</Button>
           </Group>
         )}
 
@@ -277,7 +284,7 @@ const RegisterScreen = (props: IProps) => {
             <Loader size="lg" />
           </Group>
         )}
-      </div>
+      </Container>
     </>
   );
 };

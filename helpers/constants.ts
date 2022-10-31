@@ -149,6 +149,7 @@ export const Url = {
     addPreferredCurriculums: "/api/teachers/curriculum/add-prefered-curriculums",
     removePreferredCurriculums: "/api/teachers/curriculum/remove-prefered-curriculums",
     getSchedules: "/api/teachers/schedule",
+    getEmployeeByBranch: "/api/teachers/courses/get-employee-by-branch",
   },
   students: {
     getTimetable: "/api/students/timetable",
@@ -170,6 +171,11 @@ export const Url = {
     getCourseDetail: "/api/employees/courses/get-course/",
     reopenCourse: "/api/employees/courses/reopen-course",
     getStudySessions: "/api/employees/courses/get-study-sessions",
+    getShifts: "/api/employees/courses/get-shifts",
+    getAvailableTeachersInDate: "/api/employees/courses/get-available-teachers-in-date",
+    getAvailableTutorsInDate: "/api/employees/courses/get-available-tutors-in-date",
+    getAvailableClassroomInDate: "/api/employees/courses/get-available-classrooms-in-date",
+    updateStudySession: "/api/employees/courses/update-study-session",
   }
 };
 

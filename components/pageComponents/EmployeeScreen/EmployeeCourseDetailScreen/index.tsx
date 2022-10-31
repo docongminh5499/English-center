@@ -1,5 +1,6 @@
-import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal } from "@mantine/core";
+import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal, ThemeIcon } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { IconPencil } from "@tabler/icons";
 import moment from "moment";
 import Head from "next/head"
 import { useRouter } from "next/router";
@@ -14,6 +15,7 @@ import StudySession from "../../../../models/studySession.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
 import OpenCourseModal from "../../TeacherScreen/Modal/openCourse.modal";
+import ModifyStudySessionModal from "../Modal/modifyStudySession.modal";
 
 
 interface IProps {
@@ -36,6 +38,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const [course, setCourse] = useState(props.course);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isSendingRequest, setIsSendingRequest] = useState(false);
+  const [isOpenModifyStudySessionModal, setIsOpenModifyStudySessionModal] = useState(false);
+  const [currentStudySession, setCurrentStudySession] = useState<StudySession>();
+  const [isOnSendModidySession, setIsOnSendModifySession] = useState(false);
   const router = useRouter();
 
 
@@ -51,7 +56,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
 
 
 
-  const seeMoreExercises = useCallback(async () => {
+  const seeMoreStudySession = useCallback(async () => {
     try {
       setSeeMoreLoading(true);
       const responses = await getStudySessions(EmployeeConstants.limitStudySession, listStudySessions.length);
@@ -85,6 +90,47 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, course?.slug]);
+
+
+
+  const onSendModifyStudySession = useCallback(async (data: any) => {
+    try {
+      setIsOnSendModifySession(true);
+      const responses = await API.post(Url.employees.updateStudySession, {
+        token: authState.token,
+        id: currentStudySession?.id,
+        name: data.name,
+        date: data.date,
+        shiftIds: data.shiftIds,
+        tutorId: data.tutorId,
+        teacherId: data.teacherId,
+        classroom: data.classroom,
+        version: currentStudySession?.version,
+      });
+      if (responses !== null) {
+        toast.success("Cập nhật buổi học thành công");
+        const studySessions = listStudySessions.map(studySession => {
+          if (studySession.id == responses.id) return responses;
+          else return studySession;
+        });
+        studySessions.sort((prev, next) => {
+          const prevStudySessionDate = new Date(prev.date);
+          const nextStudySessionDate = new Date(next.date);
+          if (prevStudySessionDate < nextStudySessionDate) return -1;
+          else if (prevStudySessionDate > nextStudySessionDate) return 1;
+          return 0;
+        })
+        setListStudySessions(studySessions);
+        setCourse(responses.course);
+      } else toast.error("Cập nhật buổi học thất bại. Vui lòng thử lại sau.");
+      setIsOnSendModifySession(false);
+      setIsOpenModifyStudySessionModal(false);
+    } catch (error) {
+      setIsOnSendModifySession(false);
+      setIsOpenModifyStudySessionModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, currentStudySession?.id, currentStudySession?.version, listStudySessions]);
 
 
 
@@ -127,6 +173,24 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           callBack={onOpenCourse}
         />
       </Modal>
+
+
+      <Modal
+        opened={isOpenModifyStudySessionModal}
+        onClose={() => setIsOpenModifyStudySessionModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <ModifyStudySessionModal
+          onSendRequest={onSendModifyStudySession}
+          loading={isOnSendModidySession}
+          studySession={currentStudySession}
+          shiftsPerSession={props.course?.curriculum.shiftsPerSession}
+          curriculum={props.course?.curriculum}
+        />
+      </Modal>
+
 
       {!didMount && (
         <Container style={{
@@ -279,8 +343,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                       <th>Giáo viên</th>
                       <th>Trợ giảng</th>
                       <th>Phòng học</th>
-                      {/* <th></th> */}
-                      {/* Trạng thái đã hủy, buttons */}
+                      {getCourseStatus(course) !== CourseStatus.Closed && (
+                        <th></th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -303,6 +368,17 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                           <Text>{studySession.classroom.name}</Text>
                           <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
                         </td>
+                        {getCourseStatus(course) !== CourseStatus.Closed && (
+                          <td>
+                            <ThemeIcon size="lg" style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setCurrentStudySession(studySession);
+                                setIsOpenModifyStudySessionModal(true);
+                              }}>
+                              <IconPencil size={20} />
+                            </ThemeIcon>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -319,7 +395,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           }}>
             {seeMoreLoading && <Loader variant="dots" />}
             {!seeMoreLoading && listStudySessions.length < total && <Button
-              onClick={() => seeMoreExercises()}
+              onClick={() => seeMoreStudySession()}
             >Xem thêm</Button>}
           </Container>
           <Space h={20} />

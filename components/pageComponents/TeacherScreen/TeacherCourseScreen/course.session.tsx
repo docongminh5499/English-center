@@ -1,4 +1,4 @@
-import { Badge, Container, Divider, Grid, Loader, Space, Text } from "@mantine/core";
+import { Badge, Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -10,12 +10,15 @@ import { StudySessionState, TeacherConstants, TimeZoneOffset, Url } from "../../
 import { getStudySessionState } from "../../../../helpers/getStudySessionState";
 import StudySession from "../../../../models/studySession.model";
 import { useAuth } from "../../../../stores/Auth";
+import { useSocket } from "../../../../stores/Socket";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
+import RequestOffSessionModal from "../Modal/requestOffSession.modal";
 
 
 interface IProps {
   courseSlug?: string;
+  branchId?: number;
 }
 
 
@@ -26,11 +29,14 @@ const CourseSession = (props: IProps) => {
 
   const router = useRouter();
   const [authState] = useAuth();
+  const [, socketAction] = useSocket();
   const [listStudySessions, setListStudySessions] = useState<StudySession[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [seeMoreLoading, setSeeMoreLoading] = useState(false);
-
+  const [isOpenRequestOffModal, setIsOpenRequestOffModal] = useState(false);
+  const [currentStudySession, setCurrentStudySession] = useState<StudySession>();
+  const [isSendingRequest, setIsSendingRequest] = useState(false);
 
 
   const getStudySessions = useCallback(async (limit: number, skip: number) => {
@@ -59,10 +65,22 @@ const CourseSession = (props: IProps) => {
   }, [TeacherConstants.limitStudySession, listStudySessions]);
 
 
+  const onSendOffSessionRequest = useCallback(async (data: any) => {
+    setIsSendingRequest(true);
+    const message = `Giáo viên: ${currentStudySession?.teacher.worker.user.fullName}, MSGV: ${currentStudySession?.teacher.worker.user.id}.
+    Yêu cầu nghỉ buổi học: ${currentStudySession?.name}, thuộc khóa học: ${currentStudySession?.course.name}.
+    Lý do: ${data.excuse}.`;
+    socketAction.emit('notification', { token: authState.token, userId: data.employeeId, content: message });
+    setIsSendingRequest(false);
+    setIsOpenRequestOffModal(false);
+  }, [socketAction, authState.token, currentStudySession]);
+
+
   useEffect(() => {
     const didMountFunc = async () => {
       try {
         const responses = await getStudySessions(TeacherConstants.limitStudySession, 0);
+        console.log(responses)
         setTotal(responses.total);
         setListStudySessions(responses.studySessions);
         setLoading(false);
@@ -80,6 +98,20 @@ const CourseSession = (props: IProps) => {
       <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
         Danh sách buổi học
       </Text>
+
+      <Modal
+        opened={isOpenRequestOffModal}
+        onClose={() => setIsOpenRequestOffModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <RequestOffSessionModal
+          onSendRequest={onSendOffSessionRequest}
+          loading={isSendingRequest}
+          branchId={props.branchId}
+        />
+      </Modal>
 
       {loading && (
         <Container style={{
@@ -166,7 +198,15 @@ const CourseSession = (props: IProps) => {
                     )}
                   {getStudySessionState(item) === StudySessionState.Ready &&
                     authState.userId == item.teacher.worker.user.id.toString() && (
-                      <Button color="pink" compact={isLargeTablet ? false : true} fullWidth>Xin nghỉ</Button>
+                      <Button
+                        color="pink"
+                        compact={isLargeTablet ? false : true}
+                        fullWidth
+                        onClick={() => {
+                          setCurrentStudySession(item);
+                          setIsOpenRequestOffModal(true);
+                        }}>
+                        Xin nghỉ</Button>
                     )}
                 </Grid.Col>
               </Grid>

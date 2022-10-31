@@ -8,7 +8,6 @@ export default interface StudySession {
     id: number;
     name: string;
     date: Date;
-    isTeacherAbsent: boolean
     notes: string | null;
     course: Course;
     shifts: Shift[];

@@ -211,7 +211,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="session" pt="xs">
-              <CourseSession courseSlug={course?.slug} />
+              <CourseSession courseSlug={course?.slug} branchId={course?.branch.id} />
             </Tabs.Panel>
 
             <Tabs.Panel value="student" pt="xs">
