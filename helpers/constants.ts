@@ -150,6 +150,7 @@ export const Url = {
     removePreferredCurriculums: "/api/teachers/curriculum/remove-prefered-curriculums",
     getSchedules: "/api/teachers/schedule",
     getEmployeeByBranch: "/api/teachers/courses/get-employee-by-branch",
+    getCurriculumTags: "/api/teachers/curriculum/get-curriculum-tags",
   },
   students: {
     getTimetable: "/api/students/timetable",

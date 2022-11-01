@@ -196,18 +196,34 @@ const CourseSession = (props: IProps) => {
                         )}
                       </>
                     )}
-                  {getStudySessionState(item) === StudySessionState.Ready &&
-                    authState.userId == item.teacher.worker.user.id.toString() && (
-                      <Button
-                        color="pink"
-                        compact={isLargeTablet ? false : true}
-                        fullWidth
-                        onClick={() => {
-                          setCurrentStudySession(item);
-                          setIsOpenRequestOffModal(true);
-                        }}>
-                        Xin nghỉ</Button>
-                    )}
+                  {getStudySessionState(item) === StudySessionState.Ready && (
+                    <>
+                      {authState.userId != item.teacher.worker.user.id.toString() && (
+                        <Container p={0} mt={5}>
+                          <Text weight={600} align="center" style={{ fontSize: "1.4rem" }} color="pink">
+                            Người dạy thay
+                          </Text>
+                          <Text color="#444" align="center" style={{ fontSize: "1.4rem" }}>
+                            {item.teacher.worker.user.fullName}
+                          </Text>
+                          <Text color="dimmed" align="center" style={{ fontSize: "1.2rem" }}>
+                            MSGV: {item.teacher.worker.user.id}
+                          </Text>
+                        </Container>
+                      )}
+                      {authState.userId == item.teacher.worker.user.id.toString() && (
+                        <Button
+                          color="pink"
+                          compact={isLargeTablet ? false : true}
+                          fullWidth
+                          onClick={() => {
+                            setCurrentStudySession(item);
+                            setIsOpenRequestOffModal(true);
+                          }}>
+                          Xin nghỉ</Button>
+                      )}
+                    </>
+                  )}
                 </Grid.Col>
               </Grid>
             </Container>

@@ -152,7 +152,7 @@ const TeacherScheduleScreen = () => {
                             alignItems: 'center',
                           }}>
                             <Badge color="pink" mx="auto">
-                              <Text style={{ fontSize: "1.1rem" }}>Vắng</Text>
+                              <Text style={{ fontSize: "1.1rem" }}>{getStudySessionState(studySession) == StudySessionState.Ready ? "Đăng ký nghỉ" : "Vắng"}</Text>
                             </Badge>
                             <Text color="dimmed" style={{ fontSize: "1.1rem" }} align="center" mt={8}>
                               Người dạy thay
