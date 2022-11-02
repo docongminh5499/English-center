@@ -1,24 +1,20 @@
-import { Avatar, Container, Grid, Group, Input, Loader, Modal, SimpleGrid, Space, Text } from "@mantine/core";
+import { Avatar, Container, Grid, Group, Input, Loader, SimpleGrid, Space, Text } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
-import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { TeacherConstants, Url } from "../../../../helpers/constants";
+import { TutorConstants, Url } from "../../../../helpers/constants";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import UserStudent from "../../../../models/userStudent.model";
 import { useAuth } from "../../../../stores/Auth";
-import { useSocket } from "../../../../stores/Socket";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
-import SendNotificationCourseModal from "../Modal/sendNotificationCourse";
 
 
 interface IProps {
   courseSlug?: string;
   courseId?: number;
-  courseTeacherId?: number;
 }
 
 
@@ -26,20 +22,16 @@ const CourseStudent = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
   const [authState] = useAuth();
-  const [, socketAction] = useSocket();
   const [query, setQuery] = useInputState("");
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [listStudents, setListStudents] = useState<UserStudent[]>([]);
   const [total, setTotal] = useState(0);
   const [queriedTotal, setQueriedTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [seeMoreLoading, setSeeMoreLoading] = useState(false);
-  const router = useRouter();
-
 
 
   const getStudents = useCallback(async (limit: number, skip: number, query: string) => {
-    return await API.post(Url.teachers.getStudents, {
+    return await API.post(Url.tutors.getStudents, {
       token: authState.token,
       limit: limit,
       skip: skip,
@@ -52,7 +44,7 @@ const CourseStudent = (props: IProps) => {
   const seeMoreStudents = useCallback(async () => {
     try {
       setSeeMoreLoading(true);
-      const responses = await getStudents(TeacherConstants.limitStudent, listStudents.length, query);
+      const responses = await getStudents(TutorConstants.limitStudent, listStudents.length, query);
       setQueriedTotal(responses.total);
       setListStudents(listStudents.concat(responses.students));
       setSeeMoreLoading(false);
@@ -60,14 +52,14 @@ const CourseStudent = (props: IProps) => {
       setSeeMoreLoading(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
-  }, [TeacherConstants.limitStudent, listStudents, query]);
+  }, [TutorConstants.limitStudent, listStudents, query]);
 
 
 
   const queryStudents = useCallback(async () => {
     try {
       setLoading(true);
-      const responses = await getStudents(TeacherConstants.limitStudent, 0, query);
+      const responses = await getStudents(TutorConstants.limitStudent, 0, query);
       setQueriedTotal(responses.total);
       setListStudents(responses.students);
       setLoading(false);
@@ -75,25 +67,14 @@ const CourseStudent = (props: IProps) => {
       setLoading(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
-  }, [TeacherConstants.limitStudent, query])
-
-
-
-  const onSendNotification = useCallback((data: any) => {
-    setIsNotificationModalOpen(false);
-    socketAction.emit('course_notification', {
-      token: authState.token,
-      courseId: props.courseId,
-      content: data.notification,
-    });
-  }, [props.courseId, authState.token]);
+  }, [TutorConstants.limitStudent, query])
 
 
   useEffect(() => {
     const didMountFunc = async () => {
       try {
         setLoading(true);
-        const responses = await getStudents(TeacherConstants.limitStudent, 0, query);
+        const responses = await getStudents(TutorConstants.limitStudent, 0, query);
         setTotal(responses.total);
         setQueriedTotal(responses.total);
         setListStudents(responses.students);
@@ -109,19 +90,6 @@ const CourseStudent = (props: IProps) => {
 
   return (
     <>
-      <Modal
-        opened={isNotificationModalOpen}
-        onClose={() => setIsNotificationModalOpen(false)}
-        centered
-        closeOnClickOutside={true}
-        overlayOpacity={0.55}
-        overlayBlur={3}>
-        <SendNotificationCourseModal
-          onSend={onSendNotification}
-        />
-      </Modal>
-
-
       <Container size="xl" p={0}>
         <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
           Danh sách học viên
@@ -129,17 +97,6 @@ const CourseStudent = (props: IProps) => {
         <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
           Sĩ số: {total}
         </Text>
-
-        {props.courseTeacherId == authState.userId && (
-          <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
-            <Button
-              color="green" variant="light"
-              disabled={loading || seeMoreLoading}
-              onClick={() => setIsNotificationModalOpen(true)}>
-              Gửi thông báo tới lớp học
-            </Button>
-          </Container>
-        )}
 
         <Space h={20} />
         <Grid>
@@ -186,11 +143,7 @@ const CourseStudent = (props: IProps) => {
             {listStudents.map((item, index) => (
               <Group
                 key={index}
-                onClick={() => router.push(router.asPath + "/student/" + item.user.id)}
-                style={{
-                  cursor: "pointer",
-                  flexDirection: isTablet ? "column" : "row"
-                }}>
+                style={{ flexDirection: isTablet ? "column" : "row" }}>
                 <Avatar
                   size={60}
                   color="blue"

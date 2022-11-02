@@ -170,11 +170,11 @@ const StudySessionDetailScreen = (props: IProps) => {
           <Space h={30} />
           <Grid>
             <Grid.Col span={isLargetTablet ? (isSmallTablet ? 12 : 6) : 3}>
-              <Group position={isSmallTablet ? "apart" : "left"} align="flex-start">
-                <Text color="#444444" mr={5}>Trợ giảng:</Text>
+              <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
+                <Text color="#444444" mr={5}>Giáo viên:</Text>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                  <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "Không có thông tin"}</Text>
-                  <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {infoStudySession?.tutor.worker.user.id}</Text>
+                  <Text color="#444444">{infoStudySession?.teacher.worker.user.fullName || "Không có thông tin"}</Text>
+                  <Text color="dimmed" style={{ fontSize: "1rem" }}>MSGV: {infoStudySession?.teacher.worker.user.id}</Text>
                 </div>
               </Group>
             </Grid.Col>
@@ -246,16 +246,7 @@ const StudySessionDetailScreen = (props: IProps) => {
                 heightTable={isMobile ? 500 : 300}
               />
           }
-
           <Space h={20} />
-
-          {props.studySession && getCourseStatus(props.studySession.course) !== CourseStatus.Closed &&
-            props.studySession.teacher.worker.user.id.toString() == authState.userId && (
-              <Container my={20} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button onClick={() => router.push(router.asPath + "/modify")}
-                >Chỉnh sửa</Button>
-              </Container>
-            )}
         </Container>
       )}
     </>

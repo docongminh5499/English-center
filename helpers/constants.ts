@@ -100,6 +100,13 @@ export const StudentConstants = {
   limitCourse: 12
 }
 
+export const TutorConstants = {
+  limitCourse: 12,
+  limitSchedule: 12,
+  limitStudySession: 12,
+  limitStudent: 12,
+}
+
 export const ChatConstants = {
   limitMessage: 10
 }
@@ -177,6 +184,20 @@ export const Url = {
     getAvailableTutorsInDate: "/api/employees/courses/get-available-tutors-in-date",
     getAvailableClassroomInDate: "/api/employees/courses/get-available-classrooms-in-date",
     updateStudySession: "/api/employees/courses/update-study-session",
+  },
+  tutors: {
+    getCourse: "/api/tutors/courses/get-course",
+    getAllShifts: "/api/tutors/personal/get-all-shifts",
+    getFreeShifts: "/api/tutors/personal/get-free-shifts",
+    updateFreeShifts: "/api/tutors/personal/update-free-shifts",
+    getPersonalInformation: "/api/tutors/personal/get-personal-information",
+    modifyPersonalInformation: "/api/tutors/personal/modify-personal-information",
+    getSchedules: "/api/tutors/schedule",
+    getCourseDetail: "/api/tutors/courses/get-course/",
+    getStudents: "/api/tutors/courses/get-students",
+    getStudySessions: "/api/tutors/courses/get-study-sessions",
+    getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
+    getEmployeeByBranch: "/api/tutors/courses/get-employee-by-branch",
   }
 };
 

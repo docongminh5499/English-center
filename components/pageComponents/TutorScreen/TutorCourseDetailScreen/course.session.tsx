@@ -6,7 +6,7 @@ import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { StudySessionState, TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
+import { StudySessionState, TimeZoneOffset, TutorConstants, Url } from "../../../../helpers/constants";
 import { getStudySessionState } from "../../../../helpers/getStudySessionState";
 import StudySession from "../../../../models/studySession.model";
 import { useAuth } from "../../../../stores/Auth";
@@ -40,7 +40,7 @@ const CourseSession = (props: IProps) => {
 
 
   const getStudySessions = useCallback(async (limit: number, skip: number) => {
-    return await API.post(Url.teachers.getStudySessions, {
+    return await API.post(Url.tutors.getStudySessions, {
       token: authState.token,
       limit: limit,
       skip: skip,
@@ -54,7 +54,7 @@ const CourseSession = (props: IProps) => {
   const seeMoreStudySessions = useCallback(async () => {
     try {
       setSeeMoreLoading(true);
-      const responses = await getStudySessions(TeacherConstants.limitStudySession, listStudySessions.length);
+      const responses = await getStudySessions(TutorConstants.limitStudySession, listStudySessions.length);
       setTotal(responses.total);
       setListStudySessions(listStudySessions.concat(responses.studySessions));
       setSeeMoreLoading(false);
@@ -62,12 +62,12 @@ const CourseSession = (props: IProps) => {
       setSeeMoreLoading(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
-  }, [TeacherConstants.limitStudySession, listStudySessions]);
+  }, [TutorConstants.limitStudySession, listStudySessions]);
 
 
   const onSendOffSessionRequest = useCallback(async (data: any) => {
     setIsSendingRequest(true);
-    const message = `Giáo viên: ${currentStudySession?.teacher.worker.user.fullName}, MSGV: ${currentStudySession?.teacher.worker.user.id}.
+    const message = `Trợ giảng: ${currentStudySession?.tutor.worker.user.fullName}, MSTG: ${currentStudySession?.tutor.worker.user.id}.
     Yêu cầu nghỉ buổi học: ${currentStudySession?.name}, thuộc khóa học: ${currentStudySession?.course.name}.
     Lý do: ${data.excuse}.`;
     socketAction.emit('notification', { token: authState.token, userId: data.employeeId, content: message });
@@ -79,7 +79,7 @@ const CourseSession = (props: IProps) => {
   useEffect(() => {
     const didMountFunc = async () => {
       try {
-        const responses = await getStudySessions(TeacherConstants.limitStudySession, 0);
+        const responses = await getStudySessions(TutorConstants.limitStudySession, 0);
         setTotal(responses.total);
         setListStudySessions(responses.studySessions);
         setLoading(false);
@@ -155,9 +155,9 @@ const CourseSession = (props: IProps) => {
                   </Text>
                 </Grid.Col>
                 <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 5}>
-                  <Text color="#444">Trợ giảng: {item.tutor.worker.user.fullName}</Text>
+                  <Text color="#444">Giáo viên: {item.teacher.worker.user.fullName}</Text>
                   <Text color="dimmed" style={{ fontSize: "1rem" }}>
-                    MSTG: {item.tutor.worker.user.id}
+                    MSGV: {item.teacher.worker.user.id}
                   </Text>
                   <Space h={8} />
                   <Text color="#444">Tình trạng:
@@ -180,48 +180,17 @@ const CourseSession = (props: IProps) => {
                           onClick={() => router.push(router.asPath + "/study-session/" + item.id)}>
                           Xem chi tiết
                         </Button>
-                        {authState.userId != item.teacher.worker.user.id.toString() && (
-                          <Container p={0} mt={5} style={{ background: "#FFE3E3", borderRadius: 5 }}>
-                            <Text color="pink" weight={600} align="center" style={{ fontSize: "1.1rem" }}>
-                              Vắng
-                            </Text>
-                            <Text weight={600} align="center" style={{ fontSize: "1.1rem" }}>
-                              Người dạy thay
-                            </Text>
-                            <Text align="center" style={{ fontSize: "1.1rem" }}>
-                              {item.teacher.worker.user.fullName} - MSGV: {item.teacher.worker.user.id}
-                            </Text>
-                          </Container>
-                        )}
                       </>
                     )}
                   {getStudySessionState(item) === StudySessionState.Ready && (
-                    <>
-                      {authState.userId != item.teacher.worker.user.id.toString() && (
-                        <Container p={0} mt={5}>
-                          <Text weight={600} align="center" style={{ fontSize: "1.4rem" }} color="pink">
-                            Người dạy thay
-                          </Text>
-                          <Text color="#444" align="center" style={{ fontSize: "1.4rem" }}>
-                            {item.teacher.worker.user.fullName}
-                          </Text>
-                          <Text color="dimmed" align="center" style={{ fontSize: "1.2rem" }}>
-                            MSGV: {item.teacher.worker.user.id}
-                          </Text>
-                        </Container>
-                      )}
-                      {authState.userId == item.teacher.worker.user.id.toString() && (
-                        <Button
-                          color="pink"
-                          compact={isLargeTablet ? false : true}
-                          fullWidth
-                          onClick={() => {
-                            setCurrentStudySession(item);
-                            setIsOpenRequestOffModal(true);
-                          }}>
-                          Xin nghỉ</Button>
-                      )}
-                    </>
+                    <Button
+                      color="pink"
+                      compact={isLargeTablet ? false : true}
+                      fullWidth
+                      onClick={() => {
+                        setCurrentStudySession(item);
+                        setIsOpenRequestOffModal(true);
+                      }}>Xin nghỉ</Button>
                   )}
                 </Grid.Col>
               </Grid>

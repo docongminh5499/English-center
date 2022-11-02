@@ -11,9 +11,7 @@ const AllCommentsPage: CustomNextPage = (props) => {
 }
 
 AllCommentsPage.allowUsers = [
-    UserRole.ADMIN,
     UserRole.TEACHER,
-    UserRole.TUTOR,
 ];
 export default AllCommentsPage;
 

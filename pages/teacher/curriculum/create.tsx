@@ -11,7 +11,6 @@ const CurriculumAddPage: CustomNextPage = (props) => {
 }
 
 CurriculumAddPage.allowUsers = [
-    UserRole.ADMIN,
     UserRole.TEACHER,
 ];
 export default CurriculumAddPage;
