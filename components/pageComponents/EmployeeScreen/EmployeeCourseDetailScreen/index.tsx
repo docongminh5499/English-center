@@ -1,6 +1,6 @@
 import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal, ThemeIcon } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { IconPencil } from "@tabler/icons";
+import { IconPencil, IconSquarePlus, IconTrash } from "@tabler/icons";
 import moment from "moment";
 import Head from "next/head"
 import { useRouter } from "next/router";
@@ -14,8 +14,11 @@ import { Course } from "../../../../models/course.model";
 import StudySession from "../../../../models/studySession.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
-import OpenCourseModal from "../../TeacherScreen/Modal/openCourse.modal";
+import OpenCourseModal from "../Modal/openCourse.modal";
 import ModifyStudySessionModal from "../Modal/modifyStudySession.modal";
+import CloseCourseModal from "../Modal/closeCourse.modal";
+import CreateStudySessionModal from "../Modal/createStudySession.modal";
+import RemoveStudySessionModal from "../Modal/modal";
 
 
 interface IProps {
@@ -36,11 +39,17 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const [seeMoreLoading, setSeeMoreLoading] = useState(true);
   const [didMount, setDidMount] = useState(false);
   const [course, setCourse] = useState(props.course);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [isSendingRequest, setIsSendingRequest] = useState(false);
+  const [isOpenCourseModalOpened, setIsOpenCourseModalOpened] = useState(false);
+  const [isCloseCourseModalOpened, setIsCloseCourseModalOpened] = useState(false);
+  const [isSendingOpenRequest, setIsSendingOpenRequest] = useState(false);
+  const [isSendingCloseRequest, setIsSendingCloseRequest] = useState(false);
   const [isOpenModifyStudySessionModal, setIsOpenModifyStudySessionModal] = useState(false);
+  const [isOpenCreateStudySessionModal, setIsOpenCreateStudySessionModal] = useState(false);
   const [currentStudySession, setCurrentStudySession] = useState<StudySession>();
   const [isOnSendModidySession, setIsOnSendModifySession] = useState(false);
+  const [isOnSendCreateSession, setIsOnSendCreateSession] = useState(false);
+  const [isOpenRemoveSessionModal, setIsOpenRemoveSessionModal] = useState(false);
+  const [isOnSendRemoveSession, setIsOnSendRemoveSession] = useState(false);
   const router = useRouter();
 
 
@@ -73,7 +82,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
 
   const onOpenCourse = useCallback(async () => {
     try {
-      setIsSendingRequest(true);
+      setIsSendingOpenRequest(true);
       const responses = await API.post(Url.employees.reopenCourse, {
         token: authState.token,
         courseSlug: course?.slug
@@ -82,11 +91,32 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         toast.success("Mở khóa học thành công");
         setCourse(responses);
       } else toast.error("Mở khóa học thất bại. Vui lòng thử lại sau.");
-      setIsSendingRequest(false);
-      setIsOpenModal(false);
+      setIsSendingOpenRequest(false);
+      setIsOpenCourseModalOpened(false);
     } catch (error) {
-      setIsSendingRequest(false);
-      setIsOpenModal(false);
+      setIsSendingOpenRequest(false);
+      setIsOpenCourseModalOpened(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, course?.slug]);
+
+
+  const onCloseCourse = useCallback(async () => {
+    try {
+      setIsSendingCloseRequest(true);
+      const responses = await API.post(Url.employees.closeCourse, {
+        token: authState.token,
+        courseSlug: course?.slug
+      });
+      if (responses !== null) {
+        toast.success("Đóng khóa học thành công");
+        setCourse(responses);
+      } else toast.error("Đóng khóa học thất bại. Vui lòng thử lại sau.");
+      setIsSendingCloseRequest(false);
+      setIsCloseCourseModalOpened(false);
+    } catch (error) {
+      setIsSendingCloseRequest(false);
+      setIsCloseCourseModalOpened(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, course?.slug]);
@@ -134,6 +164,73 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
 
 
 
+  const onSendCreateStudySession = useCallback(async (data: any) => {
+    try {
+      setIsOnSendCreateSession(true);
+      const responses = await API.post(Url.employees.addStudySession, {
+        token: authState.token,
+        name: data.name,
+        date: data.date,
+        shiftIds: data.shiftIds,
+        tutorId: data.tutorId,
+        teacherId: data.teacherId,
+        classroom: data.classroom,
+        courseSlug: props.course?.slug
+      });
+      if (responses !== null) {
+        toast.success("Thêm buổi học thành công");
+        const studySessions = listStudySessions.concat(responses);
+        studySessions.sort((prev, next) => {
+          const prevStudySessionDate = new Date(prev.date);
+          const nextStudySessionDate = new Date(next.date);
+          if (prevStudySessionDate < nextStudySessionDate) return -1;
+          else if (prevStudySessionDate > nextStudySessionDate) return 1;
+          return 0;
+        })
+        setListStudySessions(studySessions);
+        setCourse(responses.course);
+      } else toast.error("Thêm buổi học thất bại. Vui lòng thử lại sau.");
+      setIsOnSendCreateSession(false);
+      setIsOpenCreateStudySessionModal(false);
+    } catch (error) {
+      setIsOnSendCreateSession(false);
+      setIsOpenCreateStudySessionModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, listStudySessions, props.course]);
+
+
+
+  const onSendRemoveSession = useCallback(async () => {
+    try {
+      setIsOnSendRemoveSession(true);
+      const responses: any = await API.post(Url.employees.removeStudySession, {
+        token: authState.token,
+        studySessionId: currentStudySession?.id,
+      });
+      if (responses == true) {
+        toast.success("Xóa buổi học thành công");
+        const studySessions = listStudySessions.filter(s => s.id !== currentStudySession?.id);
+        studySessions.sort((prev, next) => {
+          const prevStudySessionDate = new Date(prev.date);
+          const nextStudySessionDate = new Date(next.date);
+          if (prevStudySessionDate < nextStudySessionDate) return -1;
+          else if (prevStudySessionDate > nextStudySessionDate) return 1;
+          return 0;
+        })
+        setListStudySessions(studySessions);
+      } else toast.error("Xóa buổi học thất bại. Vui lòng thử lại sau.");
+      setIsOnSendRemoveSession(false);
+      setIsOpenRemoveSessionModal(false);
+    } catch (error) {
+      setIsOnSendRemoveSession(false);
+      setIsOpenRemoveSessionModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, currentStudySession]);
+
+
+
   useEffect(() => {
     const didMountFunc = async () => {
       try {
@@ -162,15 +259,45 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       </Head>
 
       <Modal
-        opened={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+        opened={isOpenRemoveSessionModal}
+        onClose={() => setIsOpenRemoveSessionModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <RemoveStudySessionModal
+          loading={isOnSendRemoveSession}
+          title="Xóa buổi học"
+          message={`Bạn có chắc muốn xóa buổi học "${currentStudySession?.name}"?`}
+          buttonLabel="Xác nhận xóa"
+          colorButton="red"
+          callBack={onSendRemoveSession}
+        />
+      </Modal>
+
+      <Modal
+        opened={isOpenCourseModalOpened}
+        onClose={() => setIsOpenCourseModalOpened(false)}
         centered
         closeOnClickOutside={true}
         overlayOpacity={0.55}
         overlayBlur={3}>
         <OpenCourseModal
-          loading={isSendingRequest}
+          loading={isSendingOpenRequest}
           callBack={onOpenCourse}
+        />
+      </Modal>
+
+      <Modal
+        opened={isCloseCourseModalOpened}
+        onClose={() => setIsCloseCourseModalOpened(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <CloseCourseModal
+          loading={isSendingCloseRequest}
+          callBack={onCloseCourse}
         />
       </Modal>
 
@@ -192,6 +319,25 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       </Modal>
 
 
+      <Modal
+        opened={isOpenCreateStudySessionModal}
+        onClose={() => setIsOpenCreateStudySessionModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <CreateStudySessionModal
+          onSendRequest={onSendCreateStudySession}
+          loading={isOnSendCreateSession}
+          shiftsPerSession={props.course?.curriculum.shiftsPerSession}
+          curriculum={props.course?.curriculum}
+          courseSlug={props.course?.slug}
+          branchId={props.course?.branch.id}
+          openingDate={props.course?.openingDate}
+        />
+      </Modal>
+
+
       {!didMount && (
         <Container style={{
           display: "flex",
@@ -209,18 +355,34 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           <Title align="center" size="2.6rem" color="#444" transform="uppercase" my={20}>
             Chi tiết khóa học
           </Title>
-          {course?.closingDate !== null && (
+
+          {getCourseStatus(course) === CourseStatus.Closed && (
             <Container style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               width: "100%"
             }} p={0} mb={30}>
-              <Button color="green" onClick={() => setIsOpenModal(true)}>
+              <Button color="green" onClick={() => setIsOpenCourseModalOpened(true)}>
                 Mở khóa học
               </Button>
             </Container>
           )}
+
+          {getCourseStatus(course) !== CourseStatus.Closed &&
+            moment().diff(moment(course?.expectedClosingDate).utcOffset(TimeZoneOffset)) >= 0 && (
+              <Container style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%"
+              }} p={0} mb={30}>
+                <Button color="red" onClick={() => setIsCloseCourseModalOpened(true)}>
+                  Kết thúc khóa học
+                </Button>
+              </Container>
+            )}
+
           <Container
             style={{
               display: "flex",
@@ -344,7 +506,12 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                       <th>Trợ giảng</th>
                       <th>Phòng học</th>
                       {getCourseStatus(course) !== CourseStatus.Closed && (
-                        <th></th>
+                        <th>
+                          <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
+                            onClick={() => setIsOpenCreateStudySessionModal(true)}>
+                            <IconSquarePlus size={20} />
+                          </ThemeIcon>
+                        </th>
                       )}
                     </tr>
                   </thead>
@@ -376,6 +543,13 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                                 setIsOpenModifyStudySessionModal(true);
                               }}>
                               <IconPencil size={20} />
+                            </ThemeIcon>
+                            <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setCurrentStudySession(studySession);
+                                setIsOpenRemoveSessionModal(true);
+                              }} ml={10}>
+                              <IconTrash size={20} />
                             </ThemeIcon>
                           </td>
                         )}

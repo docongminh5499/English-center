@@ -14,7 +14,6 @@ import styles from './employeeCreateCourse.module.css';
 
 interface IProps {
   curriculumId?: number;
-  studySessionId?: number;
   branchId: number;
   date: Date;
   shiftIds: number[];
@@ -22,7 +21,7 @@ interface IProps {
 }
 
 
-const SearchTeacherFormModifySession = (props: IProps) => {
+const SearchTeacherFormCreateSession = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
@@ -53,7 +52,7 @@ const SearchTeacherFormModifySession = (props: IProps) => {
         branchId: branchId,
         date: props.date,
         shiftIds: props.shiftIds,
-        studySession: props.studySessionId,
+        studySession: -1,
         curriculumId: props.curriculumId,
       });
       setTeachers(teachers);
@@ -62,7 +61,7 @@ const SearchTeacherFormModifySession = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, currentBranchId, props.studySessionId, props.branchId, props.date, props.shiftIds, props.curriculumId]);
+  }, [authState.token, currentBranchId, props.branchId, props.date, props.shiftIds, props.curriculumId]);
 
 
 
@@ -232,4 +231,4 @@ const SearchTeacherFormModifySession = (props: IProps) => {
 
 
 
-export default SearchTeacherFormModifySession;
+export default SearchTeacherFormCreateSession;

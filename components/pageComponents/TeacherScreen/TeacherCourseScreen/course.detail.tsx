@@ -164,7 +164,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
               </Text>
             </Grid.Col>
             {course?.teacher.worker.user.id.toString() == authState.userId &&
-              course?.closingDate === null &&
+              getCourseStatus(course) !== CourseStatus.Closed &&
               moment().diff(moment(course?.expectedClosingDate).utcOffset(TimeZoneOffset)) >= 0 && (
                 <Grid.Col span={isLargeTablet ? 12 : 4}>
                   <Container style={{

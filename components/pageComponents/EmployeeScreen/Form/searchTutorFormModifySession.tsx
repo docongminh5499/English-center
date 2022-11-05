@@ -60,7 +60,7 @@ const SearchTutorFormModifySession = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, currentBranchId, props.branchId, props.date, props.shiftIds]);
+  }, [authState.token, currentBranchId, props.branchId, props.date, props.shiftIds, props.studySessionId]);
 
 
 

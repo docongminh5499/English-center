@@ -51,7 +51,7 @@ const SearchClassroomFormModifySession = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, props.branchId, props.date, props.shiftIds]);
+  }, [authState.token, props.branchId, props.date, props.shiftIds, props.studySessionId]);
 
 
   useEffect(() => {
@@ -125,7 +125,7 @@ const SearchClassroomFormModifySession = (props: IProps) => {
           height: "200px"
         }} p={10} size="xl">
           <Text color="#ADB5BD" style={{ fontSize: "2rem" }} weight={600} align="center">
-            Không tìm thấy trợ giảng phù hợp
+            Không tìm thấy phòng học phù hợp
           </Text>
         </Container>
       )}

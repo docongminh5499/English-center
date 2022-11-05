@@ -11,12 +11,12 @@ import styles from './employeeCreateCourse.module.css';
 
 interface IProps {
   branchId: number;
-  beginingDate: Date;
+  date: Date;
   shiftIds: number[];
   onChooseClassroom: (classroom: Classroom) => void;
 }
 
-const SearchClassroomForm = (props: IProps) => {
+const SearchClassroomFormCreateSession = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
@@ -37,11 +37,12 @@ const SearchClassroomForm = (props: IProps) => {
     setLoading(true);
     setError(false);
     try {
-      const classrooms = await API.post(Url.employees.getAvailableClassroom, {
+      const classrooms = await API.post(Url.employees.getAvailableClassroomInDate, {
         token: authState.token,
         branchId: props.branchId,
-        beginingDate: props.beginingDate,
+        date: props.date,
         shiftIds: props.shiftIds,
+        studySession: -1,
       })
       setClassrooms(classrooms);
       setLoading(false);
@@ -49,7 +50,7 @@ const SearchClassroomForm = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, props.branchId, props.beginingDate, props.shiftIds]);
+  }, [authState.token, props.branchId, props.date, props.shiftIds]);
 
 
   useEffect(() => {
@@ -160,4 +161,4 @@ const SearchClassroomForm = (props: IProps) => {
 
 
 
-export default SearchClassroomForm;
+export default SearchClassroomFormCreateSession;

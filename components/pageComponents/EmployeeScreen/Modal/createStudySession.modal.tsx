@@ -3,7 +3,6 @@ import { DatePicker } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
-import StudySession from "../../../../models/studySession.model";
 import 'dayjs/locale/vi';
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
@@ -11,13 +10,13 @@ import { useAuth } from "../../../../stores/Auth";
 import Shift from "../../../../models/shift.model";
 import moment from "moment";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
-import SearchTutorFormModifySession from "../Form/searchTutorFormModifySession";
 import UserTutor from "../../../../models/userTutor.model";
 import Classroom from "../../../../models/classroom.model";
 import UserTeacher from "../../../../models/userTeacher.model";
-import SearchTeacherFormModifySession from "../Form/searchTeacherFormModifySession";
-import SearchClassroomFormModifySession from "../Form/searchClassroomFormModifySession";
 import Curriculum from "../../../../models/cirriculum.model";
+import SearchTeacherFormCreateSession from "../Form/searchTeacherFormCreateSession";
+import SearchTutorFormCreateSession from "../Form/searchTutorFormCreateSession";
+import SearchClassroomFormCreateSession from "../Form/searchClassroomFormCreateSession";
 
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tên"),
@@ -32,9 +31,11 @@ const schema = yup.object().shape({
 interface IProps {
   onSendRequest: (data: any) => void;
   loading: boolean;
-  studySession?: StudySession;
   shiftsPerSession?: number;
   curriculum?: Curriculum;
+  courseSlug?: string;
+  branchId?: number;
+  openingDate?: Date;
 }
 
 
@@ -45,27 +46,36 @@ interface ShiftLabel {
 }
 
 
-const ModifyStudySessionModal = (props: IProps) => {
-  const modifyStudySessionForm = useForm({
+function getMininumValidDate(startDate?: Date) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0);
+  tomorrow.setMinutes(0);
+  tomorrow.setSeconds(0);
+  if (startDate) {
+    const openingDate = new Date(startDate);
+    return openingDate.getTime() > tomorrow.getTime() ? openingDate : tomorrow;
+  } else return tomorrow;
+}
+
+
+const CreateStudySessionModal = (props: IProps) => {
+  const createStudySessionForm = useForm({
     initialValues: {
-      name: props.studySession?.name,
-      date: new Date(props.studySession?.date || Date.now()),
+      name: "",
+      date: getMininumValidDate(props.openingDate),
       shiftLabelValue: null as number | null,
-      tutorId: props.studySession?.tutor.worker.user.id,
-      teacherId: props.studySession?.teacher.worker.user.id,
-      classroom: {
-        name: props.studySession?.classroom.name,
-        branchId: props.studySession?.classroom.branch.id,
-      }
+      tutorId: null as number | null,
+      teacherId: null as number | null,
+      classroom: null as { name: string, branchId: number } | null,
     },
     validate: yupResolver(schema),
   });
   const [authState] = useAuth();
-  const [tutor, setTutor] = useState(props.studySession?.tutor);
-  const [teacher, setTeacher] = useState(props.studySession?.teacher);
-  const [classroom, setClassroom] = useState(props.studySession?.classroom);
+  const [tutor, setTutor] = useState<UserTutor | null>(null);
+  const [teacher, setTeacher] = useState<UserTeacher | null>(null);
+  const [classroom, setClassroom] = useState<Classroom | null>(null);
   const [shiftLabels, setShiftLabels] = useState<ShiftLabel[]>([]);
-  const [firstRequest, setFirstRequest] = useState(true);
   const [isOpenTeacherForm, setIsOpenTeacherForm] = useState(false);
   const [isOpenTutorForm, setIsOpenTutorForm] = useState(false);
   const [isOpenClassroomForm, setIsOpenClassroomForm] = useState(false);
@@ -89,25 +99,22 @@ const ModifyStudySessionModal = (props: IProps) => {
           label: moment(shifts[0].startTime).format("HH:mm") + "-" + moment(shifts[shifts.length - 1].endTime).format("HH:mm"),
           shifts: shifts,
         };
-        if (firstRequest && shifts[0].id === props.studySession?.shifts[0].id)
-          modifyStudySessionForm.setFieldValue("shiftLabelValue", index);
         shiftLabels.push(shiftLabel);
       });
       setShiftLabels(shiftLabels);
     } catch (error) {
       console.log(error);
     }
-  }, [authState.token, props.shiftsPerSession, firstRequest]);
+  }, [authState.token, props.shiftsPerSession]);
 
 
 
   const onGetAvailableStudentCount = useCallback(
-    async (date: Date, studySessionId: number, courseSlug: string, shiftIds: number[]) => {
+    async (date: Date, courseSlug: string, shiftIds: number[]) => {
       try {
         const responses = await API.post(Url.employees.getAvailableStudentCount, {
           token: authState.token,
           date: date,
-          studySessionId: studySessionId,
           courseSlug: courseSlug,
           shiftIds: shiftIds,
         });
@@ -122,35 +129,35 @@ const ModifyStudySessionModal = (props: IProps) => {
   const onSendRequest = useCallback((data: any) => {
     const shiftLabel = shiftLabels.find(label => label.value === data.shiftLabelValue);
     if (shiftLabel === undefined)
-      return modifyStudySessionForm.setFieldError("shiftLabelValue", "Vui lòng chọn ca học");
+      return createStudySessionForm.setFieldError("shiftLabelValue", "Vui lòng chọn ca học");
     if (freeStudentPercentage < acceptedPercentage)
       return setFreeStudentError(`Vui lòng chọn giờ học có hơn ${acceptedPercentage}% học sinh có thể tham gia.`)
-    const shifts = shiftLabel.shifts;
-    if (props.studySession?.course.openingDate) {
-      const openingDate = new Date(props.studySession.course.openingDate);
+    if (props.openingDate) {
+      const openingDate = new Date(props.openingDate);
       openingDate.setHours(0);
       openingDate.setMinutes(0);
       openingDate.setSeconds(0);
       openingDate.setMilliseconds(0);
       if (openingDate.getTime() > data.date.getTime())
-        return modifyStudySessionForm.setFieldError("date", "Ngày diễn ra buổi học trước ngày khai giảng, vui lòng chọn lại");
+        return createStudySessionForm.setFieldError("date", "Ngày diễn ra buổi học trước ngày khai giảng, vui lòng chọn lại");
     }
+    const shifts = shiftLabel.shifts;
     data.shiftIds = shifts.map(shift => shift.id);
     props.onSendRequest(data);
-  }, [props.onSendRequest, shiftLabels, modifyStudySessionForm, freeStudentPercentage, acceptedPercentage, props.studySession]);
+  }, [props.onSendRequest, shiftLabels, createStudySessionForm, freeStudentPercentage, acceptedPercentage, props.openingDate]);
 
 
   const onChooseTeacher = useCallback((teacher: UserTeacher) => {
     setIsOpenTeacherForm(false);
     setTeacher(teacher);
-    modifyStudySessionForm.setFieldValue('teacherId', teacher.worker.user.id);
+    createStudySessionForm.setFieldValue('teacherId', teacher.worker.user.id);
   }, []);
 
 
   const onChooseTutor = useCallback((tutor: UserTutor) => {
     setIsOpenTutorForm(false);
     setTutor(tutor);
-    modifyStudySessionForm.setFieldValue('tutorId', tutor.worker.user.id);
+    createStudySessionForm.setFieldValue('tutorId', tutor.worker.user.id);
   }, []);
 
 
@@ -158,7 +165,7 @@ const ModifyStudySessionModal = (props: IProps) => {
   const onChooseClassroom = useCallback((classroom: Classroom) => {
     setIsOpenClassroomForm(false);
     setClassroom(classroom);
-    modifyStudySessionForm.setFieldValue('classroom', {
+    createStudySessionForm.setFieldValue('classroom', {
       name: classroom.name,
       branchId: classroom.branch.id,
     });
@@ -189,44 +196,41 @@ const ModifyStudySessionModal = (props: IProps) => {
 
 
   useEffect(() => {
-    if (!firstRequest) {
-      modifyStudySessionForm.setFieldValue("tutorId", null as any);
-      modifyStudySessionForm.setFieldValue("teacherId", null as any);
-      modifyStudySessionForm.setFieldValue("classroom", null as any);
-    }
-    firstRequest && modifyStudySessionForm.values.shiftLabelValue !== null && setFirstRequest(false);
-    if (modifyStudySessionForm.values.shiftLabelValue !== null) {
+    createStudySessionForm.setFieldValue("tutorId", null as any);
+    createStudySessionForm.setFieldValue("teacherId", null as any);
+    createStudySessionForm.setFieldValue("classroom", null as any);
+
+    if (createStudySessionForm.values.shiftLabelValue !== null) {
       const shiftLabel = shiftLabels.find(label =>
-        label.value === modifyStudySessionForm.values.shiftLabelValue);
+        label.value === createStudySessionForm.values.shiftLabelValue);
       const shifts = shiftLabel?.shifts || [];
-      const date = modifyStudySessionForm.values.date;
-      const studySessionId = props.studySession?.id || -1;
-      const courseSlug = props.studySession?.course.slug || "";
+      const date = createStudySessionForm.values.date;
+      const courseSlug = props.courseSlug || "";
       const shiftIds = shifts.map(shift => shift.id);
-      onGetAvailableStudentCount(date, studySessionId, courseSlug, shiftIds);
+      onGetAvailableStudentCount(date, courseSlug, shiftIds);
     } else setFreeStudentPercentage(-1);
     setFreeStudentError("");
-  }, [modifyStudySessionForm.values.shiftLabelValue])
+  }, [createStudySessionForm.values.shiftLabelValue])
 
 
 
   useEffect(() => {
-    modifyStudySessionForm.setFieldValue("shiftLabelValue", null);
+    createStudySessionForm.setFieldValue("shiftLabelValue", null);
     setShiftLabels([]);
-    if (modifyStudySessionForm.values.date !== null)
-      getShiftByDate(modifyStudySessionForm.values.date);
-  }, [modifyStudySessionForm.values.date?.getTime()]);
+    if (createStudySessionForm.values.date !== null)
+      getShiftByDate(createStudySessionForm.values.date);
+  }, [createStudySessionForm.values.date?.getTime()]);
 
 
 
   return (
     <Container>
       <Text transform="uppercase" align="center" style={{ fontSize: "2.4rem" }} color="#444" weight={600}>
-        Thay đổi buổi học
+        Thêm buổi học
       </Text>
       <Space h={10} />
       <form
-        onSubmit={modifyStudySessionForm.onSubmit((values) => onSendRequest(values))}
+        onSubmit={createStudySessionForm.onSubmit((values) => onSendRequest(values))}
         style={{
           width: "100%",
           display: "flex",
@@ -238,7 +242,7 @@ const ModifyStudySessionModal = (props: IProps) => {
           placeholder="Tên buổi học"
           label="Tên buổi học"
           withAsterisk
-          {...modifyStudySessionForm.getInputProps('name')}
+          {...createStudySessionForm.getInputProps('name')}
         />
         <Group grow>
           <Container p={0}>
@@ -247,8 +251,8 @@ const ModifyStudySessionModal = (props: IProps) => {
               placeholder="Ngày diễn ra"
               label="Ngày diễn ra"
               locale="vi"
-              minDate={props.studySession ? new Date(props.studySession.course.openingDate) : undefined}
-              {...modifyStudySessionForm.getInputProps('date')}
+              minDate={props.openingDate ? new Date(props.openingDate) : undefined}
+              {...createStudySessionForm.getInputProps('date')}
             />
             <Select
               withAsterisk
@@ -256,7 +260,7 @@ const ModifyStudySessionModal = (props: IProps) => {
               placeholder="Ca học"
               data={shiftLabels}
               nothingFound="Vui lòng chọn ngày diễn ra buổi học trước"
-              {...modifyStudySessionForm.getInputProps('shiftLabelValue')}
+              {...createStudySessionForm.getInputProps('shiftLabelValue')}
             />
           </Container>
           <Container p={0} style={{
@@ -296,7 +300,7 @@ const ModifyStudySessionModal = (props: IProps) => {
           <Text weight={600} style={{ fontSize: "14px" }}>
             Giáo viên <Text component="span" color='red'>*</Text>
           </Text>
-          {modifyStudySessionForm.values['teacherId'] === null
+          {createStudySessionForm.values['teacherId'] === null
             ? <Text>Chưa chọn giáo viên
               <Button ml={10} compact variant="light" onClick={onChangeTeacher}>Thay đổi</Button>
             </Text>
@@ -322,9 +326,9 @@ const ModifyStudySessionModal = (props: IProps) => {
               <Button ml={10} compact variant="light" onClick={onChangeTeacher}>Thay đổi</Button>
             </Group>
             )}
-          {modifyStudySessionForm.errors['teacherId'] && (
+          {createStudySessionForm.errors['teacherId'] && (
             <Text color="red" style={{ fontSize: "12px" }}>
-              {modifyStudySessionForm.errors['teacherId']}
+              {createStudySessionForm.errors['teacherId']}
             </Text>
           )}
         </Container>
@@ -333,7 +337,7 @@ const ModifyStudySessionModal = (props: IProps) => {
           <Text weight={600} style={{ fontSize: "14px" }}>
             Trợ giảng <Text component="span" color='red'>*</Text>
           </Text>
-          {modifyStudySessionForm.values['tutorId'] === null
+          {createStudySessionForm.values['tutorId'] === null
             ? <Text>Chưa chọn trợ giảng
               <Button ml={10} compact variant="light" onClick={onChangeTutor}>Thay đổi</Button>
             </Text>
@@ -359,9 +363,9 @@ const ModifyStudySessionModal = (props: IProps) => {
               <Button ml={10} compact variant="light" onClick={onChangeTutor}>Thay đổi</Button>
             </Group>
             )}
-          {modifyStudySessionForm.errors['tutorId'] && (
+          {createStudySessionForm.errors['tutorId'] && (
             <Text color="red" style={{ fontSize: "12px" }}>
-              {modifyStudySessionForm.errors['tutorId']}
+              {createStudySessionForm.errors['tutorId']}
             </Text>
           )}
         </Container>
@@ -371,7 +375,7 @@ const ModifyStudySessionModal = (props: IProps) => {
           <Text weight={600} style={{ fontSize: "14px" }}>
             Phòng học <Text component="span" color='red'>*</Text>
           </Text>
-          {modifyStudySessionForm.values['classroom'] === null
+          {createStudySessionForm.values['classroom'] === null
             ? <Text>Chưa chọn phòng học
               <Button ml={10} compact variant="light" onClick={onChangeClassroom}>Thay đổi</Button>
             </Text>
@@ -389,47 +393,44 @@ const ModifyStudySessionModal = (props: IProps) => {
               <Button ml={10} compact variant="light" onClick={onChangeClassroom}>Thay đổi</Button>
             </Group>
             )}
-          {modifyStudySessionForm.errors['classroom'] && (
+          {createStudySessionForm.errors['classroom'] && (
             <Text color="red" style={{ fontSize: "12px" }}>
-              {modifyStudySessionForm.errors['classroom']}
+              {createStudySessionForm.errors['classroom']}
             </Text>
           )}
         </Container>
 
         {isOpenTeacherForm && (
-          <SearchTeacherFormModifySession
-            branchId={props.studySession?.classroom.branch.id || 0}
-            date={modifyStudySessionForm.values.date}
+          <SearchTeacherFormCreateSession
+            branchId={props.branchId || 0}
+            date={createStudySessionForm.values.date}
             shiftIds={(shiftLabels.find(label =>
-              label.value === modifyStudySessionForm.values.shiftLabelValue)?.shifts || [])
+              label.value === createStudySessionForm.values.shiftLabelValue)?.shifts || [])
               .map(shift => shift.id)}
             onChooseTeacher={onChooseTeacher}
-            studySessionId={props.studySession?.id}
             curriculumId={props.curriculum?.id}
           />
         )}
 
         {isOpenTutorForm && (
-          <SearchTutorFormModifySession
-            branchId={props.studySession?.classroom.branch.id || 0}
-            date={modifyStudySessionForm.values.date}
+          <SearchTutorFormCreateSession
+            branchId={props.branchId || 0}
+            date={createStudySessionForm.values.date}
             shiftIds={(shiftLabels.find(label =>
-              label.value === modifyStudySessionForm.values.shiftLabelValue)?.shifts || [])
+              label.value === createStudySessionForm.values.shiftLabelValue)?.shifts || [])
               .map(shift => shift.id)}
             onChooseTutor={onChooseTutor}
-            studySessionId={props.studySession?.id}
           />
         )}
 
         {isOpenClassroomForm && (
-          <SearchClassroomFormModifySession
-            branchId={props.studySession?.classroom.branch.id || 0}
-            date={modifyStudySessionForm.values.date}
+          <SearchClassroomFormCreateSession
+            branchId={props.branchId || 0}
+            date={createStudySessionForm.values.date}
             shiftIds={(shiftLabels.find(label =>
-              label.value === modifyStudySessionForm.values.shiftLabelValue)?.shifts || [])
+              label.value === createStudySessionForm.values.shiftLabelValue)?.shifts || [])
               .map(shift => shift.id)}
             onChooseClassroom={onChooseClassroom}
-            studySessionId={props.studySession?.id}
           />
         )}
 
@@ -441,4 +442,4 @@ const ModifyStudySessionModal = (props: IProps) => {
 }
 
 
-export default ModifyStudySessionModal;
+export default CreateStudySessionModal;

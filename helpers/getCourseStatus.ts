@@ -3,7 +3,7 @@ import { Course } from "../models/course.model";
 import { CourseStatus } from "./constants";
 
 export function getCourseStatus(course: Course | null): CourseStatus {
-    if (course?.closingDate === null) {
+    if (course?.closingDate === null || course?.closingDate === undefined) {
         if (moment().utc().diff(moment(course?.openingDate)) < 0) {
             return CourseStatus.NotOpen;
         } else return CourseStatus.Opened;

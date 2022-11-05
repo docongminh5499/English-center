@@ -6,7 +6,8 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { CourseStatus, TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import StarPointTypeCount from "../../../../interfaces/starPointTypeCount.interface";
 import { Course } from "../../../../models/course.model";
 import MaskedComment from "../../../../models/maskedComment.model";
@@ -82,7 +83,7 @@ const TeacherCourseCommentScreen = (props: IProps) => {
 
     if (props.course === null)
       router.replace('/not-found');
-    else if (props.course.closingDate === undefined || props.course.closingDate === null)
+    else if (getCourseStatus(props.course) !== CourseStatus.Closed)
       router.replace('/not-found');
     else didMountFunc();
   }, []);

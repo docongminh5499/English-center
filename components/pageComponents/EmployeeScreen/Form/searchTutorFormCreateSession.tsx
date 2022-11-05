@@ -5,7 +5,7 @@ import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import Branch from "../../../../models/branch.model";
-import UserTeacher from "../../../../models/userTeacher.model";
+import UserTutor from "../../../../models/userTutor.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
 import BranchSelectItem from "../ItemComponent/branchSelectItem";
@@ -13,16 +13,14 @@ import styles from './employeeCreateCourse.module.css';
 
 
 interface IProps {
-  curriculumId?: number;
-  studySessionId?: number;
   branchId: number;
   date: Date;
   shiftIds: number[];
-  onChooseTeacher: (teacher: UserTeacher) => void;
+  onChooseTutor: (tutor: UserTutor) => void;
 }
 
 
-const SearchTeacherFormModifySession = (props: IProps) => {
+const SearchTutorFormCreateSession = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
@@ -32,14 +30,14 @@ const SearchTeacherFormModifySession = (props: IProps) => {
   const [name, setName] = useState("");
   const [branchesSelectItem, setBranchesSelectItem] = useState([]);
   const [currentBranchId, setCurrentBranchId] = useState<number | null>(null);
-  const [teachers, setTeachers] = useState<UserTeacher[]>([]);
+  const [tutors, setTutors] = useState<UserTutor[]>([]);
 
 
-  const filteredTeachers = useMemo(() => {
-    return teachers.filter(teacher =>
-      teacher.worker.user.fullName.toLowerCase().includes(name.toLowerCase()) ||
-      teacher.worker.user.id.toString().includes(name.toLowerCase()))
-  }, [teachers, teachers.length, name]);
+  const filteredTutors = useMemo(() => {
+    return tutors.filter(tutor =>
+      tutor.worker.user.fullName.toLowerCase().includes(name.toLowerCase()) ||
+      tutor.worker.user.id.toString().includes(name.toLowerCase()))
+  }, [tutors, tutors.length, name]);
 
 
   const onChangeBranch = useCallback(async () => {
@@ -48,21 +46,20 @@ const SearchTeacherFormModifySession = (props: IProps) => {
     setName("");
     try {
       const branchId = currentBranchId === null ? props.branchId : currentBranchId;
-      const teachers = await API.post(Url.employees.getAvailableTeachersInDate, {
+      const tutors = await API.post(Url.employees.getAvailableTutorsInDate, {
         token: authState.token,
         branchId: branchId,
         date: props.date,
         shiftIds: props.shiftIds,
-        studySession: props.studySessionId,
-        curriculumId: props.curriculumId,
+        studySession: -1,
       });
-      setTeachers(teachers);
+      setTutors(tutors);
       setLoading(false);
     } catch (error) {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, currentBranchId, props.studySessionId, props.branchId, props.date, props.shiftIds, props.curriculumId]);
+  }, [authState.token, currentBranchId, props.branchId, props.date, props.shiftIds]);
 
 
 
@@ -71,14 +68,13 @@ const SearchTeacherFormModifySession = (props: IProps) => {
     setError(false);
     try {
       const branchId = currentBranchId === null ? props.branchId : currentBranchId;
-      const [branches, teachers] = await Promise.all([
+      const [branches, tutors] = await Promise.all([
         API.get(Url.employees.getBranches, { token: authState.token }),
-        API.post(Url.employees.getAvailableTeachersInDate, {
+        API.post(Url.employees.getAvailableTutorsInDate, {
           token: authState.token,
           branchId: branchId,
           date: props.date,
           shiftIds: props.shiftIds,
-          curriculumId: props.curriculumId,
         })
       ]);
       const selectItems: any = [];
@@ -89,13 +85,13 @@ const SearchTeacherFormModifySession = (props: IProps) => {
       });
       setCurrentBranchId(foundBranch);
       setBranchesSelectItem(selectItems);
-      setTeachers(teachers);
+      setTutors(tutors);
       setLoading(false);
     } catch (error) {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, currentBranchId, props.branchId, props.date, props.shiftIds, props.curriculumId]);
+  }, [authState.token, currentBranchId, props.branchId, props.date, props.shiftIds]);
 
 
   useEffect(() => {
@@ -111,7 +107,7 @@ const SearchTeacherFormModifySession = (props: IProps) => {
   return (
     <Container style={{ backgroundColor: "#F1F3F5", width: "100%", borderRadius: 5 }} p={6}>
       <Title align="center" size="1.6rem" color="#444" transform="uppercase" my={10}>
-        Tìm giáo viên
+        Tìm trợ giảng
       </Title>
       <Group style={{ flexDirection: !isMobile ? "row" : "column" }}>
         <TextInput
@@ -122,7 +118,7 @@ const SearchTeacherFormModifySession = (props: IProps) => {
             root: { width: "100%", flex: 1 }
           }}
           value={name}
-          placeholder="Tên giáo viên"
+          placeholder="Tên trợ giảng"
           onChange={(event) => setName(event.currentTarget.value)}
         />
         <Select
@@ -176,7 +172,7 @@ const SearchTeacherFormModifySession = (props: IProps) => {
         </Container>
       )}
 
-      {!loading && !error && filteredTeachers.length === 0 && (
+      {!loading && !error && filteredTutors.length === 0 && (
         <Container style={{
           display: "flex",
           flexDirection: "column",
@@ -189,25 +185,25 @@ const SearchTeacherFormModifySession = (props: IProps) => {
           height: "200px"
         }} p={10} size="xl">
           <Text color="#ADB5BD" style={{ fontSize: "2rem" }} weight={600} align="center">
-            Không tìm thấy giáo viên phù hợp
+            Không tìm thấy trợ giảng phù hợp
           </Text>
         </Container>
       )}
 
-      {!loading && !error && filteredTeachers.length > 0 && (
+      {!loading && !error && filteredTutors.length > 0 && (
         <ScrollArea style={{ height: 200 }} mt={10}>
           <SimpleGrid cols={1} p="md" spacing="sm">
-            {filteredTeachers.map((teacher, index) => (
+            {filteredTutors.map((tutor, index) => (
               <Group
                 key={index}
                 noWrap
-                onClick={() => props.onChooseTeacher(teacher)}
+                onClick={() => props.onChooseTutor(tutor)}
                 className={styles.teacherCard}>
                 <Avatar
                   size={40}
                   color="blue"
                   radius='xl'
-                  src={getAvatarImageUrl(teacher.worker.user.avatar)}
+                  src={getAvatarImageUrl(tutor.worker.user.avatar)}
                 />
                 <Container style={{
                   display: "flex",
@@ -217,9 +213,9 @@ const SearchTeacherFormModifySession = (props: IProps) => {
                   alignItems: "flex-start"
                 }} p={0}>
                   <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">
-                    {teacher.worker.user.fullName}
+                    {tutor.worker.user.fullName}
                   </Text>
-                  <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSGV: {teacher.worker.user.id}</Text>
+                  <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSTG: {tutor.worker.user.id}</Text>
                 </Container>
               </Group>
             ))}
@@ -232,4 +228,4 @@ const SearchTeacherFormModifySession = (props: IProps) => {
 
 
 
-export default SearchTeacherFormModifySession;
+export default SearchTutorFormCreateSession;
