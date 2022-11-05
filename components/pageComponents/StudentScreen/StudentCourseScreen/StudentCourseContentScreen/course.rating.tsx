@@ -14,8 +14,6 @@ const CourseRatingTab = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [assessSuccess, setAssessSuccess] = useState(() =>{
     const studentParticipateCourse = props.studentPaticipateCourses;
-    // console.log(studentParticipateCourse)
-    // console.log(studentParticipateCourse.filter((value: any) => value.student.user.id === authState.userId));
     if (studentParticipateCourse.filter((value: any) => value.student.user.id === authState.userId && value.starPoint !== null).length !== 0)
       return true;
     return false;

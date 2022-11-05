@@ -21,13 +21,6 @@ export enum CourseType {
   LONG_TERM = "LongTerm"
 }
 
-export enum StudySessionState {
-  Cancel = "Cancel",
-  Ready = "Ready",
-  Start = "Start",
-  Finish = "Finish",
-}
-
 export enum ExerciseStatus {
   NotOpen = "NotOpen",
   Opened = "Opened",
@@ -40,11 +33,11 @@ export enum CourseStatus {
   Closed = "Closed",
 }
 
-export enum AttendanceStatus {
-  Attendance = "Attendance",
-  AbsenceWithPermission = "AbsenceWithPermission",
-  AbsenceWithoutPermission = "AbsenceWithoutPermission",
-}
+// export enum AttendanceStatus {
+//   Attendance = "Attendance",
+//   AbsenceWithPermission = "AbsenceWithPermission",
+//   AbsenceWithoutPermission = "AbsenceWithoutPermission",
+// }
 
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
@@ -96,7 +89,11 @@ export const Url = {
     getCurriculum: "/api/teachers/curriculum/get-curriculum/",
     modifyCurriculum: "/api/teachers/curriculum/modify-curriculum",
     createCurriculum: "/api/teachers/curriculum/create-curriculum",
-    deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/"
+    deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/",
+    //Hoc
+    createExercise: "/api/teachers/exercise/create-exercise",
+    addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",
+    getAllQuestionTag: "/api/teachers/exercise/get-all-question-tag",
   },
   students: {
     getTimetable: "/api/students/timetable",
@@ -104,6 +101,9 @@ export const Url = {
     getCourseDetail: "/api/students/courses/get-course/",
     sendAssessCourse: "/api/students/courses/assess-course",
     getAttendance: "/api/students/courses/attendance-course/",
+    getAllExercises: "/api/students/exercise/get-all-exercises/",
+    submitExercise: "/api/students/exercise/submit-exercise/",
+    getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
   }
 };
 
