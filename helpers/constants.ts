@@ -207,6 +207,7 @@ export const Url = {
     getSchedules: "/api/tutors/schedule",
     getCourseDetail: "/api/tutors/courses/get-course/",
     getStudents: "/api/tutors/courses/get-students",
+    getStudentDetails: "/api/tutors/courses/get-student-detail",
     getStudySessions: "/api/tutors/courses/get-study-sessions",
     getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
     getEmployeeByBranch: "/api/tutors/courses/get-employee-by-branch",

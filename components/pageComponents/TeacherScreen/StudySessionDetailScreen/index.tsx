@@ -164,7 +164,14 @@ const StudySessionDetailScreen = (props: IProps) => {
           <Title transform="uppercase" color="#444444" size="2.6rem" mt={20} align="left">
             {infoStudySession?.name || ""}
           </Title>
-          <Text transform="uppercase" weight={600} color="#666666" style={{ fontSize: '1.6rem' }} align="justify">
+          <Text
+            transform="uppercase"
+            weight={600}
+            color="#666666"
+            style={{ fontSize: '1.6rem', cursor: "pointer" }}
+            align="justify"
+            onClick={() => router.push("/teacher/course/" + infoStudySession?.course.slug)}
+          >
             Khóa học: {infoStudySession?.course.name || ""}
           </Text>
           <Space h={30} />

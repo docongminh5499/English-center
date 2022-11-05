@@ -1,4 +1,4 @@
-import { Avatar, Button, Container, Group, Select, Space, Text, TextInput } from "@mantine/core";
+import { Avatar, Button, Container, Group, Loader, Select, Space, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { useCallback, useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import Curriculum from "../../../../models/cirriculum.model";
 import SearchTeacherFormCreateSession from "../Form/searchTeacherFormCreateSession";
 import SearchTutorFormCreateSession from "../Form/searchTutorFormCreateSession";
 import SearchClassroomFormCreateSession from "../Form/searchClassroomFormCreateSession";
+import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tên"),
@@ -79,12 +80,15 @@ const CreateStudySessionModal = (props: IProps) => {
   const [isOpenTeacherForm, setIsOpenTeacherForm] = useState(false);
   const [isOpenTutorForm, setIsOpenTutorForm] = useState(false);
   const [isOpenClassroomForm, setIsOpenClassroomForm] = useState(false);
+  const [isOnSendGetAvaiableStudentCount, setIsOnSendGetAvailableCount] = useState(false);
+  const [isOnSendGetShifts, setIsOnSendGetShifts] = useState(false);
   const [freeStudentPercentage, setFreeStudentPercentage] = useState(-1);
   const [acceptedPercentage, setAcceptedPercentage] = useState(0);
   const [freeStudentError, setFreeStudentError] = useState("");
 
   const getShiftByDate = useCallback(async (date: Date) => {
     try {
+      setIsOnSendGetShifts(true);
       const responses = await API.post(Url.employees.getShifts, {
         token: authState.token,
         date: date,
@@ -102,8 +106,10 @@ const CreateStudySessionModal = (props: IProps) => {
         shiftLabels.push(shiftLabel);
       });
       setShiftLabels(shiftLabels);
+      setIsOnSendGetShifts(false);
     } catch (error) {
-      console.log(error);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      setIsOnSendGetShifts(false);
     }
   }, [authState.token, props.shiftsPerSession]);
 
@@ -112,15 +118,20 @@ const CreateStudySessionModal = (props: IProps) => {
   const onGetAvailableStudentCount = useCallback(
     async (date: Date, courseSlug: string, shiftIds: number[]) => {
       try {
+        setIsOnSendGetAvailableCount(true);
         const responses = await API.post(Url.employees.getAvailableStudentCount, {
           token: authState.token,
           date: date,
           courseSlug: courseSlug,
           shiftIds: shiftIds,
         });
-        setFreeStudentPercentage(Math.round(responses.free / responses.total * 1000) / 10);
+        const percentage = responses.total === 0 ? 100 : Math.round(responses.free / responses.total * 1000) / 10;
+        setFreeStudentPercentage(percentage);
         setAcceptedPercentage(responses.acceptedPercent);
+        setIsOnSendGetAvailableCount(false);
       } catch (error) {
+        setIsOnSendGetAvailableCount(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }, [authState.token]);
 
@@ -173,25 +184,31 @@ const CreateStudySessionModal = (props: IProps) => {
 
 
   const onChangeClassroom = useCallback(() => {
-    setIsOpenClassroomForm(true);
-    setIsOpenTutorForm(false);
-    setIsOpenTeacherForm(false);
-  }, []);
+    if (createStudySessionForm.values.shiftLabelValue !== null) {
+      setIsOpenClassroomForm(true);
+      setIsOpenTutorForm(false);
+      setIsOpenTeacherForm(false);
+    } else createStudySessionForm.setFieldError("classroom", "Vui lòng chọn ca học trước");
+  }, [createStudySessionForm, createStudySessionForm.values.shiftLabelValue]);
 
 
 
   const onChangeTutor = useCallback(() => {
-    setIsOpenClassroomForm(false);
-    setIsOpenTutorForm(true);
-    setIsOpenTeacherForm(false);
-  }, []);
+    if (createStudySessionForm.values.shiftLabelValue !== null) {
+      setIsOpenClassroomForm(false);
+      setIsOpenTutorForm(true);
+      setIsOpenTeacherForm(false);
+    } else createStudySessionForm.setFieldError("tutorId", "Vui lòng chọn ca học trước");
+  }, [createStudySessionForm, createStudySessionForm.values.shiftLabelValue]);
 
 
   const onChangeTeacher = useCallback(() => {
-    setIsOpenClassroomForm(false);
-    setIsOpenTutorForm(false);
-    setIsOpenTeacherForm(true);
-  }, []);
+    if (createStudySessionForm.values.shiftLabelValue !== null) {
+      setIsOpenClassroomForm(false);
+      setIsOpenTutorForm(false);
+      setIsOpenTeacherForm(true);
+    } else createStudySessionForm.setFieldError("teacherId", "Vui lòng chọn ca học trước");
+  }, [createStudySessionForm, createStudySessionForm.values.shiftLabelValue]);
 
 
 
@@ -199,6 +216,12 @@ const CreateStudySessionModal = (props: IProps) => {
     createStudySessionForm.setFieldValue("tutorId", null as any);
     createStudySessionForm.setFieldValue("teacherId", null as any);
     createStudySessionForm.setFieldValue("classroom", null as any);
+    setIsOpenClassroomForm(false);
+    setIsOpenTutorForm(false);
+    setIsOpenTeacherForm(false);
+    createStudySessionForm.clearFieldError("teacherId");
+    createStudySessionForm.clearFieldError("tutorId");
+    createStudySessionForm.clearFieldError("classroom");
 
     if (createStudySessionForm.values.shiftLabelValue !== null) {
       const shiftLabel = shiftLabels.find(label =>
@@ -259,7 +282,11 @@ const CreateStudySessionModal = (props: IProps) => {
               label="Chọn ca học"
               placeholder="Ca học"
               data={shiftLabels}
-              nothingFound="Vui lòng chọn ngày diễn ra buổi học trước"
+              nothingFound={
+                isOnSendGetShifts ?
+                  <Loader variant="dots" my={20} /> :
+                  "Vui lòng chọn ngày diễn ra buổi học trước"
+              }
               {...createStudySessionForm.getInputProps('shiftLabelValue')}
             />
           </Container>
@@ -273,7 +300,9 @@ const CreateStudySessionModal = (props: IProps) => {
             <Text align="center" color="#444" style={{ fontSize: "1.1rem" }}>
               Số lượng học viên có thể tham gia giờ học
             </Text>
-            {freeStudentPercentage < 0 ? (
+            {isOnSendGetAvaiableStudentCount ? (
+              <Loader variant="dots" mt={20} />
+            ) : freeStudentPercentage < 0 ? (
               <Text
                 align="center"
                 weight={600}
@@ -302,7 +331,7 @@ const CreateStudySessionModal = (props: IProps) => {
           </Text>
           {createStudySessionForm.values['teacherId'] === null
             ? <Text>Chưa chọn giáo viên
-              <Button ml={10} compact variant="light" onClick={onChangeTeacher}>Thay đổi</Button>
+              <Button ml={10} compact variant="light" onClick={onChangeTeacher} disabled={isOnSendGetAvaiableStudentCount}>Thay đổi</Button>
             </Text>
             : (<Group style={{ border: "1px solid #CED4DA", borderRadius: 5 }} p={10} >
               <Avatar
@@ -323,7 +352,7 @@ const CreateStudySessionModal = (props: IProps) => {
                 </Text>
                 <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSGV: {teacher?.worker.user.id}</Text>
               </Container>
-              <Button ml={10} compact variant="light" onClick={onChangeTeacher}>Thay đổi</Button>
+              <Button ml={10} compact variant="light" onClick={onChangeTeacher} disabled={isOnSendGetAvaiableStudentCount}>Thay đổi</Button>
             </Group>
             )}
           {createStudySessionForm.errors['teacherId'] && (
@@ -339,7 +368,7 @@ const CreateStudySessionModal = (props: IProps) => {
           </Text>
           {createStudySessionForm.values['tutorId'] === null
             ? <Text>Chưa chọn trợ giảng
-              <Button ml={10} compact variant="light" onClick={onChangeTutor}>Thay đổi</Button>
+              <Button ml={10} compact variant="light" onClick={onChangeTutor} disabled={isOnSendGetAvaiableStudentCount}>Thay đổi</Button>
             </Text>
             : (<Group style={{ border: "1px solid #CED4DA", borderRadius: 5 }} p={10} >
               <Avatar
@@ -360,7 +389,7 @@ const CreateStudySessionModal = (props: IProps) => {
                 </Text>
                 <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSTG: {tutor?.worker.user.id}</Text>
               </Container>
-              <Button ml={10} compact variant="light" onClick={onChangeTutor}>Thay đổi</Button>
+              <Button ml={10} compact variant="light" onClick={onChangeTutor} disabled={isOnSendGetAvaiableStudentCount}>Thay đổi</Button>
             </Group>
             )}
           {createStudySessionForm.errors['tutorId'] && (
@@ -377,7 +406,7 @@ const CreateStudySessionModal = (props: IProps) => {
           </Text>
           {createStudySessionForm.values['classroom'] === null
             ? <Text>Chưa chọn phòng học
-              <Button ml={10} compact variant="light" onClick={onChangeClassroom}>Thay đổi</Button>
+              <Button ml={10} compact variant="light" onClick={onChangeClassroom} disabled={isOnSendGetAvaiableStudentCount}>Thay đổi</Button>
             </Text>
             : (<Group style={{ border: "1px solid #CED4DA", borderRadius: 5 }} p={10}>
               <Container style={{
@@ -390,7 +419,7 @@ const CreateStudySessionModal = (props: IProps) => {
                 <Text style={{ fontSize: "1.2rem" }}>Phòng {classroom?.name} </Text>
                 <Text color="dimmed" style={{ fontSize: "1rem" }}>Sức chứa {classroom?.capacity} </Text>
               </Container>
-              <Button ml={10} compact variant="light" onClick={onChangeClassroom}>Thay đổi</Button>
+              <Button ml={10} compact variant="light" onClick={onChangeClassroom} disabled={isOnSendGetAvaiableStudentCount}>Thay đổi</Button>
             </Group>
             )}
           {createStudySessionForm.errors['classroom'] && (
@@ -435,7 +464,7 @@ const CreateStudySessionModal = (props: IProps) => {
         )}
 
         <Space h={20} />
-        <Button type="submit" loading={props.loading}>Lưu thông tin</Button>
+        <Button type="submit" loading={props.loading} disabled={isOnSendGetAvaiableStudentCount}>Lưu thông tin</Button>
       </form>
     </Container >
   );

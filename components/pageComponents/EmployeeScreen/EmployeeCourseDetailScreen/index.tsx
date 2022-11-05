@@ -138,20 +138,11 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         version: currentStudySession?.version,
       });
       if (responses !== null) {
-        toast.success("Cập nhật buổi học thành công");
-        const studySessions = listStudySessions.map(studySession => {
-          if (studySession.id == responses.id) return responses;
-          else return studySession;
-        });
-        studySessions.sort((prev, next) => {
-          const prevStudySessionDate = new Date(prev.date);
-          const nextStudySessionDate = new Date(next.date);
-          if (prevStudySessionDate < nextStudySessionDate) return -1;
-          else if (prevStudySessionDate > nextStudySessionDate) return 1;
-          return 0;
-        })
-        setListStudySessions(studySessions);
+        const studySessionsResponses = await getStudySessions(listStudySessions.length, 0);
+        setTotal(studySessionsResponses.total);
+        setListStudySessions(studySessionsResponses.studySessions);
         setCourse(responses.course);
+        toast.success("Cập nhật buổi học thành công");
       } else toast.error("Cập nhật buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendModifySession(false);
       setIsOpenModifyStudySessionModal(false);
@@ -160,7 +151,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setIsOpenModifyStudySessionModal(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
-  }, [authState.token, currentStudySession?.id, currentStudySession?.version, listStudySessions]);
+  }, [authState.token, currentStudySession?.id, currentStudySession?.version, listStudySessions, getStudySessions]);
 
 
 
@@ -178,17 +169,11 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         courseSlug: props.course?.slug
       });
       if (responses !== null) {
-        toast.success("Thêm buổi học thành công");
-        const studySessions = listStudySessions.concat(responses);
-        studySessions.sort((prev, next) => {
-          const prevStudySessionDate = new Date(prev.date);
-          const nextStudySessionDate = new Date(next.date);
-          if (prevStudySessionDate < nextStudySessionDate) return -1;
-          else if (prevStudySessionDate > nextStudySessionDate) return 1;
-          return 0;
-        })
-        setListStudySessions(studySessions);
+        const studySessionsResponses = await getStudySessions(listStudySessions.length, 0);
+        setTotal(studySessionsResponses.total);
+        setListStudySessions(studySessionsResponses.studySessions);
         setCourse(responses.course);
+        toast.success("Thêm buổi học thành công");
       } else toast.error("Thêm buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendCreateSession(false);
       setIsOpenCreateStudySessionModal(false);

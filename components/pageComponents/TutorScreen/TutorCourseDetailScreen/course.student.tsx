@@ -1,6 +1,7 @@
 import { Avatar, Container, Grid, Group, Input, Loader, SimpleGrid, Space, Text } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
@@ -19,6 +20,7 @@ interface IProps {
 
 
 const CourseStudent = (props: IProps) => {
+  const router = useRouter();
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
   const [authState] = useAuth();
@@ -143,7 +145,11 @@ const CourseStudent = (props: IProps) => {
             {listStudents.map((item, index) => (
               <Group
                 key={index}
-                style={{ flexDirection: isTablet ? "column" : "row" }}>
+                onClick={() => router.push(router.asPath + "/student/" + item.user.id)}
+                style={{
+                  cursor: "pointer",
+                  flexDirection: isTablet ? "column" : "row"
+                }}>
                 <Avatar
                   size={60}
                   color="blue"
