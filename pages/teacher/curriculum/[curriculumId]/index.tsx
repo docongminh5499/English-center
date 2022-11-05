@@ -7,7 +7,7 @@ import { CookieParser } from "../../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../../interfaces/page.interface";
 
 const CurriculumDetailPage: CustomNextPage = (props) => {
-    return <TeacherCurriculumDetailScreen  curriculum={null} {...props} />
+    return <TeacherCurriculumDetailScreen isPreferred={false} curriculum={null} {...props} />
 }
 
 CurriculumDetailPage.allowUsers = [
@@ -24,9 +24,12 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
     const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
 
     try {
-        const responses = await API.get(Url.teachers.getCurriculum + context.params?.curriculumId, { token: user.token });
-        return { props: { userRole: user.role || null, curriculum: responses } };
+        const [curriculum, isPreferred] = await Promise.all([
+            API.get(Url.teachers.getCurriculum + context.params?.curriculumId, { token: user.token }),
+            API.post(Url.teachers.checkPreferredCurriculums, { token: user.token, curriculumId: context.params?.curriculumId }),
+        ]);
+        return { props: { userRole: user.role || null, curriculum: curriculum, isPreferred: isPreferred } };
     } catch (error: any) {
-        return { props: { userRole: user.role || null, curriculum: null } }
+        return { props: { userRole: user.role || null, curriculum: null, isPreferred: false } }
     };
 });

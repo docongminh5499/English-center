@@ -1,15 +1,23 @@
-import { Container, Title, Text, Image, Loader, Space, Grid, NavLink, Divider } from "@mantine/core";
+import { Container, Title, Text, Image, Loader, Space, Grid, NavLink, Divider, Badge } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import API from "../../../../helpers/api";
+import { Url } from "../../../../helpers/constants";
+import { getCourseType } from "../../../../helpers/getCourseType";
+import { getCurriculumLevel } from "../../../../helpers/getCurriculumLevel";
 import { getImageUrl } from "../../../../helpers/image.helper";
 import Curriculum from "../../../../models/cirriculum.model";
+import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
 
 
 interface IProps {
-  curriculum: Curriculum | null
+  curriculum: Curriculum | null;
+  isPreferred: boolean;
 }
 
 const TeacherCurriculumDetailScreen = (props: IProps) => {
@@ -18,7 +26,10 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
   const isMobile = useMediaQuery('(max-width: 480px)');
   const [active, setActive] = useState(0);
 
+  const [authState] = useAuth();
   const [didMount, setDidMount] = useState(false);
+  const [isPreferred, setIsPreferred] = useState(props.isPreferred);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,19 +39,116 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
   }, []);
 
 
+
+  const addPreferredCurriculum = useCallback(async () => {
+    try {
+      setLoading(true);
+      const responses = await API.post(Url.teachers.addPreferredCurriculums,
+        { token: authState.token, curriculumId: props.curriculum?.id });
+      if (responses) {
+        setIsPreferred(!isPreferred);
+        toast.success("Thêm đăng ký thành công.")
+      } else toast.error("Thêm đăng ký thất bại.")
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [props.curriculum?.id, authState.token, isPreferred]);
+
+
+  const removePreferredCurriculum = useCallback(async () => {
+    try {
+      setLoading(true);
+      const responses = await API.post(Url.teachers.removePreferredCurriculums,
+        { token: authState.token, curriculumId: props.curriculum?.id });
+      if (responses) {
+        toast.success("Hủy đăng ký thành công.")
+        setIsPreferred(!isPreferred);
+      } else toast.error("Hủy đăng ký thất bại.")
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [props.curriculum?.id, authState.token, isPreferred]);
+
+
+
   return (
     <>
       <Head>
         <title>Chi tiết chương trình học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {!didMount && (
+        <Container style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <Loading />
+        </Container>
+      )}
+
       {didMount && (
         <Container size="xl" style={{ width: "100%" }}>
           <Title transform="uppercase" color="#444" size="2.6rem" my={20} align="center">
             {props.curriculum?.name}
           </Title>
+          <Container style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            {isPreferred && (
+              <Button color="red" loading={loading} onClick={() => removePreferredCurriculum()}>
+                Hủy đăng ký
+              </Button>
+            )}
+            {!isPreferred && (
+              <Button loading={loading} onClick={() => addPreferredCurriculum()}>
+                Đăng ký
+              </Button>
+            )}
+          </Container>
+          <Space h={20} />
           <Text color="#444" align="justify">
+            <Text color="#444" weight={600}>Mô tả: </Text>
             {props.curriculum?.desc}
+          </Text>
+          <Space h={20} />
+          <Text color="#444" align="justify">
+            <Text color="#444" weight={600} component="span">Loại khóa học: </Text>
+            {getCourseType(props.curriculum?.type)}
+          </Text>
+          <Space h={20} />
+          <Text color="#444" align="justify">
+            <Text color="#444" weight={600} component="span">Số ca học mỗi buổi: </Text>
+            {props.curriculum?.shiftsPerSession} ca học mỗi buổi
+          </Text>
+          <Space h={20} />
+          <Text color="#444" align="justify">
+            <Text color="#444" weight={600} component="span">Trình độ: </Text>
+            {getCurriculumLevel(props.curriculum?.level)}
+          </Text>
+          <Space h={20} />
+          <Text color="#444" align="justify">
+            <Text color="#444" weight={600} component="span">Thể loại: </Text>
+            {props.curriculum &&
+              props.curriculum.tags &&
+              props.curriculum.tags.length > 0 &&
+              props.curriculum?.tags.map((tag, index) => (
+                <Badge key={index} m={5} color="gray" variant="filled">
+                  {tag.name}
+                </Badge>
+              ))}
+            {(!props.curriculum ||
+              !props.curriculum.tags ||
+              !(props.curriculum.tags.length > 0)) && "Chưa có dữ liệu"}
           </Text>
           <Space h={40} />
           <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

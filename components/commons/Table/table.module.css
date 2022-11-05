@@ -1,0 +1,28 @@
+.wrapTable {
+    max-width: calc(97vw - 32px - 225px) ;
+    overflow-x: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.vertical {
+    vertical-align: top;
+}
+
+@media screen and (max-width: 1024px) {
+    .wrapTable {
+        max-width: calc(97vw - 32px - 110px) ;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .wrapTable {
+        max-width: calc(97vw - 32px - 100px) ;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wrapTable {
+        max-width: calc(97vw - 32px) ;
+    }
+}

@@ -19,6 +19,7 @@ import DeleteModal from "../Modal/delete.modal";
 import ChangeModifiedLectureModal from "../Modal/changeModifiedLecture.modal";
 import API from "../../../../helpers/api";
 import { useAuth } from "../../../../stores/Auth";
+import Loading from "../../../commons/Loading";
 
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tiêu đề").max(255, "Tiêu đề có độ dài quá lớn, tối đa 255 ký tự"),
@@ -319,8 +320,20 @@ const TeacherCurriculumModifyScreen = (props: IProps) => {
           <Text align="center" style={{ color: "#444" }}>Bạn chưa lưu bài học.</Text>
           <Text align="center" style={{ color: "#444" }}>Hãy lưu bài học trước khi kết thúc chỉnh sửa.</Text>
         </Container>
-
       </Modal>
+
+
+      {!didMount && (
+          <Container style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <Loading />
+          </Container>
+        )}
 
 
       {didMount && (

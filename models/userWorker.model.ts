@@ -1,3 +1,4 @@
+import Branch from "./branch.model";
 import User from "./user.model";
 
 export default interface UserWorker {
@@ -9,5 +10,5 @@ export default interface UserWorker {
     coefficients: number;
     salaryDate: Date | null;
     startDate: Date;
-    // branch: Branch;
+    branch: Branch;
 }

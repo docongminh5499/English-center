@@ -1,18 +1,24 @@
-import { Avatar, Container, Grid, Group, Input, Modal, SimpleGrid, Space, Text } from "@mantine/core";
+import { Avatar, Container, Grid, Group, Input, Loader, Modal, SimpleGrid, Space, Text } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
-import { useCallback, useState } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import API from "../../../../helpers/api";
+import { TeacherConstants, Url } from "../../../../helpers/constants";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
-import StudentParticipateCourse from "../../../../models/studentParticipateCourse.model";
+import UserStudent from "../../../../models/userStudent.model";
 import { useAuth } from "../../../../stores/Auth";
 import { useSocket } from "../../../../stores/Socket";
 import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
 import SendNotificationCourseModal from "../Modal/sendNotificationCourse";
 
 
 interface IProps {
+  courseSlug?: string;
   courseId?: number;
-  studentParticipations?: StudentParticipateCourse[];
+  courseTeacherId?: number;
 }
 
 
@@ -23,18 +29,54 @@ const CourseStudent = (props: IProps) => {
   const [, socketAction] = useSocket();
   const [query, setQuery] = useInputState("");
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
-  const [listStudentParticipations, setListStudentParticipations] = useState(props.studentParticipations);
+  const [listStudents, setListStudents] = useState<UserStudent[]>([]);
+  const [total, setTotal] = useState(0);
+  const [queriedTotal, setQueriedTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [seeMoreLoading, setSeeMoreLoading] = useState(false);
+  const router = useRouter();
 
 
-  const queryStudentHandler = useCallback((query: string) => {
-    const formattedQuery = query.trim().toLocaleLowerCase();
-    if (formattedQuery === "")
-      return setListStudentParticipations(props.studentParticipations);
-    const queriesStudentParticipations = listStudentParticipations?.filter(item =>
-      item.student.user.fullName.toLocaleLowerCase().indexOf(formattedQuery) > -1 ||
-      item.student.user.id.toString().toLocaleLowerCase().indexOf(formattedQuery) > -1);
-    setListStudentParticipations(queriesStudentParticipations);
-  }, [listStudentParticipations]);
+
+  const getStudents = useCallback(async (limit: number, skip: number, query: string) => {
+    return await API.post(Url.teachers.getStudents, {
+      token: authState.token,
+      limit: limit,
+      skip: skip,
+      query: query,
+      courseSlug: props.courseSlug
+    });
+  }, [authState.token, props.courseSlug]);
+
+
+  const seeMoreStudents = useCallback(async () => {
+    try {
+      setSeeMoreLoading(true);
+      const responses = await getStudents(TeacherConstants.limitStudent, listStudents.length, query);
+      setQueriedTotal(responses.total);
+      setListStudents(listStudents.concat(responses.students));
+      setSeeMoreLoading(false);
+    } catch (error) {
+      setSeeMoreLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [TeacherConstants.limitStudent, listStudents, query]);
+
+
+
+  const queryStudents = useCallback(async () => {
+    try {
+      setLoading(true);
+      const responses = await getStudents(TeacherConstants.limitStudent, 0, query);
+      setQueriedTotal(responses.total);
+      setListStudents(responses.students);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [TeacherConstants.limitStudent, query])
+
 
 
   const onSendNotification = useCallback((data: any) => {
@@ -45,6 +87,24 @@ const CourseStudent = (props: IProps) => {
       content: data.notification,
     });
   }, [props.courseId, authState.token]);
+
+
+  useEffect(() => {
+    const didMountFunc = async () => {
+      try {
+        setLoading(true);
+        const responses = await getStudents(TeacherConstants.limitStudent, 0, query);
+        setTotal(responses.total);
+        setQueriedTotal(responses.total);
+        setListStudents(responses.students);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      }
+    }
+    didMountFunc();
+  }, []);
 
 
   return (
@@ -67,20 +127,26 @@ const CourseStudent = (props: IProps) => {
           Danh sách học viên
         </Text>
         <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
-          Sĩ số: {props.studentParticipations?.length}
+          Sĩ số: {total}
         </Text>
 
-        <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
-          <Button color="green" variant="light" onClick={() => setIsNotificationModalOpen(true)}>
-            Gửi thông báo tới lớp học
-          </Button>
-        </Container>
+        {props.courseId == authState.userId && (
+          <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
+            <Button
+              color="green" variant="light"
+              disabled={loading || seeMoreLoading}
+              onClick={() => setIsNotificationModalOpen(true)}>
+              Gửi thông báo tới lớp học
+            </Button>
+          </Container>
+        )}
 
         <Space h={20} />
         <Grid>
           {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
           <Grid.Col span={isTablet ? (isMobile ? 12 : 8) : 4}>
             <Input
+              disabled={loading || seeMoreLoading}
               styles={{ input: { color: "#444" } }}
               value={query}
               placeholder="Tìm kiếm theo tên hoặc MSHV"
@@ -88,25 +154,39 @@ const CourseStudent = (props: IProps) => {
             />
           </Grid.Col>
           <Grid.Col span={isTablet ? (isMobile ? 12 : 4) : 2}>
-            <Button fullWidth onClick={() => queryStudentHandler(query)}>Tìm kiếm</Button>
+            <Button disabled={loading || seeMoreLoading} fullWidth onClick={() => queryStudents()}>
+              Tìm kiếm
+            </Button>
           </Grid.Col>
         </Grid>
 
         <Space h={20} />
 
-        {listStudentParticipations?.length === 0 && (
+        {loading && (
+          <Container style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: 'center',
+            flexGrow: 1,
+            height: "150px"
+          }}>
+            <Loading />
+          </Container>
+        )}
+
+        {!loading && listStudents.length === 0 && (
           <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px" }}>
             <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>Không có học sinh</Text>
           </Container>
 
         )}
 
-        {listStudentParticipations && listStudentParticipations?.length > 0 && (
+        {!loading && listStudents.length > 0 && (
           <SimpleGrid cols={2} p="md" spacing="xl">
-            {listStudentParticipations?.map((item, index) => (
+            {listStudents.map((item, index) => (
               <Group
                 key={index}
-                onClick={() => console.log("A")}
+                onClick={() => router.push(router.asPath + "/student/" + item.user.id)}
                 style={{
                   cursor: "pointer",
                   flexDirection: isTablet ? "column" : "row"
@@ -115,7 +195,7 @@ const CourseStudent = (props: IProps) => {
                   size={60}
                   color="blue"
                   radius='xl'
-                  src={getAvatarImageUrl(item.student.user.avatar)}
+                  src={getAvatarImageUrl(item.user.avatar)}
                 />
                 <div style={{
                   display: "flex",
@@ -124,17 +204,29 @@ const CourseStudent = (props: IProps) => {
                   alignItems: isTablet ? "center" : "flex-start"
                 }} >
                   <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444" align="center">
-                    {item.student.user.fullName}
+                    {item.user.fullName}
                   </Text>
-                  <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSHV: {item.student.user.id}</Text>
+                  <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSHV: {item.user.id}</Text>
                   <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">
-                    Ngày sinh: {moment(item.student.user.dateOfBirth).format("DD/MM/YYYY")}
+                    Ngày sinh: {moment(item.user.dateOfBirth).format("DD/MM/YYYY")}
                   </Text>
                 </div>
               </Group>
             ))}
           </SimpleGrid>
         )}
+        <Space h={20} />
+        <Container style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: 'center',
+          flexGrow: 1,
+        }}>
+          {seeMoreLoading && <Loader variant="dots" />}
+          {!seeMoreLoading && listStudents.length < queriedTotal && <Button
+            onClick={() => seeMoreStudents()}
+          >Xem thêm</Button>}
+        </Container>
         <Space h={20} />
       </Container>
     </>

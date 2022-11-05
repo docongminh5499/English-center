@@ -1,4 +1,4 @@
-import { Card, Container, SimpleGrid, Text, Image, Title, Group, Space, Modal } from "@mantine/core"
+import { Card, Container, SimpleGrid, Text, Image, Title, Group, Space, Modal, Badge } from "@mantine/core"
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSchool } from "@tabler/icons";
 import Head from "next/head";
@@ -18,6 +18,7 @@ import styles from "./curriculum.module.css";
 
 interface IProps {
   curriculums: Curriculum[];
+  preferredCurriculums: Curriculum[];
 }
 
 const TeacherCurriculumListScreen = (props: IProps) => {
@@ -34,6 +35,7 @@ const TeacherCurriculumListScreen = (props: IProps) => {
   const [shortTermCurriculums, setShortTermCurriculums] = useState<Curriculum[]>();
   const [longTermCurriculums, setLongTermCurriculums] = useState<Curriculum[]>();
   const [didMount, setDidMount] = useState(false);
+  const [preferredCurriculums, setPreferredCurriculums] = useState(props.preferredCurriculums);
 
 
   const onDelete = useCallback(async () => {
@@ -153,7 +155,6 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                   shadow="sm" p="lg" radius="md" withBorder
                   className={styles.curriculumCard}
                   onClick={() => {
-                    console.log("X")
                     router.push("/teacher/curriculum/" + curriculum.id)
                   }}>
                   <Card.Section>
@@ -163,20 +164,38 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       alt="curriculum-course"
                     />
                   </Card.Section>
-                  <Container p={0}>
-                    <Text
-                      weight={600}
-                      align="center"
-                      lineClamp={2}
-                      my={5}
-                      color="#444" className={styles.curriculumName}>
-                      {curriculum.name}
-                    </Text>
+                  <Container style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    flexGrow: 1
+                  }} p={0}>
+                    <Container p={0} style={{ flexGrow: 1 }}>
+                      <Text
+                        weight={600}
+                        align="center"
+                        lineClamp={2}
+                        my={5}
+                        color="#444" className={styles.curriculumName}>
+                        {curriculum.name}
+                      </Text>
+                    </Container>
+                    {preferredCurriculums.find(cur => cur.id === curriculum.id) && (
+                      <Container style={{
+                        display: "flex",
+                        justifyContent: "center"
+                      }} p={0} my={10}>
+                        <Badge>
+                          <Text style={{ fontSize: "1.1rem" }}>Đã đăng ký</Text>
+                        </Badge>
+                      </Container>
+                    )}
                     <Container
                       p={0}
                       style={{
                         display: "flex",
                         flexDirection: isTablet ? "column" : "row",
+                        width: "100%",
                         gap: "0.5rem"
                       }}>
                       <Button compact fullWidth
@@ -224,19 +243,37 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       alt="curriculum-course"
                     />
                   </Card.Section>
-                  <Container p={0}>
-                    <Text
-                      weight={600}
-                      align="center"
-                      lineClamp={2}
-                      my={5}
-                      color="#444" className={styles.curriculumName}>
-                      {curriculum.name}
-                    </Text>
+                  <Container style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    flexGrow: 1
+                  }} p={0}>
+                    <Container p={0} style={{ flexGrow: 1 }}>
+                      <Text
+                        weight={600}
+                        align="center"
+                        lineClamp={2}
+                        my={5}
+                        color="#444" className={styles.curriculumName}>
+                        {curriculum.name}
+                      </Text>
+                    </Container>
+                    {preferredCurriculums.find(cur => cur.id === curriculum.id) && (
+                      <Container style={{
+                        display: "flex",
+                        justifyContent: "center"
+                      }} p={0} my={10}>
+                        <Badge>
+                          <Text style={{ fontSize: "1.1rem" }}>Đã đăng ký</Text>
+                        </Badge>
+                      </Container>
+                    )}
                     <Container
                       p={0}
                       style={{
                         display: "flex",
+                        width: "100%",
                         flexDirection: isTablet ? "column" : "row",
                         gap: "0.5rem"
                       }}>

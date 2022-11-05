@@ -17,6 +17,7 @@ import API from "../../../../helpers/api";
 import { useAuth } from "../../../../stores/Auth";
 import { toast } from "react-toastify";
 import SaveNotificationModal from "../Modal/save.modal";
+import Loading from "../../../commons/Loading";
 
 
 interface IProps {
@@ -179,6 +180,19 @@ const TeacherModifyPersonalScreen = (props: IProps) => {
           onSave={() => onSave(data)}
         />
       </Modal>
+
+      {!didMount && (
+          <Container style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <Loading />
+          </Container>
+        )}
+
 
       {didMount && (
         <Container size="xl" style={{ width: "100%" }} p={isMobile ? 8 : 20}>

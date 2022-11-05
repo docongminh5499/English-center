@@ -1,25 +1,269 @@
-import { Button, Container } from "@mantine/core";
-import { useCallback } from "react";
+import { Button, Card, Checkbox, Container, Grid, Input, SimpleGrid, Space, Image, Text, Badge, Pagination } from "@mantine/core";
+import { useInputState, useMediaQuery } from "@mantine/hooks";
+import moment from "moment";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
+import API from "../../../../helpers/api";
+import { CourseStatus, EmployeeConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
+import { getImageUrl } from "../../../../helpers/image.helper";
+import { Course } from "../../../../models/course.model";
+import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
-import { useSocket } from "../../../../stores/Socket";
+import Loading from "../../../commons/Loading";
+import styles from './employee.home.module.css';
 
-const EmployeeHomeScreen = () => {
-    const [, socketAction] = useSocket();
-    const [authState] = useAuth();
-    const sendNotification = useCallback((userId: number) => {
-        socketAction.emit("notification", {
-            token: authState.token,
-            userId: userId,
-            content: `"Are you getting my texts???" she texted to him. He glanced at it and chuckled under his breath. Of course he was getting them, but if he wasn't getting them, how would he ever be able to answer? He put the phone down and continued on his project. He was ignoring her texts and he planned to continue to do so. They decided to find the end of the rainbow. While they hoped they would find a pot of gold, neither of them truly believed that the mythical pot would actually be there. Nor did they believe they could actually find the end of the rainbow. Still, it seemed like a fun activity for the day, and pictures of them chasing rainbows would look great on their Instagram accounts. They would have never believed they would actually find the end of a rainbow, and when they did, what they actually found there. The words hadn't flowed from his fingers for the past few weeks. He never imagined he'd find himself with writer's block, but here he sat with a blank screen in front of him. That blank screen taunting him day after day had started to play with his mind. He didn't understand why he couldn't even type a single word, just one to begin the process and build from there. And yet, he already knew that the eight hours he was prepared to sit in front of his computer today would end with the screen remaining blank.`
-        })
-    }, []);
+interface IProps {
+  courses?: Partial<Course>[],
+  pageable?: Pageable,
+  error?: Boolean,
+  userRole?: UserRole | null,
+}
 
 
-    return <Container>
-        <Button onClick={() => sendNotification(2000001)}>
-            Test Notification
-        </Button>
-    </Container>
+const EmployeeHomeScreen = (props: IProps) => {
+  const router = useRouter();
+  const formatCourse = useCallback((courses: any) => {
+    const result: any = {};
+    (courses || []).forEach((course: any) => {
+      const key = moment(course.openingDate).utcOffset(TimeZoneOffset).format("MM-YYYY");
+      result[key] = result[key] || [];
+      result[key].push(course);
+    });
+    return result;
+  }, []);
+
+
+  const [error, setError] = useState(props.error || false);
+  const [loading, setLoading] = useState(false);
+  const [maxPage, setMaxPage] = useState(Math.ceil((
+    props.pageable?.total || 1) / (props.pageable?.limit || EmployeeConstants.limitCourse)));
+  const [currentPage, setCurrentPage] = useState(1);
+  const [course, setCourse] = useState<any>(formatCourse(props.courses));
+  const [authState] = useAuth();
+  const isSmallerThan768 = useMediaQuery('(max-width: 768px)');
+
+  // Filter state
+  const [name, setName] = useInputState("");
+  const [closed, setClosed] = useInputState(false);
+  const [open, setOpen] = useInputState(false);
+  const [longTerm, setLongTerm] = useInputState(false);
+  const [shortTerm, setShortTerm] = useInputState(false);
+
+
+  const getCourse = useCallback(async (limit: number, skip: number,
+    name: string, closed: boolean, open: boolean, longTerm: boolean, shortTerm: boolean) => {
+    const responses = await API.get(Url.employees.getCourse, {
+      token: authState.token,
+      limit, skip, name, closed, open, longTerm, shortTerm
+    });
+    const result = formatCourse(responses.courses);
+    setCourse(result);
+    setMaxPage(Math.ceil(responses.total / responses.limit));
+  }, []);
+
+
+  const onClickPaginationPage = useCallback(async (page: number,
+    name: string, closed: boolean, open: boolean, longTerm: boolean, shortTerm: boolean) => {
+    try {
+      if (page < 1) return;
+      setLoading(true);
+      setError(false);
+
+      await getCourse(
+        EmployeeConstants.limitCourse,
+        (page - 1) * EmployeeConstants.limitCourse,
+        name, closed, open, longTerm, shortTerm,
+      );
+
+      setLoading(false);
+      setCurrentPage(page);
+    } catch (err) {
+      setLoading(false);
+      setCurrentPage(page);
+      setError(true);
+    }
+  }, []);
+
+  return (
+    <>
+      <Head>
+        <title>Trang chủ</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className={styles.employeeHomePage}>
+        <p className={styles.title}>Danh sách khóa học</p>
+        <Space h="md" />
+        <div className={styles.filterComponent}>
+          <Grid>
+            <Grid.Col span={isSmallerThan768 ? 12 : 9}>
+              <Input
+                styles={{ input: { color: "#444" } }}
+                value={name}
+                placeholder="Tên khóa học"
+                onChange={setName}
+              />
+              <Space h="xs" />
+              <SimpleGrid cols={isSmallerThan768 ? 2 : 4}>
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Đang - Sắp diễn ra"
+                  checked={open}
+                  onChange={setOpen}
+                />
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Đã kết thúc"
+                  checked={closed}
+                  onChange={setClosed}
+                />
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Khóa ngắn hạn"
+                  checked={shortTerm}
+                  onChange={setShortTerm}
+                />
+                <Checkbox
+                  styles={{ label: { color: "#444" } }}
+                  label="Khóa dài hạn"
+                  checked={longTerm}
+                  onChange={setLongTerm}
+                />
+              </SimpleGrid>
+            </Grid.Col>
+            <Grid.Col span={isSmallerThan768 ? 12 : 3} py={isSmallerThan768 ? 8 : 0}>
+              <Container
+                p={0}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  gap: "0.2rem",
+                  height: "100%"
+                }}>
+                <Button
+                  // compact={!isSmallerThan768}
+                  onClick={() => {
+                    setCurrentPage(1);
+                    onClickPaginationPage(1, name, closed, open, longTerm, shortTerm);
+                  }}
+                >Lọc khóa học</Button>
+                <Button
+                  // compact={!isSmallerThan768}
+                  color="gray"
+                  onClick={() => {
+                    setCurrentPage(1);
+                    setName("");
+                    setClosed(false);
+                    setOpen(false);
+                    setLongTerm(false);
+                    setShortTerm(false);
+                    onClickPaginationPage(1, "", false, false, false, false);
+                  }}>Xóa bộ lọc</Button>
+              </Container>
+            </Grid.Col>
+          </Grid>
+        </div>
+
+        <div className={styles.courseList}>
+          {loading && (
+            <div className={styles.loadingContainer}>
+              <Loading />
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className={styles.errorContainer}>
+              <p>Có lỗi xảy ra, vui lòng thử lại</p>
+              <Button
+                color="primary"
+                onClick={() => onClickPaginationPage(currentPage, name, closed, open, longTerm, shortTerm,)}>
+                Thử lại
+              </Button>
+            </div>
+          )}
+
+          {!loading &&
+            !error &&
+            Object.keys(course).length == 0 && (
+              <div className={styles.emptyResultContainer}>
+                <p>Không có kết quả</p>
+              </div>
+            )}
+
+          {!loading &&
+            !error &&
+            Object.keys(course).length > 0 &&
+            Object.keys(course).map((key, sectionIndex) => {
+              const [month, year] = key.split("-");
+              return (
+                <div className={styles.courseDateBasedSection} key={sectionIndex}>
+                  <p className={styles.date}>
+                    Tháng {month.padStart(2, "0")} năm {year}
+                  </p>
+                  <div className={styles.courseContainer}>
+                    {course[key].map((courseInfo: Course) => {
+                      return (
+                        <Card
+                          key={courseInfo.id}
+                          className={styles.courseCard}
+                          shadow="sm" p="lg" radius="md" withBorder
+                          onClick={() => router.push("/employee/course/" + courseInfo.slug)}>
+                          <Card.Section>
+                            <Image
+                              src={getImageUrl(courseInfo.image)}
+                              height={180}
+                              alt="image-course"
+                            />
+                          </Card.Section>
+                          <div className={styles.courseInfo}>
+                            <Text weight={600} align="center" className={styles.courseName} lineClamp={2}>
+                              {courseInfo.name}
+                            </Text>
+                            <Text style={{ fontSize: "1.2rem" }} color="dimmed" align="center">
+                              Mã lớp: {courseInfo.id.toString().padStart(6, "0")}
+                            </Text>
+                            {getCourseStatus(courseInfo) === CourseStatus.NotOpen && (
+                              <Badge color="gray" variant="light">
+                                Sắp diễn ra
+                              </Badge>
+                            )}
+
+                            {getCourseStatus(courseInfo) === CourseStatus.Opened && (
+                              <Badge color="green" variant="light">
+                                Đang diễn ra
+                              </Badge>
+                            )}
+
+                            {getCourseStatus(courseInfo) === CourseStatus.Closed && (
+                              <Badge color="pink" variant="light">
+                                Đã kết thúc
+                              </Badge>
+                            )}
+                          </div>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+
+          {currentPage > 0 && maxPage > 0 && (
+            <Pagination
+              className={styles.pagination}
+              page={currentPage}
+              total={maxPage}
+              onChange={(choosedPage: number) => onClickPaginationPage(
+                choosedPage, name, closed, open, longTerm, shortTerm,
+              )}
+            />
+          )}
+        </div>
+      </div>
+    </>
+  );
 }
 
 

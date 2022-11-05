@@ -7,8 +7,9 @@ interface IProps {
   title: string;
   message: string;
   onSave: () => void;
+  buttonLabel?: string;
 }
-const SaveModal = ({ loading, title, message, onSave }: IProps) => {
+const SaveModal = ({ loading, title, message, onSave, buttonLabel }: IProps) => {
   return (
     <Container p={0} style={{
       backgroundColor: "white",
@@ -33,7 +34,7 @@ const SaveModal = ({ loading, title, message, onSave }: IProps) => {
           <Text color="#444" align="center">{message}</Text>
           <Space h={10} />
           <Container style={{ display: "flex", justifyContent: "center" }}>
-            <Button color="green" onClick={onSave}>Xác nhận lưu</Button>
+            <Button color="green" onClick={onSave}> {buttonLabel ? buttonLabel : "Xác nhận lưu"}</Button>
           </Container>
         </>
       )}

@@ -21,6 +21,13 @@ export enum CourseType {
   LONG_TERM = "LongTerm"
 }
 
+export enum StudySessionState {
+  Cancel = "Cancel",
+  Ready = "Ready",
+  Start = "Start",
+  Finish = "Finish",
+}
+
 export enum ExerciseStatus {
   NotOpen = "NotOpen",
   Opened = "Opened",
@@ -39,6 +46,33 @@ export enum CourseStatus {
 //   AbsenceWithoutPermission = "AbsenceWithoutPermission",
 // }
 
+export enum CurriculumLevel {
+  Beginer = "Beginer",
+  Intermediate = "Intermediate",
+  Advance = "Advance",
+}
+
+export enum TagsType {
+  Question = "question",
+  Curriculum = "curriculum"
+}
+
+export enum Weekday {
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+  Sunday = "Sunday",
+}
+
+export enum ClassroomFunction {
+  MEETING_ROOM = "Phòng họp",
+  WAREHOUSE_ROOM = "Phòng vật dụng",
+  CLASSROOM = "Phòng học",
+}
+
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
 };
@@ -48,7 +82,19 @@ export const CookieKey = {
 };
 
 export const TeacherConstants = {
-  limitCourse: 12
+  limitCourse: 12,
+  limitStudent: 12,
+  limitExercise: 12,
+  limitDocument: 12,
+  limitComments: 12,
+  maxTopComments: 3,
+  limitStudySession: 12,
+  limitSchedule: 12,
+}
+
+export const EmployeeConstants = {
+  limitCourse: 12,
+  limitStudySession: 12,
 }
 
 export const StudentConstants = {
@@ -80,7 +126,12 @@ export const Url = {
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
     getCourseDetail: "/api/teachers/courses/get-course/",
+    closeCourse: "/api/teachers/courses/close-course",
+    getStudents: "/api/teachers/courses/get-students",
+    getStudentDetails: "/api/teachers/courses/get-student-detail",
+    getExercises: "/api/teachers/courses/get-exercises",
     deleteExercise: "/api/teachers/courses/delete-exercise/",
+    getDocuments: "/api/teachers/courses/get-documents",
     deleteDocument: "/api/teachers/courses/delete-document/",
     createDocument: "/api/teachers/courses/create-document",
     getPersonalInformation: "/api/teachers/personal/get-personal-information",
@@ -101,6 +152,28 @@ export const Url = {
     getCourseDetail: "/api/students/courses/get-course/",
     sendAssessCourse: "/api/students/courses/assess-course",
     getAttendance: "/api/students/courses/attendance-course/",
+    getAllExercises: "/api/students/exercise/get-all-exercises/",
+    submitExercise: "/api/students/exercise/submit-exercise/",
+    getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
+  },
+  employees: {
+    getPersonalInformation: "/api/employees/personal/get-personal-information",
+    getCurriculumList: "/api/employees/curriculum/get-curriculum",
+    getBranches: "/api/employees/courses/get-branches",
+    getTeachers: "/api/employees/courses/get-teachers",
+    getTeacherFreeShift: "/api/employees/courses/get-teacher-free-shift",
+    getAvailableTutors: "/api/employees/courses/get-available-tutors",
+    getAvailableClassroom: "/api/employees/courses/get-available-classrooms",
+    createCourse: "/api/employees/courses/create-course",
+    getCourse: "/api/employees/courses/get-course",
+    getCourseDetail: "/api/employees/courses/get-course/",
+    reopenCourse: "/api/employees/courses/reopen-course",
+    getStudySessions: "/api/employees/courses/get-study-sessions",
+    getShifts: "/api/employees/courses/get-shifts",
+    getAvailableTeachersInDate: "/api/employees/courses/get-available-teachers-in-date",
+    getAvailableTutorsInDate: "/api/employees/courses/get-available-tutors-in-date",
+    getAvailableClassroomInDate: "/api/employees/courses/get-available-classrooms-in-date",
+    updateStudySession: "/api/employees/courses/update-study-session",
     getAllExercises: "/api/students/exercise/get-all-exercises/",
     submitExercise: "/api/students/exercise/submit-exercise/",
     getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",

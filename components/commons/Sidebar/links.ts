@@ -16,12 +16,20 @@ export const teacherSidebar: Array<SidebarItem> = [
   {
     src: IconNotebook,
     name: "Nhật ký",
-    href: "/teacher/teaching-history",
+    href: "/teacher/schedule",
   },
   {
     src: IconSchool,
     name: "Chương trình dạy",
     href: "/teacher/curriculum",
+  },
+];
+
+export const employeeSidebar: Array<SidebarItem> = [
+  {
+    src: IconCertificate,
+    name: "Khóa học",
+    href: "/employee/course",
   },
 ];
 

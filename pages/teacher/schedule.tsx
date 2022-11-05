@@ -1,21 +1,18 @@
-import EmployeeHomeScreen from "../../components/pageComponents/EmployeeScreen/EmployeeHomeScreen/employee.home";
-import { CookieKey, UserRole } from "../../helpers/constants";
-import { CustomNextPage } from "../../interfaces/page.interface";
 import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
+import TeacherScheduleScreen from "../../components/pageComponents/TeacherScreen/TeacherScheduleScreen";
+import { CookieKey, UserRole } from "../../helpers/constants";
 import { CookieParser } from "../../helpers/cookieParser";
+import { CustomNextPage } from "../../interfaces/page.interface";
 
-
-const EmployeeHomePage: CustomNextPage = (props) => {
-    return <EmployeeHomeScreen {...props} />;
+const TeacherSchedulePage: CustomNextPage = (props) => {
+    return <TeacherScheduleScreen {...props} />;
 };
 
-EmployeeHomePage.allowUsers = [
-    UserRole.ADMIN,
-    UserRole.EMPLOYEE,
+TeacherSchedulePage.allowUsers = [
+    UserRole.TEACHER,
 ];
-export default EmployeeHomePage;
-
+export default TeacherSchedulePage;
 
 
 export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context) => {

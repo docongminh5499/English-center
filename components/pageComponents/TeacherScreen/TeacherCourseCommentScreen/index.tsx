@@ -1,13 +1,18 @@
-import { Container, Grid, Space, Title, Text, Stack } from "@mantine/core"
+import { Container, Grid, Space, Title, Text, Stack, Loader, Button } from "@mantine/core"
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-import { TimeZoneOffset, UserRole } from "../../../../helpers/constants";
-import Course from "../../../../models/course.model";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import API from "../../../../helpers/api";
+import { TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import StarPointTypeCount from "../../../../interfaces/starPointTypeCount.interface";
+import { Course } from "../../../../models/course.model";
 import MaskedComment from "../../../../models/maskedComment.model";
+import { useAuth } from "../../../../stores/Auth";
 import Comment from "../../../commons/Comment";
+import Loading from "../../../commons/Loading";
 import Rating from "../../../commons/Rating";
 import RatingProgress from "../../../commons/RatingProgress";
 
@@ -19,61 +24,70 @@ interface IProps {
 const TeacherCourseCommentScreen = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
+
+
+  const [authState] = useAuth();
+  const [total, setTotal] = useState(0);
+  const [avg, setAvg] = useState(0);
+  const [commentList, setCommentList] = useState<MaskedComment[]>([]);
+  const [starPointTypeCount, setStarPointCount] = useState<StarPointTypeCount>({ "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 });
   const [didMount, setDidMount] = useState(false);
+  const [seeMoreLoading, setSeeMoreLoading] = useState(false);
   const router = useRouter();
 
+
+  const getComments = useCallback(async (limit: number, skip: number) => {
+    return await API.post(Url.teachers.getComments, {
+      token: authState.token,
+      limit: limit,
+      skip: skip,
+      courseSlug: props.course?.slug
+    });
+  }, [authState.token, props.course?.slug]);
+
+
+
+  const seeMoreComments = useCallback(async () => {
+    try {
+      setSeeMoreLoading(true);
+      const responses = await getComments(TeacherConstants.limitComments, commentList.length);
+      setTotal(responses.total);
+      setCommentList(commentList.concat(responses.comments));
+      setAvg(responses.average);
+      setStarPointCount(responses.starTypeCount);
+      setSeeMoreLoading(false);
+    } catch (error) {
+      setSeeMoreLoading(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [TeacherConstants.limitComments, commentList]);
+
+
+
+
   useEffect(() => {
+    const didMountFunc = async () => {
+      try {
+        const responses = await getComments(TeacherConstants.limitComments, 0);
+        setTotal(responses.total);
+        setCommentList(responses.comments);
+        setAvg(responses.average);
+        setStarPointCount(responses.starTypeCount);
+        setDidMount(true);
+      } catch (error) {
+        setDidMount(true);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      }
+    }
+
     if (props.course === null)
       router.replace('/not-found');
-    else setDidMount(true);
+    else if (props.course.closingDate === undefined || props.course.closingDate === null)
+      router.replace('/not-found');
+    else didMountFunc();
   }, []);
 
 
-
-  const totalScore = useMemo(() => {
-    const totalScore = props.course?.maskedComments?.reduce((total, current) =>
-      total += (current.starPoint ? current.starPoint : 0), 0) || 0;
-    return totalScore;
-  }, [props.course?.maskedComments]);
-
-
-  const totalCount = useMemo(() => {
-    const totalCount = props.course?.maskedComments?.reduce((total, current) =>
-      total += (current.starPoint ? 1 : 0), 0) || 0;
-    return totalCount;
-  }, [props.course?.maskedComments]);
-
-
-  const average = useMemo(() => {
-    if (totalCount == 0) return 0;
-    return Math.round(totalScore / totalCount * 10) / 10
-  }, [totalCount, totalScore]);
-
-
-  const eachScoreCount = useMemo(() => {
-    const result: any = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    props.course?.maskedComments?.forEach(item => {
-      if (item.starPoint) result[item.starPoint] += 1;
-    })
-    const total = result[1] + result[2] + result[3] + result[4] + result[5];
-    if (total > 0) {
-      result[1] = Math.round(result[1] / total * 100);
-      result[2] = Math.round(result[2] / total * 100);
-      result[3] = Math.round(result[3] / total * 100);
-      result[4] = Math.round(result[4] / total * 100);
-      result[5] = Math.round(result[5] / total * 100);
-    }
-    return result;
-  }, [props.course?.maskedComments]);
-
-
-  const comments = useMemo(() => {
-    const result: MaskedComment[] = [];
-    props.course?.maskedComments?.forEach(item => {
-      if (item.starPoint) result.push(item);
-    })
-    return result;
-  }, [props.course?.maskedComments]);
 
   return (
     <>
@@ -81,6 +95,17 @@ const TeacherCourseCommentScreen = (props: IProps) => {
         <title>Bình luận khóa học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {!didMount && (
+        <Container p={0} style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: 'center',
+          flexGrow: 1,
+        }}>
+          <Loading />
+        </Container>
+      )}
 
       {didMount && (
         <Container p={isMobile ? "xs" : "md"} size="xl" style={{ width: "100%" }}>
@@ -101,29 +126,29 @@ const TeacherCourseCommentScreen = (props: IProps) => {
               gap: "1rem"
             }}>
               <Text style={{ fontSize: "4rem" }} weight={600} align='center' color="#444">
-                {average}
+                {Math.round(avg * 10) / 10}
               </Text>
-              <Rating score={Math.round(average)} size="2.8rem" />
+              <Rating score={Math.round(avg)} size="2.8rem" />
               <Text color="dimmed" align="center">
-                ({totalCount} bình luận)
+                ({total} bình luận)
               </Text>
             </Grid.Col>
             <Grid.Col span={isMobile ? 12 : 6}>
               <Stack spacing="xs" justify="center">
-                <RatingProgress score={5} value={eachScoreCount[5]} />
-                <RatingProgress score={4} value={eachScoreCount[4]} />
-                <RatingProgress score={3} value={eachScoreCount[3]} />
-                <RatingProgress score={2} value={eachScoreCount[2]} />
-                <RatingProgress score={1} value={eachScoreCount[1]} />
+                <RatingProgress score={5} value={starPointTypeCount[5] / total * 100} />
+                <RatingProgress score={4} value={starPointTypeCount[4] / total * 100} />
+                <RatingProgress score={3} value={starPointTypeCount[3] / total * 100} />
+                <RatingProgress score={2} value={starPointTypeCount[2] / total * 100} />
+                <RatingProgress score={1} value={starPointTypeCount[1] / total * 100} />
               </Stack>
             </Grid.Col>
           </Grid>
 
           <Space h={40} />
 
-          {comments && comments.length > 0 && (
+          {commentList && commentList.length > 0 && (
             <Stack spacing="xl" justify="center">
-              {comments.map((item, index) => (
+              {commentList.map((item, index) => (
                 <Comment
                   key={index}
                   name={item.userFullName || ""}
@@ -135,7 +160,22 @@ const TeacherCourseCommentScreen = (props: IProps) => {
             </Stack>
           )}
 
-          <Space h={40} />
+          <Space h={20} />
+          <Container style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: 'center',
+            flexGrow: 1,
+          }}>
+            {seeMoreLoading && <Loader variant="dots" />}
+            {!seeMoreLoading &&
+              commentList.length < total &&
+              <Button onClick={() => seeMoreComments()}
+              >Xem thêm
+              </Button>
+            }
+          </Container>
+          <Space h={20} />
         </Container>
       )}
     </>

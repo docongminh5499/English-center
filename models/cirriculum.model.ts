@@ -1,7 +1,6 @@
-import { CourseType } from "../helpers/constants"
+import { CourseType, CurriculumLevel } from "../helpers/constants"
 import Lecture from "./lecture.model"
-
-
+import Tag from "./tag.model"
 
 
 export default interface Curriculum {
@@ -13,4 +12,7 @@ export default interface Curriculum {
     type: CourseType,
     latest: boolean,
     lectures: Lecture[],
+    shiftsPerSession: number,
+    tags: Tag[],
+    level: CurriculumLevel
 }

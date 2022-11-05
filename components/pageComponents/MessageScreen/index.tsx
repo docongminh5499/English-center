@@ -41,10 +41,10 @@ const MessageScreen = () => {
       console.log(error);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại")
     });
-    return () => { 
+    return () => {
       chatAction.resetData();
       authState.token && chatAction.getUnreadMessageCount(authState.token);
-     }
+    }
   }, []);
 
 
@@ -194,7 +194,7 @@ const MessageScreen = () => {
               }}>
                 <Indicator dot inline size={12} offset={3} position="bottom-end" color={contact.user.isActive ? "green" : "red"} withBorder>
                   <Avatar
-                    size="sm"
+                    size="md"
                     radius="xl"
                     src={getAvatarImageUrl(contact.user.userAvatar)}
                   />
@@ -203,6 +203,9 @@ const MessageScreen = () => {
                 <div style={{ flex: 1 }}>
                   <Text style={{ fontSize: "1.4rem" }} weight={500} color="#444">
                     {contact.user.userFullName}
+                  </Text>
+                  <Text style={{ fontSize: "1rem" }} color="dimmed">
+                    {getRoleName(contact.user.userRole)}
                   </Text>
                 </div>
               </Container>

@@ -1,15 +1,4 @@
-.formContainer {
+.formContainer,
+.stepperContainer {
     max-width: 400px;
-}
-
-@media screen and (max-width: 480px) {
-    .stepperContainer, .formContainer{
-        width: 200px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .stepperContainer {
-        width: 300px;
-    }
 }
