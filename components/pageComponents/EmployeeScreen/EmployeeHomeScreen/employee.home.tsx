@@ -91,6 +91,7 @@ const EmployeeHomeScreen = (props: IProps) => {
       limit, skip, name, closed, open, longTerm, shortTerm
     });
     const result = formatCourse(responses.courses);
+    setCourses(responses.courses);
     setCourse(result);
     setMaxPage(Math.ceil(responses.total / responses.limit));
   }, []);

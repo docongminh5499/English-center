@@ -219,6 +219,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           return 0;
         })
         setListStudySessions(studySessions);
+        setTotal(total - 1);
       } else toast.error("Xóa buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendRemoveSession(false);
       setIsOpenRemoveSessionModal(false);
@@ -227,7 +228,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setIsOpenRemoveSessionModal(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
-  }, [authState.token, currentStudySession]);
+  }, [authState.token, currentStudySession, total]);
 
 
 
