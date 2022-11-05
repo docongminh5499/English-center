@@ -237,12 +237,19 @@ const TeacherCourseDetailScreen = (props: IProps) => {
               />
             </Tabs.Panel>
 
+            {/* <Tabs.Panel value="exercise" pt="xs">
+              <CourseExercise courseSlug={course?.slug} exercises={props.course?.exercises} courseId={props.course?.id} course={props.course}/>
+            </Tabs.Panel> */}
+
+           
             {course?.teacher.worker.user.id == authState.userId && (
               <>
                 <Tabs.Panel value="exercise" pt="xs">
                   <CourseExercise
+                    exercises={props.course?.exercises}
                     courseSlug={course?.slug}
                     course={course}
+                    courseId={props.course?.id}
                   />
                 </Tabs.Panel>
                 <Tabs.Panel value="document" pt="xs">

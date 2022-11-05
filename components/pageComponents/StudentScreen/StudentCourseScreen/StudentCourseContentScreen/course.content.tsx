@@ -26,9 +26,6 @@ const StudentCourseContentScreen = (props: any) => {
   if(course === null){
     setLoading(true);
   }
-  // console.log("===========================================");
-  // console.log(course);
-  // console.log(props.attendance);
 
   const openingDate = new Date(course.openingDate);
   const closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
@@ -89,7 +86,7 @@ const StudentCourseContentScreen = (props: any) => {
             <CourseDocumentTab />
           </Tabs.Panel>
           <Tabs.Panel value="exercise">
-            <CourseExerciseTab />
+            <CourseExerciseTab course={course}/>
           </Tabs.Panel>
           <Tabs.Panel value="rating">
             <CourseRatingTab {...course} />

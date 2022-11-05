@@ -1,7 +1,6 @@
 import { createStyles, Grid, Indicator, MediaQuery, Popover, Text, Title } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import "dayjs/locale/vi";
-import { AttendanceStatus } from "../../../../../helpers/constants";
 
 function getKeyFromDate(date: Date){
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -70,7 +69,7 @@ const CourseAttendanceTab = (props: any) => {
   else initialMonth = openingDate;
 
   const attendances = formatAttendanceData(props.attendance);
-  // console.log(attendances);
+  console.log(attendances);
   // console.log(`Start: ${openingDate}, Closed: ${closingDate}`);
 
   const { classes, cx } = useStyles();
@@ -98,11 +97,9 @@ const CourseAttendanceTab = (props: any) => {
               );
               if (attendances.has(getKeyFromDate(date))){
                 attendances.get(getKeyFromDate(date)).forEach((studenAttendStudySession: any, idx: number) => {
-                  if (studenAttendStudySession.isAttend === AttendanceStatus.Attendance)
+                  if (studenAttendStudySession.isAttend === true)
                     indicatorColor = 'green';
-                  else if (studenAttendStudySession.isAttend === AttendanceStatus.AbsenceWithPermission)
-                    indicatorColor = 'orange';
-                  else if (studenAttendStudySession.isAttend === AttendanceStatus.AbsenceWithoutPermission)
+                  else if (studenAttendStudySession.isAttend === false)
                     indicatorColor = 'red';
                   dayJSX = (
                     <Indicator size={6} color={indicatorColor} offset={8} position={positionOrder[idx]}>
@@ -143,10 +140,10 @@ const CourseAttendanceTab = (props: any) => {
               <p className={classes.annotationItem}>Có mặt</p>
             </div>
 
-            <div>
+            {/* <div>
               <span className={cx(classes.dot, classes.orangeDot)}></span>
               <p className={classes.annotationItem}>Nghỉ có phép</p>
-            </div>
+            </div> */}
 
             <div>
               <span className={cx(classes.dot, classes.redDot)}></span>

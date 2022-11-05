@@ -39,11 +39,11 @@ export enum CourseStatus {
   Closed = "Closed",
 }
 
-export enum AttendanceStatus {
-  Attendance = "Attendance",
-  AbsenceWithPermission = "AbsenceWithPermission",
-  AbsenceWithoutPermission = "AbsenceWithoutPermission",
-}
+// export enum AttendanceStatus {
+//   Attendance = "Attendance",
+//   AbsenceWithPermission = "AbsenceWithPermission",
+//   AbsenceWithoutPermission = "AbsenceWithoutPermission",
+// }
 
 export enum CurriculumLevel {
   Beginer = "Beginer",
@@ -158,6 +158,10 @@ export const Url = {
     getSchedules: "/api/teachers/schedule",
     getEmployeeByBranch: "/api/teachers/courses/get-employee-by-branch",
     getCurriculumTags: "/api/teachers/curriculum/get-curriculum-tags",
+    //Hoc
+    createExercise: "/api/teachers/exercise/create-exercise",
+    addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",
+    getAllQuestionTag: "/api/teachers/exercise/get-all-question-tag",
   },
   students: {
     getTimetable: "/api/students/timetable",
@@ -165,6 +169,9 @@ export const Url = {
     getCourseDetail: "/api/students/courses/get-course/",
     sendAssessCourse: "/api/students/courses/assess-course",
     getAttendance: "/api/students/courses/attendance-course/",
+    getAllExercises: "/api/students/exercise/get-all-exercises/",
+    submitExercise: "/api/students/exercise/submit-exercise/",
+    getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
   },
   employees: {
     getPersonalInformation: "/api/employees/personal/get-personal-information",
