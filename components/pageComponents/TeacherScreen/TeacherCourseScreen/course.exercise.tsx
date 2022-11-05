@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import { Box, Checkbox, Container, FileButton, Grid, Group, Modal, MultiSelect, Space, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { Box, Checkbox, Divider, Loader, Container, FileButton, Grid, Group, Modal, MultiSelect, Space, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { DateRangePicker, DateRangePickerValue, TimeRangeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-=======
-import { Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
->>>>>>> master
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
@@ -24,13 +20,10 @@ import { IconPlus } from "@tabler/icons";
 import CourseCreateExercise from "./course.create.exercise";
 
 interface IProps {
-<<<<<<< HEAD
   exercises?: Exercise[];
   courseId?: number;
-=======
   courseSlug?: string;
   course: Course | null;
->>>>>>> master
 }
 
 const CourseExercise = (props: IProps) => {
@@ -42,10 +35,7 @@ const CourseExercise = (props: IProps) => {
   const [currentExercise, setCurrentExercise] = useState<Exercise>();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-<<<<<<< HEAD
   const [listExercises, setListExercises] = useState(props.exercises === undefined ? [] : props.exercises);
-=======
-  const [listExercises, setListExercises] = useState<Exercise[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [seeMoreLoading, setSeeMoreLoading] = useState(false);
@@ -61,7 +51,6 @@ const CourseExercise = (props: IProps) => {
   }, [authState.token, props.courseSlug]);
 
 
->>>>>>> master
 
   const onDelete = useCallback(async () => {
     try {
@@ -87,10 +76,8 @@ const CourseExercise = (props: IProps) => {
     }
   }, [authState.token, currentExercise, listExercises]);
 
-<<<<<<< HEAD
   //TODO: Create new exercise
   const [createNewExercise, setCreateNewExercise] = useState(false);
-=======
 
 
   const seeMoreExercises = useCallback(async () => {
@@ -124,7 +111,6 @@ const CourseExercise = (props: IProps) => {
     didMountFunc();
   }, []);
 
->>>>>>> master
 
   return (
     <>
@@ -142,9 +128,11 @@ const CourseExercise = (props: IProps) => {
           onDelete={onDelete}
         />
       </Modal>
-<<<<<<< HEAD
       {createNewExercise === false &&
       <>
+        <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
+          Danh sách bài tập
+        </Text>
         {listExercises && listExercises.length === 0 && (
           <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
             <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
@@ -249,11 +237,8 @@ const CourseExercise = (props: IProps) => {
           <CourseCreateExercise {...props} createExerState={setCreateNewExercise} setListExercises={setListExercises}/>
         </>
       }
-=======
 
-      <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
-        Danh sách bài tập
-      </Text>
+{/*       
       {getCourseStatus(props.course) !== CourseStatus.Closed && (
         <Container my={10} style={{ display: "flex", justifyContent: "center" }}>
           <Button variant="light">Tạo bài tập mới</Button>
@@ -374,7 +359,7 @@ const CourseExercise = (props: IProps) => {
             )}
           </React.Fragment>
         ))
-      )}
+      )} */}
 
       <Space h={20} />
       <Container style={{
@@ -389,7 +374,6 @@ const CourseExercise = (props: IProps) => {
         >Xem thêm</Button>}
       </Container>
       <Space h={20} />
->>>>>>> master
     </>
   );
 }

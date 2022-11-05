@@ -222,25 +222,19 @@ const TeacherCourseDetailScreen = (props: IProps) => {
               />
             </Tabs.Panel>
 
-<<<<<<< HEAD
-            <Tabs.Panel value="exercise" pt="xs">
-              <CourseExercise exercises={props.course?.exercises} courseId={props.course?.id}/>
-            </Tabs.Panel>
+            {/* <Tabs.Panel value="exercise" pt="xs">
+              <CourseExercise courseSlug={course?.slug} exercises={props.course?.exercises} courseId={props.course?.id} course={props.course}/>
+            </Tabs.Panel> */}
 
-            <Tabs.Panel value="document" pt="xs">
-              <CourseDocument documents={props.course?.documents} courseSlug={props.course?.slug} />
-            </Tabs.Panel>
-
-            <Tabs.Panel value="rating" pt="xs">
-              <CourseRating maskedComments={props.course?.maskedComments} />
-            </Tabs.Panel>
-=======
+           
             {course?.teacher.worker.user.id == authState.userId && (
               <>
                 <Tabs.Panel value="exercise" pt="xs">
                   <CourseExercise
+                    exercises={props.course?.exercises}
                     courseSlug={course?.slug}
                     course={course}
+                    courseId={props.course?.id}
                   />
                 </Tabs.Panel>
                 <Tabs.Panel value="document" pt="xs">
@@ -256,7 +250,6 @@ const TeacherCourseDetailScreen = (props: IProps) => {
                 )}
               </>
             )}
->>>>>>> master
           </Tabs>
         </Container>
       )}
