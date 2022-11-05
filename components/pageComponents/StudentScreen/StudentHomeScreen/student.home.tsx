@@ -1,5 +1,6 @@
 import {
   Box,
+  Container,
   MediaQuery,
   Popover,
   Table,
@@ -86,19 +87,16 @@ const StudentHomeScreen = (props: any) => {
           let day = date.getDate() + '';
           if (day.length < 2)
             day = '0' + day
-          const key =getKeyFromDate(date);
+          const key = getKeyFromDate(date);
           let dateBackgroundColor = "white";
           let textColor = null;
           let dropdownInfo = <></>;
           // TODO: handle studysession is cancelled
           if(dayInTimetable.has(key)){
             for(const data of dayInTimetable.get(key)){
-              if(data.studySession.cancelled === false){
-                dateBackgroundColor = "green";
-                textColor = "white";
-                break;
-              }
-              // dateBackgroundColor = "red";
+              console.log("***********************")
+              dateBackgroundColor = "green";
+              textColor = "white";
             }
             dropdownInfo = dayInTimetable.get(key).map(data => {
               const shifts = data.studySession.shifts;
@@ -118,15 +116,15 @@ const StudentHomeScreen = (props: any) => {
             );
           }
           return (
-            <div>
-              <Popover position="bottom" withArrow shadow="md">
+            <Box>
+              <Popover width={"300"} position="bottom" withArrow shadow="md">
                 <Popover.Target>
                   <div>
                     <span style={{backgroundColor: dateBackgroundColor, padding: "10px", width: "70px", height: "70px", color: textColor ,borderRadius: "50%"}}>{day}</span>  
                   </div>
                 </Popover.Target>
                 <Popover.Dropdown>
-                  <Table>
+                  <Table withBorder withColumnBorders>
                     <thead>
                       <tr>
                         <th>Tên khóa học</th>
@@ -138,7 +136,7 @@ const StudentHomeScreen = (props: any) => {
                   </Table>
                 </Popover.Dropdown>
               </Popover>
-            </div>
+            </Box>
           );
         }}
       />
