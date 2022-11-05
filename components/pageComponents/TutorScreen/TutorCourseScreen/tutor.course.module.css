@@ -1,0 +1,128 @@
+.tutorCoursePage {
+  margin: 3.6rem 5rem 5.6rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.tutorCoursePage .title {
+  color: #444;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 2.4rem;
+  width: 100%;
+  text-align: center;
+}
+
+.tutorCoursePage .courseList {
+  flex-grow: 1;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.loadingContainer {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.errorContainer > p {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #4f4f4f;
+}
+
+.emptyResultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.emptyResultContainer > p {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #4f4f4f;
+}
+
+.courseDateBasedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.courseDateBasedSection .date {
+  color: #444;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.courseDateBasedSection .courseContainer {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.courseCard .courseInfo {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.courseCard .courseInfo .courseName {
+  color: #444;
+  font-size: 1.6rem;
+  flex-grow: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.courseCard:hover .courseInfo .courseName {
+  color: #228BE6;
+}
+
+.pagination {
+  margin: auto;
+}
+
+.pagination * {
+  color: #444;
+}
+
+@media screen and (max-width: 1024px) {
+  .tutorCoursePage {
+    margin: 2rem;
+  }
+
+  .courseDateBasedSection .courseContainer {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .courseDateBasedSection .courseContainer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

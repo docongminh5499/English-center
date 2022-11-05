@@ -170,9 +170,12 @@ const StudySessionDetailScreen = (props: IProps) => {
           <Space h={30} />
           <Grid>
             <Grid.Col span={isLargetTablet ? (isSmallTablet ? 12 : 6) : 3}>
-              <Group position={isSmallTablet ? "apart" : "left"}>
+              <Group position={isSmallTablet ? "apart" : "left"} align="flex-start">
                 <Text color="#444444" mr={5}>Trợ giảng:</Text>
-                <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "Không có thông tin"}</Text>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
+                  <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "Không có thông tin"}</Text>
+                  <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {infoStudySession?.tutor.worker.user.id}</Text>
+                </div>
               </Group>
             </Grid.Col>
             <Grid.Col span={isLargetTablet ? (isSmallTablet ? 12 : 6) : 3}>

@@ -69,6 +69,9 @@ const ModifyStudySessionModal = (props: IProps) => {
   const [isOpenTeacherForm, setIsOpenTeacherForm] = useState(false);
   const [isOpenTutorForm, setIsOpenTutorForm] = useState(false);
   const [isOpenClassroomForm, setIsOpenClassroomForm] = useState(false);
+  const [freeStudentPercentage, setFreeStudentPercentage] = useState(-1);
+  const [acceptedPercentage, setAcceptedPercentage] = useState(0);
+  const [freeStudentError, setFreeStudentError] = useState("");
 
   const getShiftByDate = useCallback(async (date: Date) => {
     try {
@@ -98,21 +101,43 @@ const ModifyStudySessionModal = (props: IProps) => {
 
 
 
+  const onGetAvailableStudentCount = useCallback(
+    async (date: Date, studySessionId: number, courseSlug: string, shiftIds: number[]) => {
+      try {
+        const responses = await API.post(Url.employees.getAvailableStudentCount, {
+          token: authState.token,
+          date: date,
+          studySessionId: studySessionId,
+          courseSlug: courseSlug,
+          shiftIds: shiftIds,
+        });
+        setFreeStudentPercentage(Math.round(responses.free / responses.total * 1000) / 10);
+        setAcceptedPercentage(responses.acceptedPercent);
+      } catch (error) {
+      }
+    }, [authState.token]);
+
+
+
   const onSendRequest = useCallback((data: any) => {
     const shiftLabel = shiftLabels.find(label => label.value === data.shiftLabelValue);
     if (shiftLabel === undefined)
       return modifyStudySessionForm.setFieldError("shiftLabelValue", "Vui lòng chọn ca học");
+    if (freeStudentPercentage < acceptedPercentage)
+      return setFreeStudentError(`Vui lòng chọn giờ học có hơn ${acceptedPercentage}% học sinh có thể tham gia.`)
     const shifts = shiftLabel.shifts;
-    // const endTime = new Date(shifts[shifts.length - 1].endTime);
-    // const current = new Date
-    // endTime.setFullYear(data.date.getFullYear());
-    // endTime.setMonth(data.date.getMonth());
-    // endTime.setDate(data.date.getDate());
-    // if (endTime.getTime() <= current.getTime())
-    //   return modifyStudySessionForm.setFieldError("shiftLabelValue", "Ngày giờ của buổi học đã quá hạn, vui lòng chọn lại");
+    if (props.studySession?.course.openingDate) {
+      const openingDate = new Date(props.studySession.course.openingDate);
+      openingDate.setHours(0);
+      openingDate.setMinutes(0);
+      openingDate.setSeconds(0);
+      openingDate.setMilliseconds(0);
+      if (openingDate.getTime() > data.date.getTime())
+        return modifyStudySessionForm.setFieldError("date", "Ngày diễn ra buổi học trước ngày khai giảng, vui lòng chọn lại");
+    }
     data.shiftIds = shifts.map(shift => shift.id);
     props.onSendRequest(data);
-  }, [props.onSendRequest, shiftLabels, modifyStudySessionForm]);
+  }, [props.onSendRequest, shiftLabels, modifyStudySessionForm, freeStudentPercentage, acceptedPercentage, props.studySession]);
 
 
   const onChooseTeacher = useCallback((teacher: UserTeacher) => {
@@ -170,6 +195,17 @@ const ModifyStudySessionModal = (props: IProps) => {
       modifyStudySessionForm.setFieldValue("classroom", null as any);
     }
     firstRequest && modifyStudySessionForm.values.shiftLabelValue !== null && setFirstRequest(false);
+    if (modifyStudySessionForm.values.shiftLabelValue !== null) {
+      const shiftLabel = shiftLabels.find(label =>
+        label.value === modifyStudySessionForm.values.shiftLabelValue);
+      const shifts = shiftLabel?.shifts || [];
+      const date = modifyStudySessionForm.values.date;
+      const studySessionId = props.studySession?.id || -1;
+      const courseSlug = props.studySession?.course.slug || "";
+      const shiftIds = shifts.map(shift => shift.id);
+      onGetAvailableStudentCount(date, studySessionId, courseSlug, shiftIds);
+    } else setFreeStudentPercentage(-1);
+    setFreeStudentError("");
   }, [modifyStudySessionForm.values.shiftLabelValue])
 
 
@@ -204,21 +240,57 @@ const ModifyStudySessionModal = (props: IProps) => {
           withAsterisk
           {...modifyStudySessionForm.getInputProps('name')}
         />
-        <DatePicker
-          withAsterisk
-          placeholder="Ngày diễn ra"
-          label="Ngày diễn ra"
-          locale="vi"
-          {...modifyStudySessionForm.getInputProps('date')}
-        />
-        <Select
-          withAsterisk
-          label="Chọn ca học"
-          placeholder="Ca học"
-          data={shiftLabels}
-          nothingFound="Vui lòng chọn ngày diễn ra buổi học trước"
-          {...modifyStudySessionForm.getInputProps('shiftLabelValue')}
-        />
+        <Group grow>
+          <Container p={0}>
+            <DatePicker
+              withAsterisk
+              placeholder="Ngày diễn ra"
+              label="Ngày diễn ra"
+              locale="vi"
+              minDate={props.studySession ? new Date(props.studySession.course.openingDate) : undefined}
+              {...modifyStudySessionForm.getInputProps('date')}
+            />
+            <Select
+              withAsterisk
+              label="Chọn ca học"
+              placeholder="Ca học"
+              data={shiftLabels}
+              nothingFound="Vui lòng chọn ngày diễn ra buổi học trước"
+              {...modifyStudySessionForm.getInputProps('shiftLabelValue')}
+            />
+          </Container>
+          <Container p={0} style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%"
+          }}>
+            <Text align="center" color="#444" style={{ fontSize: "1.1rem" }}>
+              Số lượng học viên có thể tham gia giờ học
+            </Text>
+            {freeStudentPercentage < 0 ? (
+              <Text
+                align="center"
+                weight={600}
+                style={{ fontSize: "2.6rem" }}
+                color="#444">
+                ____
+              </Text>
+            ) : (
+              <Text
+                align="center"
+                weight={600}
+                style={{ fontSize: "2.6rem" }}
+                color={freeStudentPercentage >= acceptedPercentage ? "green" : "red"}>
+                {freeStudentPercentage}%
+              </Text>
+            )}
+            {freeStudentError.length > 0 && (
+              <Text color="red" align="center" style={{ fontSize: "1.1rem" }}>{freeStudentError}</Text>
+            )}
+          </Container>
+        </Group>
 
         <Container size="xl" style={{ width: "100%" }} p={0}>
           <Text weight={600} style={{ fontSize: "14px" }}>
@@ -364,7 +436,7 @@ const ModifyStudySessionModal = (props: IProps) => {
         <Space h={20} />
         <Button type="submit" loading={props.loading}>Lưu thông tin</Button>
       </form>
-    </Container>
+    </Container >
   );
 }
 

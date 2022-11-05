@@ -107,7 +107,22 @@ const TeacherCourseDetailScreen = (props: IProps) => {
           </Text>
           <Space h={14} />
           <Grid>
-            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4}>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pb={!isTablet ? 8 : 0}>
+              <Text color="#444">
+                <Text weight={600} component="span">Giáo viên: </Text>
+                {course?.teacher.worker.user.fullName}
+              </Text>
+            </Grid.Col>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pt={!isTablet ? 8 : 4}>
+              <Text color="#444">
+                <Text weight={600} component="span">MSGV: </Text>
+                {course?.teacher.worker.user.id}
+              </Text>
+            </Grid.Col>
+          </Grid>
+          <Space h={4} />
+          <Grid>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pb={!isTablet ? 8 : 0} pt={!isTablet ? 8 : 4}>
               <Text color="#444">
                 <Text weight={600} component="span">Ngày khai giảng: </Text>
                 {moment(course?.openingDate).utcOffset(TimeZoneOffset).format("DD/MM/YYYY")}
@@ -118,7 +133,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
                 {moment(course?.expectedClosingDate).utcOffset(TimeZoneOffset).format("DD/MM/YYYY")}
               </Text>
             </Grid.Col>
-            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4}>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pt={!isTablet ? 8 : 4}>
               <Text color="#444">
                 <Text weight={600} component="span">Trạng thái: </Text>
 
@@ -149,7 +164,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
               </Text>
             </Grid.Col>
             {course?.teacher.worker.user.id.toString() == authState.userId &&
-              course?.closingDate === null &&
+              getCourseStatus(course) !== CourseStatus.Closed &&
               moment().diff(moment(course?.expectedClosingDate).utcOffset(TimeZoneOffset)) >= 0 && (
                 <Grid.Col span={isLargeTablet ? 12 : 4}>
                   <Container style={{

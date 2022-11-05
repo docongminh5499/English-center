@@ -1,9 +1,11 @@
-import { Button, Card, Checkbox, Container, Grid, Input, SimpleGrid, Space, Image, Text, Badge, Pagination } from "@mantine/core";
+import { Button, Card, Checkbox, Container, Grid, Input, SimpleGrid, Space, Image, Text, Badge, Pagination, ThemeIcon, Modal } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
+import { IconTrash } from "@tabler/icons";
 import moment from "moment";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { CourseStatus, EmployeeConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
@@ -12,6 +14,7 @@ import { Course } from "../../../../models/course.model";
 import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
+import RemoveCourseModal from "../Modal/modal";
 import styles from './employee.home.module.css';
 
 interface IProps {
@@ -35,12 +38,13 @@ const EmployeeHomeScreen = (props: IProps) => {
   }, []);
 
 
+  const [courses, setCourses] = useState(props.courses);
   const [error, setError] = useState(props.error || false);
   const [loading, setLoading] = useState(false);
   const [maxPage, setMaxPage] = useState(Math.ceil((
     props.pageable?.total || 1) / (props.pageable?.limit || EmployeeConstants.limitCourse)));
   const [currentPage, setCurrentPage] = useState(1);
-  const [course, setCourse] = useState<any>(formatCourse(props.courses));
+  const [course, setCourse] = useState<any>(formatCourse(courses));
   const [authState] = useAuth();
   const isSmallerThan768 = useMediaQuery('(max-width: 768px)');
 
@@ -50,6 +54,34 @@ const EmployeeHomeScreen = (props: IProps) => {
   const [open, setOpen] = useInputState(false);
   const [longTerm, setLongTerm] = useInputState(false);
   const [shortTerm, setShortTerm] = useInputState(false);
+  // Delete modal
+  const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
+  const [isOpenRemoveCourseModal, setIsOpenRemoveCourseModal] = useState(false);
+  const [isOnSendRemoveCourseRequest, setIsOnSendRemoveCourseRequest] = useState(false);
+
+
+  const onRemoveCourse = useCallback(async () => {
+    try {
+      setIsOnSendRemoveCourseRequest(true);
+      const responses: any = await API.post(Url.employees.removeCourse, {
+        token: authState.token,
+        courseSlug: currentCourse?.slug,
+      });
+      if (responses == true) {
+        toast.success("Xóa khóa học thành công");
+        const updatedCourses = courses?.filter(c => c.id !== currentCourse?.id);
+        const course = formatCourse(updatedCourses);
+        setCourse(course);
+        setCourses(updatedCourses);
+      } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+      setIsOnSendRemoveCourseRequest(false);
+      setIsOpenRemoveCourseModal(false);
+    } catch (error) {
+      setIsOnSendRemoveCourseRequest(false);
+      setIsOpenRemoveCourseModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, currentCourse?.slug, formatCourse, courses, currentCourse?.id]);
 
 
   const getCourse = useCallback(async (limit: number, skip: number,
@@ -59,6 +91,7 @@ const EmployeeHomeScreen = (props: IProps) => {
       limit, skip, name, closed, open, longTerm, shortTerm
     });
     const result = formatCourse(responses.courses);
+    setCourses(responses.courses);
     setCourse(result);
     setMaxPage(Math.ceil(responses.total / responses.limit));
   }, []);
@@ -92,6 +125,24 @@ const EmployeeHomeScreen = (props: IProps) => {
         <title>Trang chủ</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Modal
+        opened={isOpenRemoveCourseModal}
+        onClose={() => setIsOpenRemoveCourseModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <RemoveCourseModal
+          loading={isOnSendRemoveCourseRequest}
+          title="Xóa khóa học"
+          message={`Bạn có chắc muốn xóa khóa học "${currentCourse?.name}"?`}
+          buttonLabel="Xác nhận xóa"
+          colorButton="red"
+          callBack={onRemoveCourse}
+        />
+      </Modal>
+
       <div className={styles.employeeHomePage}>
         <p className={styles.title}>Danh sách khóa học</p>
         <Space h="md" />
@@ -216,6 +267,20 @@ const EmployeeHomeScreen = (props: IProps) => {
                               height={180}
                               alt="image-course"
                             />
+                            <Container p={0} style={{
+                              position: "absolute",
+                              top: 10,
+                              right: 10,
+                            }}>
+                              <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setCurrentCourse(courseInfo);
+                                  setIsOpenRemoveCourseModal(true);
+                                }}>
+                                <IconTrash size={20} />
+                              </ThemeIcon>
+                            </Container>
                           </Card.Section>
                           <div className={styles.courseInfo}>
                             <Text weight={600} align="center" className={styles.courseName} lineClamp={2}>

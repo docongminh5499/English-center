@@ -1,4 +1,4 @@
-import { Container, FileInput, Image, Loader, Space, Textarea, TextInput, Text, Select, Title, Modal } from "@mantine/core";
+import { Container, FileInput, Image, Loader, Space, Textarea, TextInput, Text, Select, Title, Modal, MultiSelect } from "@mantine/core";
 import Head from "next/head";
 import Button from "../../../commons/Button";
 import * as yup from "yup";
@@ -6,7 +6,7 @@ import { useListState, useMediaQuery } from "@mantine/hooks";
 import { useForm, yupResolver } from "@mantine/form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getImageUrl } from "../../../../helpers/image.helper";
-import { CourseType, Url } from "../../../../helpers/constants";
+import { CourseType, CurriculumLevel, TagsType, Url } from "../../../../helpers/constants";
 import { LectureList } from "./LectureList";
 import SaveCurriculumModal from "../Modal/save.modal";
 import { toast } from "react-toastify";
@@ -19,6 +19,7 @@ import DeleteModal from "../Modal/delete.modal";
 import ChangeModifiedLectureModal from "../Modal/changeModifiedLecture.modal";
 import API from "../../../../helpers/api";
 import { useAuth } from "../../../../stores/Auth";
+import Tag from "../../../../models/tag.model";
 
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tiêu đề").max(255, "Tiêu đề có độ dài quá lớn, tối đa 255 ký tự"),
@@ -27,12 +28,22 @@ const schema = yup.object().shape({
     .required("Vui lòng chọn loại chương trình")
     .oneOf([CourseType.LONG_TERM, CourseType.SHORT_TERM], "Vui lòng chọn loại chương trình"),
   lectures: yup.array().required("Vui lòng thêm bài học").min(1, "Vui lòng thêm bài học"),
-  image: yup.mixed().required("Vui lòng chọn hình ảnh minh họa")
+  image: yup.mixed().required("Vui lòng chọn hình ảnh minh họa"),
+  shiftsPerSession: yup.number().typeError("Vui lòng nhập số ca học").required("Vui lòng nhập số ca học").integer("Vui lòng nhập số ca học hợp lệ").positive("Vui lòng nhập số ca học hợp lệ"),
+  level: yup.string()
+    .required("Vui lòng chọn trình độ")
+    .oneOf([CurriculumLevel.Advance, CurriculumLevel.Beginer, CurriculumLevel.Intermediate], "Vui lòng chọn trình độ"),
+  tags: yup.array().required("Vui lòng thêm thể loại").min(1, "Vui lòng thêm thể loại"),
 });
 
 
+interface IProps {
+  tags: Tag[];
+}
 
-const TeacherCurriculumAddScreen = () => {
+
+
+const TeacherCurriculumAddScreen = (props: IProps) => {
   const isMobile = useMediaQuery('(max-width: 480px)');
   const saveLectureFormRef = useRef<HTMLButtonElement>() as React.MutableRefObject<HTMLButtonElement>;
   const avatarInputRef = useRef<HTMLInputElement>() as React.MutableRefObject<HTMLInputElement>;
@@ -51,6 +62,7 @@ const TeacherCurriculumAddScreen = () => {
   const [isOpenChangeModifiedModal, setIsOpenChangeModifiedModal] = useState(false);
   const [isOpenHaveNotSaveLectureModal, setIsOpenHaveNotSaveLectureModal] = useState(false);
   const [currentRemovedLecture, setCurrentRemovedLecture] = useState<Lecture | null>();
+  const [tags, setTags] = useState(props.tags);
 
 
 
@@ -60,7 +72,10 @@ const TeacherCurriculumAddScreen = () => {
       desc: "",
       type: "",
       lectures: lectures,
-      image: null
+      image: null,
+      shiftsPerSession: "",
+      level: "",
+      tags: [] as string[],
     },
     validate: yupResolver(schema),
   });
@@ -75,6 +90,9 @@ const TeacherCurriculumAddScreen = () => {
         desc: data.desc,
         type: data.type,
         lectures: data.lectures,
+        shiftsPerSession: data.shiftsPerSession,
+        level: data.level,
+        tags: data.tags,
       };
       const formData = new FormData();
       formData.append("curriculum", JSON.stringify(updatedCurriculum));
@@ -341,6 +359,49 @@ const TeacherCurriculumAddScreen = () => {
               { value: CourseType.LONG_TERM, label: 'Dài hạn' },
             ]}
             {...createCurriculumInfoForm.getInputProps('type')}
+          />
+
+          <Space h={10} />
+
+          <Select
+            style={{ flex: 1 }}
+            withAsterisk
+            placeholder="Trình độ"
+            label="Trình độ"
+            data={[
+              { value: CurriculumLevel.Beginer, label: 'Sơ cấp' },
+              { value: CurriculumLevel.Intermediate, label: 'Trung cấp' },
+              { value: CurriculumLevel.Advance, label: 'Cao cấp' },
+            ]}
+            {...createCurriculumInfoForm.getInputProps('level')}
+          />
+
+          <Space h={10} />
+
+          <TextInput
+            style={{ flex: 1 }}
+            placeholder="Số ca học mỗi buổi học"
+            label="Số ca học mỗi buổi học"
+            withAsterisk
+            {...createCurriculumInfoForm.getInputProps("shiftsPerSession")}
+          />
+
+          <Space h={10} />
+
+          <MultiSelect
+            data={tags.map(tag => tag.name)}
+            label="Thể loại"
+            placeholder="Thể loại"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Thêm "${query}"`}
+            onCreate={(query) => {
+              const item = { name: query, type: TagsType.Curriculum };
+              setTags((current) => [...current, item]);
+              return query;
+            }}
+            nothingFound="Không tìm thấy kết quả"
+            {...createCurriculumInfoForm.getInputProps('tags')}
           />
 
           <Space h={10} />

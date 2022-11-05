@@ -22,7 +22,6 @@ export enum CourseType {
 }
 
 export enum StudySessionState {
-  Cancel = "Cancel",
   Ready = "Ready",
   Start = "Start",
   Finish = "Finish",
@@ -101,6 +100,13 @@ export const StudentConstants = {
   limitCourse: 12
 }
 
+export const TutorConstants = {
+  limitCourse: 12,
+  limitSchedule: 12,
+  limitStudySession: 12,
+  limitStudent: 12,
+}
+
 export const ChatConstants = {
   limitMessage: 10
 }
@@ -141,6 +147,17 @@ export const Url = {
     modifyCurriculum: "/api/teachers/curriculum/modify-curriculum",
     createCurriculum: "/api/teachers/curriculum/create-curriculum",
     deleteCurriculum: "/api/teachers/curriculum/delete-curriculum/",
+    getComments: "/api/teachers/courses/get-comments",
+    getStudySessions: "/api/teachers/courses/get-study-sessions",
+    getStudySessionDetail: "/api/teachers/courses/get-study-session-detail",
+    modifyStudySessionDetail: "/api/teachers/courses/modify-study-session-detail",
+    getPreferredCurriculums: "/api/teachers/curriculum/get-prefered-curriculums",
+    checkPreferredCurriculums: "/api/teachers/curriculum/check-prefered-curriculums",
+    addPreferredCurriculums: "/api/teachers/curriculum/add-prefered-curriculums",
+    removePreferredCurriculums: "/api/teachers/curriculum/remove-prefered-curriculums",
+    getSchedules: "/api/teachers/schedule",
+    getEmployeeByBranch: "/api/teachers/courses/get-employee-by-branch",
+    getCurriculumTags: "/api/teachers/curriculum/get-curriculum-tags",
     //Hoc
     createExercise: "/api/teachers/exercise/create-exercise",
     addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",
@@ -168,15 +185,31 @@ export const Url = {
     getCourse: "/api/employees/courses/get-course",
     getCourseDetail: "/api/employees/courses/get-course/",
     reopenCourse: "/api/employees/courses/reopen-course",
+    closeCourse: "/api/employees/courses/close-course",
     getStudySessions: "/api/employees/courses/get-study-sessions",
     getShifts: "/api/employees/courses/get-shifts",
     getAvailableTeachersInDate: "/api/employees/courses/get-available-teachers-in-date",
     getAvailableTutorsInDate: "/api/employees/courses/get-available-tutors-in-date",
     getAvailableClassroomInDate: "/api/employees/courses/get-available-classrooms-in-date",
+    addStudySession: "/api/employees/courses/add-study-session",
     updateStudySession: "/api/employees/courses/update-study-session",
-    getAllExercises: "/api/students/exercise/get-all-exercises/",
-    submitExercise: "/api/students/exercise/submit-exercise/",
-    getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
+    removeStudySession: "/api/employees/courses/remove-study-session",
+    getAvailableStudentCount: "/api/employees/courses/get-available-student-count",
+    removeCourse: "/api/employees/courses/remove-course",
+  },
+  tutors: {
+    getCourse: "/api/tutors/courses/get-course",
+    getAllShifts: "/api/tutors/personal/get-all-shifts",
+    getFreeShifts: "/api/tutors/personal/get-free-shifts",
+    updateFreeShifts: "/api/tutors/personal/update-free-shifts",
+    getPersonalInformation: "/api/tutors/personal/get-personal-information",
+    modifyPersonalInformation: "/api/tutors/personal/modify-personal-information",
+    getSchedules: "/api/tutors/schedule",
+    getCourseDetail: "/api/tutors/courses/get-course/",
+    getStudents: "/api/tutors/courses/get-students",
+    getStudySessions: "/api/tutors/courses/get-study-sessions",
+    getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
+    getEmployeeByBranch: "/api/tutors/courses/get-employee-by-branch",
   }
 };
 

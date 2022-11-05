@@ -13,7 +13,6 @@ const EmployeeHomePage: CustomNextPage = (props) => {
 };
 
 EmployeeHomePage.allowUsers = [
-    UserRole.ADMIN,
     UserRole.EMPLOYEE,
 ];
 export default EmployeeHomePage;

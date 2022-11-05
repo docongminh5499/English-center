@@ -130,7 +130,7 @@ const CourseStudent = (props: IProps) => {
           Sĩ số: {total}
         </Text>
 
-        {props.courseId == authState.userId && (
+        {props.courseTeacherId == authState.userId && (
           <Container style={{ display: "flex", justifyContent: "center", alignItems: "center" }} mt={10}>
             <Button
               color="green" variant="light"

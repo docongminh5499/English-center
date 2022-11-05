@@ -11,7 +11,6 @@ const CurriculumListPage: CustomNextPage = (props) => {
 }
 
 CurriculumListPage.allowUsers = [
-    UserRole.ADMIN,
     UserRole.TEACHER,
 ];
 export default CurriculumListPage;

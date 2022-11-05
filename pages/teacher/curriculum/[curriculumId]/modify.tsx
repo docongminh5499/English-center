@@ -7,11 +7,10 @@ import { CookieParser } from "../../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../../interfaces/page.interface";
 
 const CurriculumModifyPage: CustomNextPage = (props) => {
-    return <TeacherCurriculumModifyScreen curriculum={null} {...props} />
+    return <TeacherCurriculumModifyScreen tags={[]} curriculum={null} {...props} />
 }
 
 CurriculumModifyPage.allowUsers = [
-    UserRole.ADMIN,
     UserRole.TEACHER,
 ];
 export default CurriculumModifyPage;
@@ -24,9 +23,12 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
     const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
 
     try {
-        const responses = await API.get(Url.teachers.getCurriculum + context.params?.curriculumId, { token: user.token });
-        return { props: { userRole: user.role || null, curriculum: responses } };
+        const [curriculum, tags] = await Promise.all([
+            API.get(Url.teachers.getCurriculum + context.params?.curriculumId, { token: user.token }),
+            API.get(Url.teachers.getCurriculumTags, { token: user.token }),
+        ])
+        return { props: { userRole: user.role || null, curriculum: curriculum, tags: tags } };
     } catch (error: any) {
-        return { props: { userRole: user.role || null, curriculum: null } }
+        return { props: { userRole: user.role || null, curriculum: null, tags: [] } }
     };
 });

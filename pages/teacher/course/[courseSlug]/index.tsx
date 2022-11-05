@@ -11,9 +11,7 @@ const CourseDetail: CustomNextPage = (props) => {
 }
 
 CourseDetail.allowUsers = [
-    UserRole.ADMIN,
     UserRole.TEACHER,
-    UserRole.TUTOR,
 ];
 export default CourseDetail;
 

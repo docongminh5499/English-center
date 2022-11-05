@@ -200,8 +200,12 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
                     <Container
                       px={isMobile ? 0 : 10}
                       size="xl"
-                      style={{ color: "#444", textAlign: "justify", width: "100%" }}
-                      dangerouslySetInnerHTML={{ __html: props.curriculum.lectures[active].detail }} />
+                      style={{ color: "#444", textAlign: "justify", width: "100%" }}>
+                      <Text color="#444" weight={600}>Mô tả ngắn: </Text>
+                      <Container p={0} dangerouslySetInnerHTML={{ __html: props.curriculum.lectures[active].desc || "" }} />
+                      <Text color="#444" weight={600} mt={20}>Chi tiết bài học: </Text>
+                      <Container p={0} dangerouslySetInnerHTML={{ __html: props.curriculum.lectures[active].detail }} />
+                    </Container>
                   )}
                 </Container>
               </Container>
