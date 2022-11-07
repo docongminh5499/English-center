@@ -27,6 +27,7 @@ const startHourLastShift = 20;
 
 
 interface IProps {
+  maximumStudentNumber: number;
   branchId: number;
   numberShiftsPerSession: number,
   teacherId: number,
@@ -167,6 +168,7 @@ const ShiftForm = (props: IProps) => {
           beginingDate={props.beginingDate}
           shifts={chooseShifts}
           onSubmit={onSubmitModal}
+          maximumStudentNumber={props.maximumStudentNumber}
         />
       </Modal>
 

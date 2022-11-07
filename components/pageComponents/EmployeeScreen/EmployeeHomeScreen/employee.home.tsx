@@ -163,6 +163,12 @@ const EmployeeHomeScreen = (props: IProps) => {
       <div className={styles.employeeHomePage}>
         <p className={styles.title}>Danh sách khóa học</p>
         <Space h="md" />
+        <Container p={0}>
+          <Button variant="light" color="green" onClick={() => router.push(router.asPath + "/create")}>
+            Tạo khóa học mới
+          </Button>
+        </Container>
+        <Space h="xl" />
         <div className={styles.filterComponent}>
           <Grid>
             <Grid.Col span={isSmallerThan768 ? 12 : 9}>

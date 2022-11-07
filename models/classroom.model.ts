@@ -6,4 +6,5 @@ export default interface Classroom {
     branch: Branch;
     function: ClassroomFunction;
     capacity: number;
+    version: number;
 }

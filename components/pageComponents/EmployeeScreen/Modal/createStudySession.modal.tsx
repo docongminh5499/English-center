@@ -37,6 +37,7 @@ interface IProps {
   courseSlug?: string;
   branchId?: number;
   openingDate?: Date;
+  maximumStudentNumber?: number;
 }
 
 
@@ -253,7 +254,12 @@ const CreateStudySessionModal = (props: IProps) => {
       </Text>
       <Space h={10} />
       <form
-        onSubmit={createStudySessionForm.onSubmit((values) => onSendRequest(values))}
+        onSubmit={createStudySessionForm.onSubmit((values) => {
+          if (props.maximumStudentNumber && classroom &&
+            props.maximumStudentNumber > classroom.capacity)
+            return createStudySessionForm.setFieldError("classroom", "Sức chứa phòng học không đủ. Vui lòng thay đổi phòng học khác.");
+          onSendRequest(values);
+        })}
         style={{
           width: "100%",
           display: "flex",

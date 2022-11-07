@@ -149,10 +149,12 @@ const CourseSession = (props: IProps) => {
                   </Text>
 
                   <Space h={8} />
-                  <Text color="#444">Phòng học: {item.classroom.name}</Text>
-                  <Text color="dimmed" style={{ fontSize: "1rem" }}>
-                    {item.classroom.branch.name}
-                  </Text>
+                  <Text color="#444">Phòng học: {item.classroom?.name || "Không có thông tin"}</Text>
+                  {item.classroom && (
+                    <Text color="dimmed" style={{ fontSize: "1rem" }}>
+                      {item.classroom.branch.name}
+                    </Text>
+                  )}
                 </Grid.Col>
                 <Grid.Col span={isLargeTablet ? (isMobile ? 12 : 6) : 5}>
                   <Text color="#444">Giáo viên: {item.teacher.worker.user.fullName}</Text>

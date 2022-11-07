@@ -348,9 +348,12 @@ const ModifyStudySessionScreen = (props: IProps) => {
             <Space h={30} />
             <Grid>
               <Grid.Col span={isLargetTablet ? (isSmallTablet ? 12 : 6) : 3}>
-                <Group position={isSmallTablet ? "apart" : "left"}>
+                <Group position={isSmallTablet ? "apart" : "left"} align="flex-start">
                   <Text color="#444444" mr={5}>Trợ giảng:</Text>
-                  <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "Không có thông tin"}</Text>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
+                    <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "Không có thông tin"}</Text>
+                    <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {infoStudySession?.tutor.worker.user.id}</Text>
+                  </div>
                 </Group>
               </Grid.Col>
               <Grid.Col span={isLargetTablet ? (isSmallTablet ? 12 : 6) : 3}>
@@ -395,8 +398,10 @@ const ModifyStudySessionScreen = (props: IProps) => {
                 <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                   <Text color="#444">Phòng học:</Text>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                    <Text color="#444">{infoStudySession?.classroom.name}</Text>
-                    <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
+                    <Text color="#444">{infoStudySession?.classroom?.name || "Không có thông tin"}</Text>
+                    {infoStudySession?.classroom && (
+                      <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
+                    )}
                   </div>
                 </Group>
               </Grid.Col>

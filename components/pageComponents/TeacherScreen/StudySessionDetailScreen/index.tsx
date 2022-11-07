@@ -227,8 +227,10 @@ const StudySessionDetailScreen = (props: IProps) => {
               <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                 <Text color="#444">Phòng học:</Text>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                  <Text color="#444">{infoStudySession?.classroom.name}</Text>
-                  <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
+                  <Text color="#444">{infoStudySession?.classroom?.name || "Không có thông tin"}</Text>
+                  {infoStudySession?.classroom && (
+                    <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
+                  )}
                 </div>
               </Group>
             </Grid.Col>

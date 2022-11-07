@@ -109,6 +109,21 @@ const TeacherCourseDetailScreen = (props: IProps) => {
           <Grid>
             <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pb={!isTablet ? 8 : 0}>
               <Text color="#444">
+                <Text weight={600} component="span">Chi nhánh: </Text>
+                {course?.branch.name}
+              </Text>
+            </Grid.Col>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pt={!isTablet ? 8 : 4}>
+              <Text color="#444">
+                <Text weight={600} component="span">Địa chỉ: </Text>
+                {course?.branch.address}
+              </Text>
+            </Grid.Col>
+          </Grid>
+          <Space h={4} />
+          <Grid>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pb={!isTablet ? 8 : 0}>
+              <Text color="#444">
                 <Text weight={600} component="span">Giáo viên: </Text>
                 {course?.teacher.worker.user.fullName}
               </Text>
@@ -241,7 +256,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
               <CourseExercise courseSlug={course?.slug} exercises={props.course?.exercises} courseId={props.course?.id} course={props.course}/>
             </Tabs.Panel> */}
 
-           
+
             {course?.teacher.worker.user.id == authState.userId && (
               <>
                 <Tabs.Panel value="exercise" pt="xs">

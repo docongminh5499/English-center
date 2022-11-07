@@ -36,6 +36,8 @@ interface IProps {
   studySession?: StudySession;
   shiftsPerSession?: number;
   curriculum?: Curriculum;
+  maximumStudentNumber?: number;
+  branchId?: number;
 }
 
 
@@ -54,10 +56,10 @@ const ModifyStudySessionModal = (props: IProps) => {
       shiftLabelValue: null as number | null,
       tutorId: props.studySession?.tutor.worker.user.id,
       teacherId: props.studySession?.teacher.worker.user.id,
-      classroom: {
+      classroom: props.studySession?.classroom ? {
         name: props.studySession?.classroom.name,
         branchId: props.studySession?.classroom.branch.id,
-      }
+      } : null,
     },
     validate: yupResolver(schema),
   });
@@ -250,7 +252,12 @@ const ModifyStudySessionModal = (props: IProps) => {
       </Text>
       <Space h={10} />
       <form
-        onSubmit={modifyStudySessionForm.onSubmit((values) => onSendRequest(values))}
+        onSubmit={modifyStudySessionForm.onSubmit((values) => {
+          if (props.maximumStudentNumber && classroom &&
+            props.maximumStudentNumber > classroom.capacity)
+            return modifyStudySessionForm.setFieldError("classroom", "Sức chứa phòng học không đủ. Vui lòng thay đổi phòng học khác.");
+          onSendRequest(values)
+        })}
         style={{
           width: "100%",
           display: "flex",
@@ -428,7 +435,7 @@ const ModifyStudySessionModal = (props: IProps) => {
 
         {isOpenTeacherForm && (
           <SearchTeacherFormModifySession
-            branchId={props.studySession?.classroom.branch.id || 0}
+            branchId={props.branchId || 0}
             date={modifyStudySessionForm.values.date}
             shiftIds={(shiftLabels.find(label =>
               label.value === modifyStudySessionForm.values.shiftLabelValue)?.shifts || [])
@@ -441,7 +448,7 @@ const ModifyStudySessionModal = (props: IProps) => {
 
         {isOpenTutorForm && (
           <SearchTutorFormModifySession
-            branchId={props.studySession?.classroom.branch.id || 0}
+            branchId={props.branchId || 0}
             date={modifyStudySessionForm.values.date}
             shiftIds={(shiftLabels.find(label =>
               label.value === modifyStudySessionForm.values.shiftLabelValue)?.shifts || [])
@@ -453,7 +460,7 @@ const ModifyStudySessionModal = (props: IProps) => {
 
         {isOpenClassroomForm && (
           <SearchClassroomFormModifySession
-            branchId={props.studySession?.classroom.branch.id || 0}
+            branchId={props.branchId || 0}
             date={modifyStudySessionForm.values.date}
             shiftIds={(shiftLabels.find(label =>
               label.value === modifyStudySessionForm.values.shiftLabelValue)?.shifts || [])

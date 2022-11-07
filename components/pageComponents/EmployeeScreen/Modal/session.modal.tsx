@@ -25,6 +25,7 @@ interface IProps {
   beginingDate: Date;
   branchId: number;
   onSubmit: (data: any) => void;
+  maximumStudentNumber: number;
 }
 
 const StudySessionModal = (props: IProps) => {
@@ -171,7 +172,12 @@ const StudySessionModal = (props: IProps) => {
       <Container style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
         <Button color="green" onClick={() => {
           createSessionForm.validate();
-          if (createSessionForm.isValid()) props.onSubmit(createSessionForm.values)
+          if (createSessionForm.isValid()) {
+            const classroom = createSessionForm.values.classroom as any;
+            if (classroom.capacity < props.maximumStudentNumber)
+              return createSessionForm.setFieldError("classroom", "Sức chứa phòng học không đủ. Vui lòng thay đổi phòng học khác.");
+            props.onSubmit(createSessionForm.values);
+          }
         }}>Chọn khung giờ</Button>
       </Container>
 
