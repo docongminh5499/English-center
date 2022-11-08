@@ -170,9 +170,12 @@ const CourseCreateExercise = (props: any) => {
               searchable
               clearable
               creatable
-              rightSection={addTagLoading === true ? <Loader size={14}/> : <IconChevronDown size={14} />}
+              rightSection={addTagLoading === true ? <Loader size={14}/> : null}
               getCreateLabel={(query) => `+ Thêm tag: ${query}`}
-              onCreate={query => addTagHandler(query)}
+              onCreate={query => {
+                addTagHandler(query, index)
+                return { value: query, label: query };
+              }}
               {...questionForm.getInputProps(`questions.${index}.tags`)}
             />
           </Grid.Col>

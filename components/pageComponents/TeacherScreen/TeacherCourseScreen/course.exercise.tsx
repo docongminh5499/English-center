@@ -18,6 +18,7 @@ import DeleteExerciseModal from "../Modal/delete.modal";
 import 'dayjs/locale/vi';
 import { IconPlus } from "@tabler/icons";
 import CourseCreateExercise from "./course.create.exercise";
+import CourseExerciseDetail from "./course.exercise.detail";
 
 interface IProps {
   exercises?: Exercise[];
@@ -39,6 +40,9 @@ const CourseExercise = (props: IProps) => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [seeMoreLoading, setSeeMoreLoading] = useState(false);
+  //See detail
+  const [seeExerciseDetail, setSeeExerciseDetail] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise>();
 
 
   const getExercises = useCallback(async (limit: number, skip: number) => {
@@ -128,7 +132,7 @@ const CourseExercise = (props: IProps) => {
           onDelete={onDelete}
         />
       </Modal>
-      {createNewExercise === false &&
+      {createNewExercise === false && seeExerciseDetail === false &&
         <>
           <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
             Danh sách bài tập
@@ -214,7 +218,15 @@ const CourseExercise = (props: IProps) => {
                           display: "flex",
                           alignItems: "center",
                         }}>
-                        <Button compact={isLargeTablet ? false : true} fullWidth variant="light">
+                        <Button 
+                          compact={isLargeTablet ? false : true} 
+                          fullWidth 
+                          variant="light" 
+                          onClick={() => {
+                            setSelectedExercise(item);
+                            setSeeExerciseDetail(true);
+                          }}
+                        >
                           Xem chi tiết
                         </Button>
                       </Grid.Col>
@@ -227,7 +239,15 @@ const CourseExercise = (props: IProps) => {
                           alignItems: "flex-start",
                           gap: "0.5rem"
                         }}>
-                        <Button compact={isLargeTablet ? false : true} fullWidth size="xs" variant="light">
+                        <Button 
+                          compact={isLargeTablet ? false : true} 
+                          fullWidth 
+                          size="xs" 
+                          variant="light" 
+                          onClick={() => {
+                            setSelectedExercise(item);
+                            setSeeExerciseDetail(true);
+                          }}>
                           Xem chi tiết
                         </Button>
                         <Button
@@ -271,6 +291,12 @@ const CourseExercise = (props: IProps) => {
       {createNewExercise === true &&
         <>
           <CourseCreateExercise {...props} createExerState={setCreateNewExercise} setListExercises={setListExercises} />
+        </>
+      }
+
+      {seeExerciseDetail === true &&
+        <>
+          <CourseExerciseDetail {...props} setSeeExerciseDetail={setSeeExerciseDetail} exerciseId={selectedExercise?.id}/>
         </>
       }
     </>

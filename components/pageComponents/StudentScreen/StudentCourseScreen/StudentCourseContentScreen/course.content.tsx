@@ -83,7 +83,7 @@ const StudentCourseContentScreen = (props: any) => {
             <CourseAttendanceTab {...props} />
           </Tabs.Panel>
           <Tabs.Panel value="document">
-            <CourseDocumentTab />
+            <CourseDocumentTab course={course}/>
           </Tabs.Panel>
           <Tabs.Panel value="exercise">
             <CourseExerciseTab course={course}/>

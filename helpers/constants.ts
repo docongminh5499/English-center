@@ -167,6 +167,9 @@ export const Url = {
     createExercise: "/api/teachers/exercise/create-exercise",
     addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",
     getAllQuestionTag: "/api/teachers/exercise/get-all-question-tag",
+    getExerciseById: "/api/teachers/exercise/get-exercise-by-id/",
+    getStdExeResult: "/api/teachers/exercise/get-student-exercise-result/",
+    modifyExercise: "/api/teachers/exercise/modify-exercise",
   },
   students: {
     getTimetable: "/api/students/timetable",
@@ -177,6 +180,7 @@ export const Url = {
     getAllExercises: "/api/students/exercise/get-all-exercises/",
     submitExercise: "/api/students/exercise/submit-exercise/",
     getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
+    getAllDocument: "/api/students/document/get-all-document/",
   },
   employees: {
     getPersonalInformation: "/api/employees/personal/get-personal-information",
