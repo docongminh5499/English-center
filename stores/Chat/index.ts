@@ -6,14 +6,18 @@ import ChatBox from "../../models/chatbox.model";
 export type State = {
     unreadMessageCount: number;
     contacts: Contact[] | undefined,
+    totalContacts: number,
     searchResults: Contact[],
+    totalSearchResults: number,
     currentBox: ChatBox | undefined,
 };
 
 const initialState: State = {
     unreadMessageCount: 0,
     contacts: undefined,
+    totalContacts: 0,
     searchResults: [],
+    totalSearchResults: 0,
     currentBox: undefined,
 };
 

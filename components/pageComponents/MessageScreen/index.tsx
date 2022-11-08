@@ -32,6 +32,11 @@ const MessageScreen = () => {
   const isSmallTablet = useMediaQuery('(max-width: 768px)');
   const viewport = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLDivElement>;
 
+  const [isLoadingFoundContacts, setIsLoadingFoundContacts] = useState(false);
+  const findContactViewport = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLDivElement>;
+  const [isLoadingExistedContacts, setIsLoadingExistedContacts] = useState(false);
+  const getExistedContactViewport = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLDivElement>;
+
   useEffect(() => {
     const getAllContacts = async () => {
       const token = authState.token || "";
@@ -81,6 +86,7 @@ const MessageScreen = () => {
 
 
   const onCloseModal = useCallback(() => {
+    setIsLoadingFoundContacts(false);
     setOpenModal(false);
     setFindName("");
     chatAction.clearSearchResults();
@@ -107,6 +113,8 @@ const MessageScreen = () => {
     try {
       e.preventDefault();
       const token = authState.token || "";
+      setIsLoadingFoundContacts(false);
+      await chatAction.clearSearchResults();
       await chatAction.findContacts(token, findName)
     } catch (err) {
       console.log(err);
@@ -135,7 +143,6 @@ const MessageScreen = () => {
   const onScrollPositionChange = useCallback(async (positions: any) => {
     if (chatState.currentBox === undefined) return;
     if (firstEnterChatBox === true) return;
-
     const verticalThreshold = 50;
     const maxMessageCount = chatState.currentBox?.maxMessageCount || 0;
     const currentMessageCount = chatState.currentBox?.messages?.length || 0;
@@ -152,6 +159,44 @@ const MessageScreen = () => {
       }
     }
   }, [authState.token, chatState.currentBox, loadingMessage, firstEnterChatBox]);
+
+
+
+  const onScrollFindContacts = useCallback(async (positions: any) => {
+    const verticalThreshold = 50;
+    if (!isLoadingFoundContacts &&
+      chatState.totalSearchResults > chatState.searchResults.length &&
+      findContactViewport.current.offsetHeight + findContactViewport.current.scrollTop >= findContactViewport.current.scrollHeight - verticalThreshold) {
+      try {
+        setIsLoadingFoundContacts(true);
+        await chatAction.findContacts(authState.token || "", findName);
+        setIsLoadingFoundContacts(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoadingFoundContacts(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+      }
+    }
+  }, [authState.token, findName, isLoadingFoundContacts, chatState.totalSearchResults, chatState.searchResults.length, findContactViewport.current]);
+
+
+
+  const onScrollGetExistedContacts = useCallback(async (positions: any) => {
+    const verticalThreshold = 50;
+    if (!isLoadingExistedContacts &&
+      chatState.totalContacts > (chatState.contacts || []).length &&
+      getExistedContactViewport.current.offsetHeight + getExistedContactViewport.current.scrollTop >= getExistedContactViewport.current.scrollHeight - verticalThreshold) {
+      try {
+        setIsLoadingExistedContacts(true);
+        await chatAction.getContacts(authState.token || "");
+        setIsLoadingExistedContacts(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoadingExistedContacts(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+      }
+    }
+  }, [authState.token, isLoadingExistedContacts, chatState.totalContacts, chatState.contacts?.length, getExistedContactViewport.current]);
 
 
 
@@ -186,10 +231,14 @@ const MessageScreen = () => {
             />
           </form>
           <Space h={10} />
-          <ScrollArea style={{ height: '300px' }} type={isSmallTablet ? "never" : "scroll"}>
+          <ScrollArea
+            style={{ height: '300px' }}
+            type={isSmallTablet ? "never" : "scroll"}
+            viewportRef={findContactViewport}
+            onScrollPositionChange={onScrollFindContacts}>
             {chatState.searchResults.map((contact, index) => (
               <Container key={index} py={10} px={15} className={styles.contact} onClick={() => {
-                setOpenModal(false);
+                onCloseModal();
                 onStartChatBox(contact.user);
               }}>
                 <Indicator dot inline size={12} offset={3} position="bottom-end" color={contact.user.isActive ? "green" : "red"} withBorder>
@@ -210,6 +259,11 @@ const MessageScreen = () => {
                 </div>
               </Container>
             ))}
+            {isLoadingFoundContacts && (
+              <Container style={{ display: "flex", justifyContent: "center" }} my={20} p={0}>
+                <Loader variant='dots' />
+              </Container>
+            )}
           </ScrollArea>
         </div>
       </Modal>
@@ -398,7 +452,11 @@ const MessageScreen = () => {
             </Container>
           )}
 
-          <ScrollArea style={{ flex: 1 }} type={isSmallTablet ? "never" : "scroll"}>
+          <ScrollArea
+            style={{ flex: 1 }}
+            type={isSmallTablet ? "never" : "scroll"}
+            viewportRef={getExistedContactViewport}
+            onScrollPositionChange={onScrollGetExistedContacts}>
             {chatState.contacts && chatState.contacts.map((contact, index) => (
               <Container
                 className={`${styles.contact} ${contact.user.userId === chatState.currentBox?.user.userId ? styles.active : ""}`}
@@ -440,6 +498,11 @@ const MessageScreen = () => {
                 </Container>
               </Container>
             ))}
+            {isLoadingExistedContacts && (
+              <Container style={{ display: "flex", justifyContent: "center" }} my={20} p={0}>
+                <Loader variant='dots' />
+              </Container>
+            )}
           </ScrollArea>
         </div>
       </div>

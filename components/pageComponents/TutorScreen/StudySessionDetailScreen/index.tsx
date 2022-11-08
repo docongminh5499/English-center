@@ -164,7 +164,14 @@ const StudySessionDetailScreen = (props: IProps) => {
           <Title transform="uppercase" color="#444444" size="2.6rem" mt={20} align="left">
             {infoStudySession?.name || ""}
           </Title>
-          <Text transform="uppercase" weight={600} color="#666666" style={{ fontSize: '1.6rem' }} align="justify">
+          <Text
+            transform="uppercase"
+            weight={600}
+            color="#666666"
+            style={{ fontSize: '1.6rem', cursor: "pointer" }}
+            align="justify"
+            onClick={() => router.push("/tutor/course/" + infoStudySession?.course.slug)}
+          >
             Khóa học: {infoStudySession?.course.name || ""}
           </Text>
           <Space h={30} />
@@ -220,8 +227,10 @@ const StudySessionDetailScreen = (props: IProps) => {
               <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                 <Text color="#444">Phòng học:</Text>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                  <Text color="#444">{infoStudySession?.classroom.name}</Text>
-                  <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
+                  <Text color="#444">{infoStudySession?.classroom?.name || "Không có thông tin"}</Text>
+                  {infoStudySession?.classroom && (
+                    <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
+                  )}
                 </div>
               </Group>
             </Grid.Col>

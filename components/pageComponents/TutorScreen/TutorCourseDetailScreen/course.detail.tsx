@@ -64,6 +64,21 @@ const TutorCourseDetailScreen = (props: IProps) => {
           <Grid>
             <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pb={!isTablet ? 8 : 0}>
               <Text color="#444">
+                <Text weight={600} component="span">Chi nhánh: </Text>
+                {course?.branch.name}
+              </Text>
+            </Grid.Col>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pt={!isTablet ? 8 : 4}>
+              <Text color="#444">
+                <Text weight={600} component="span">Địa chỉ: </Text>
+                {course?.branch.address}
+              </Text>
+            </Grid.Col>
+          </Grid>
+          <Space h={4} />
+          <Grid>
+            <Grid.Col span={isLargeTablet ? (isTablet ? 12 : 6) : 4} pb={!isTablet ? 8 : 0}>
+              <Text color="#444">
                 <Text weight={600} component="span">Giáo viên: </Text>
                 {course?.teacher.worker.user.fullName}
               </Text>

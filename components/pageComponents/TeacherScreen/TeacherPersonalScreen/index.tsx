@@ -144,6 +144,13 @@ const TeacherPersonalScreen = (props: IProps) => {
             <Text weight={600} color="#444" mr={5}>Số điện thoại: </Text>
             <Text color="#444">{props.userTeacher?.worker.branch.phoneNumber}</Text>
           </Group>
+          <Space h={10} />
+          <Group position="apart">
+            <Text weight={600} color="#444" mr={5}>Quản lý: </Text>
+            <Text color="#444">{props.userTeacher?.worker.branch.userEmployee?.worker.user.fullName ?
+              `${props.userTeacher?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userTeacher?.worker.branch.userEmployee.worker.user.id})` :
+              "Không có thông tin"}</Text>
+          </Group>
 
           <Space h={40} />
           <Text color="#444" weight={700} style={{ fontSize: "1.8rem" }}>Kỹ năng chuyên môn</Text>

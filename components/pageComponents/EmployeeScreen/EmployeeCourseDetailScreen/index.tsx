@@ -1,5 +1,5 @@
-import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal, ThemeIcon } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal, ThemeIcon, Pagination, Grid, Input } from "@mantine/core";
+import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { IconPencil, IconSquarePlus, IconTrash } from "@tabler/icons";
 import moment from "moment";
 import Head from "next/head"
@@ -19,6 +19,7 @@ import ModifyStudySessionModal from "../Modal/modifyStudySession.modal";
 import CloseCourseModal from "../Modal/closeCourse.modal";
 import CreateStudySessionModal from "../Modal/createStudySession.modal";
 import RemoveStudySessionModal from "../Modal/modal";
+import styles from "./course.module.css";
 
 
 interface IProps {
@@ -34,10 +35,14 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
 
 
   const [authState] = useAuth();
-  const [listStudySessions, setListStudySessions] = useState<StudySession[]>([]);
-  const [total, setTotal] = useState(0);
-  const [seeMoreLoading, setSeeMoreLoading] = useState(true);
   const [didMount, setDidMount] = useState(false);
+  const [listStudySessions, setListStudySessions] = useState<StudySession[]>([]);
+  const [totalStudySession, setTotalStudySession] = useState(0);
+  const [loadingStudySession, setLoadingStudySession] = useState(true);
+  const [errorStudySession, setErrorStudySession] = useState(false);
+  const [currentPageStudySesion, setCurrentPageStudySession] = useState(1);
+  const [maxPageStudySession, setMaxPageStudySession] = useState(1);
+  const [queryStudySession, setQueryStudySession] = useInputState("");
   const [course, setCourse] = useState(props.course);
   const [isOpenCourseModalOpened, setIsOpenCourseModalOpened] = useState(false);
   const [isCloseCourseModalOpened, setIsCloseCourseModalOpened] = useState(false);
@@ -53,30 +58,58 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const router = useRouter();
 
 
-  const getStudySessions = useCallback(async (limit: number, skip: number) => {
+  const getStudySessions = useCallback(async (limit: number, skip: number, query: string) => {
     return await API.post(Url.employees.getStudySessions, {
       token: authState.token,
       limit: limit,
       skip: skip,
-      courseSlug: course?.slug
+      courseSlug: course?.slug,
+      query: query
     });
   }, [authState.token, course?.slug]);
 
 
 
-
-  const seeMoreStudySession = useCallback(async () => {
+  const queryStudySessions = useCallback(async () => {
     try {
-      setSeeMoreLoading(true);
-      const responses = await getStudySessions(EmployeeConstants.limitStudySession, listStudySessions.length);
-      setTotal(responses.total);
-      setListStudySessions(listStudySessions.concat(responses.studySessions));
-      setSeeMoreLoading(false);
+      setLoadingStudySession(true);
+      setErrorStudySession(false);
+      const responses = await getStudySessions(EmployeeConstants.limitStudySession, 0, queryStudySession);
+      setCurrentPageStudySession(1);
+      setTotalStudySession(responses.total);
+      setMaxPageStudySession(Math.ceil(responses.total / EmployeeConstants.limitStudySession));
+      setListStudySessions(responses.studySessions);
+      setLoadingStudySession(false);
+      setErrorStudySession(false);
     } catch (error) {
-      setSeeMoreLoading(false);
+      setLoadingStudySession(false);
+      setErrorStudySession(true);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
-  }, [EmployeeConstants.limitStudySession, listStudySessions]);
+  }, [queryStudySession]);
+
+
+  const onClickPaginationPageStudySession = useCallback(async (page: number) => {
+    try {
+      if (page < 1) return;
+      setLoadingStudySession(true);
+      setErrorStudySession(false);
+      const responses = await getStudySessions(
+        EmployeeConstants.limitStudySession,
+        (page - 1) * EmployeeConstants.limitStudySession,
+        queryStudySession
+      );
+      setTotalStudySession(responses.total);
+      setMaxPageStudySession(Math.ceil(responses.total / EmployeeConstants.limitStudySession));
+      setListStudySessions(responses.studySessions);
+      setLoadingStudySession(false);
+      setCurrentPageStudySession(page);
+    } catch (err) {
+      setLoadingStudySession(false);
+      setCurrentPageStudySession(page);
+      setErrorStudySession(true);
+    }
+  }, [queryStudySession]);
 
 
 
@@ -138,20 +171,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         version: currentStudySession?.version,
       });
       if (responses !== null) {
-        toast.success("Cập nhật buổi học thành công");
-        const studySessions = listStudySessions.map(studySession => {
-          if (studySession.id == responses.id) return responses;
-          else return studySession;
-        });
-        studySessions.sort((prev, next) => {
-          const prevStudySessionDate = new Date(prev.date);
-          const nextStudySessionDate = new Date(next.date);
-          if (prevStudySessionDate < nextStudySessionDate) return -1;
-          else if (prevStudySessionDate > nextStudySessionDate) return 1;
-          return 0;
-        })
-        setListStudySessions(studySessions);
+        onClickPaginationPageStudySession(currentPageStudySesion);
         setCourse(responses.course);
+        toast.success("Cập nhật buổi học thành công");
       } else toast.error("Cập nhật buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendModifySession(false);
       setIsOpenModifyStudySessionModal(false);
@@ -160,7 +182,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setIsOpenModifyStudySessionModal(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
-  }, [authState.token, currentStudySession?.id, currentStudySession?.version, listStudySessions]);
+  }, [authState.token, currentStudySession?.id, currentStudySession?.version, currentPageStudySesion]);
 
 
 
@@ -178,17 +200,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         courseSlug: props.course?.slug
       });
       if (responses !== null) {
-        toast.success("Thêm buổi học thành công");
-        const studySessions = listStudySessions.concat(responses);
-        studySessions.sort((prev, next) => {
-          const prevStudySessionDate = new Date(prev.date);
-          const nextStudySessionDate = new Date(next.date);
-          if (prevStudySessionDate < nextStudySessionDate) return -1;
-          else if (prevStudySessionDate > nextStudySessionDate) return 1;
-          return 0;
-        })
-        setListStudySessions(studySessions);
+        onClickPaginationPageStudySession(currentPageStudySesion);
         setCourse(responses.course);
+        toast.success("Thêm buổi học thành công");
       } else toast.error("Thêm buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendCreateSession(false);
       setIsOpenCreateStudySessionModal(false);
@@ -197,7 +211,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setIsOpenCreateStudySessionModal(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
-  }, [authState.token, listStudySessions, props.course]);
+  }, [authState.token, listStudySessions, props.course, currentPageStudySesion]);
 
 
 
@@ -209,17 +223,15 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         studySessionId: currentStudySession?.id,
       });
       if (responses == true) {
+        const currentLimit = (currentPageStudySesion - 1) * EmployeeConstants.limitStudySession;
+        const updatedTotal = totalStudySession - 1;
+        const updatedPage = currentLimit < updatedTotal ? currentPageStudySesion : currentPageStudySesion - 1
+        if (updatedPage < 1) {
+          setTotalStudySession(1);
+          setMaxPageStudySession(1);
+          setListStudySessions([]);
+        } else onClickPaginationPageStudySession(updatedPage);
         toast.success("Xóa buổi học thành công");
-        const studySessions = listStudySessions.filter(s => s.id !== currentStudySession?.id);
-        studySessions.sort((prev, next) => {
-          const prevStudySessionDate = new Date(prev.date);
-          const nextStudySessionDate = new Date(next.date);
-          if (prevStudySessionDate < nextStudySessionDate) return -1;
-          else if (prevStudySessionDate > nextStudySessionDate) return 1;
-          return 0;
-        })
-        setListStudySessions(studySessions);
-        setTotal(total - 1);
       } else toast.error("Xóa buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendRemoveSession(false);
       setIsOpenRemoveSessionModal(false);
@@ -228,21 +240,25 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setIsOpenRemoveSessionModal(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
-  }, [authState.token, currentStudySession, total]);
+  }, [authState.token, currentStudySession, currentPageStudySesion, totalStudySession]);
 
 
 
   useEffect(() => {
     const didMountFunc = async () => {
       try {
-        const responses = await getStudySessions(EmployeeConstants.limitStudySession, 0);
-        setTotal(responses.total);
-        setListStudySessions(responses.studySessions);
+        const [responseStudySessions] = await Promise.all([
+          getStudySessions(EmployeeConstants.limitStudySession, 0, queryStudySession),
+        ]);
+        setTotalStudySession(responseStudySessions.total);
+        setMaxPageStudySession(Math.ceil(responseStudySessions.total / EmployeeConstants.limitStudySession));
+        setListStudySessions(responseStudySessions.studySessions);
+        setLoadingStudySession(false);
+        setErrorStudySession(false);
         setDidMount(true);
-        setSeeMoreLoading(false);
       } catch (error) {
-        setDidMount(true);
-        setSeeMoreLoading(false);
+        setLoadingStudySession(false);
+        setErrorStudySession(true);
         toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
@@ -316,6 +332,8 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           studySession={currentStudySession}
           shiftsPerSession={props.course?.curriculum.shiftsPerSession}
           curriculum={props.course?.curriculum}
+          maximumStudentNumber={props.course?.maxNumberOfStudent}
+          branchId={props.course?.branch.id}
         />
       </Modal>
 
@@ -335,9 +353,9 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           courseSlug={props.course?.slug}
           branchId={props.course?.branch.id}
           openingDate={props.course?.openingDate}
+          maximumStudentNumber={props.course?.maxNumberOfStudent}
         />
       </Modal>
-
 
       {!didMount && (
         <Container style={{
@@ -494,84 +512,142 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                 alt="Hình minh họa chương trình dạy"
               />
             </Container>
-            <Container size="xl" style={{ width: "100%" }} p={0}>
-              <Text weight={600} align="center" style={{ fontSize: "1.8rem" }} my={20}>Danh sách buổi học</Text>
-              <ScrollArea style={{ width: "100%" }}>
-                <Table verticalSpacing="xs" highlightOnHover style={{ width: "100%", minWidth: "900px" }}>
-                  <thead>
-                    <tr>
-                      <th>Tên buổi học</th>
-                      <th>Ngày diễn ra</th>
-                      <th>Giờ học</th>
-                      <th>Giáo viên</th>
-                      <th>Trợ giảng</th>
-                      <th>Phòng học</th>
-                      {getCourseStatus(course) !== CourseStatus.Closed && (
-                        <th>
-                          <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
-                            onClick={() => setIsOpenCreateStudySessionModal(true)}>
-                            <IconSquarePlus size={20} />
-                          </ThemeIcon>
-                        </th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {listStudySessions.map((studySession: StudySession, index: number) => (
-                      <tr key={index}>
-                        <td>{studySession.name}</td>
-                        <td>{moment(studySession.date).format("DD/MM/YYYY")}</td>
-                        <td>{moment(studySession.shifts[0].startTime).format("HH:mm")
-                          + "-" + moment(studySession.shifts[studySession.shifts.length - 1].endTime).format("HH:mm")
-                        }</td>
-                        <td>
-                          <Text>{studySession.teacher.worker.user.fullName}</Text>
-                          <Text color="dimmed" style={{ fontSize: "1rem" }}>MSGV: {studySession.teacher.worker.user.id}</Text>
-                        </td>
-                        <td>
-                          <Text>{studySession.tutor.worker.user.fullName}</Text>
-                          <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {studySession.tutor.worker.user.id}</Text>
-                        </td>
-                        <td>
-                          <Text>{studySession.classroom.name}</Text>
-                          <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
-                        </td>
-                        {getCourseStatus(course) !== CourseStatus.Closed && (
-                          <td>
-                            <ThemeIcon size="lg" style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setCurrentStudySession(studySession);
-                                setIsOpenModifyStudySessionModal(true);
-                              }}>
-                              <IconPencil size={20} />
-                            </ThemeIcon>
-                            <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setCurrentStudySession(studySession);
-                                setIsOpenRemoveSessionModal(true);
-                              }} ml={10}>
-                              <IconTrash size={20} />
-                            </ThemeIcon>
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </ScrollArea>
-            </Container>
           </Container>
-          <Space h={20} />
-          <Container style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: 'center',
-            flexGrow: 1,
-          }}>
-            {seeMoreLoading && <Loader variant="dots" />}
-            {!seeMoreLoading && listStudySessions.length < total && <Button
-              onClick={() => seeMoreStudySession()}
-            >Xem thêm</Button>}
+          <Container size="xl" style={{ width: "100%" }} p={0}>
+            <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} mb={10} transform="uppercase">
+              Danh sách buổi học
+            </Text>
+            <Grid mb={20}>
+              {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
+              <Grid.Col span={isTablet ? (isMobile ? 12 : 8) : 4}>
+                <Input
+                  styles={{ input: { color: "#444" } }}
+                  value={queryStudySession}
+                  placeholder="Tìm kiếm theo tên"
+                  onChange={setQueryStudySession}
+                />
+              </Grid.Col>
+              <Grid.Col span={isTablet ? (isMobile ? 12 : 4) : 2}>
+                <Button fullWidth onClick={() => queryStudySessions()} disabled={loadingStudySession}>
+                  Tìm kiếm
+                </Button>
+              </Grid.Col>
+            </Grid>
+            {loadingStudySession && (
+              <Container style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "400px",
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
+                <Loading />
+              </Container>
+            )}
+            {!loadingStudySession && errorStudySession && (
+              <div className={styles.errorContainer}>
+                <p>Có lỗi xảy ra, vui lòng thử lại</p>
+                <Button
+                  color="primary"
+                  onClick={() => onClickPaginationPageStudySession(currentPageStudySesion)}>
+                  Thử lại
+                </Button>
+              </div>
+            )}
+            {!loadingStudySession &&
+              !errorStudySession &&
+              listStudySessions.length == 0 && (
+                <div className={styles.emptyResultContainer}>
+                  <p>Không có kết quả</p>
+                </div>
+              )}
+            {!loadingStudySession &&
+              !errorStudySession &&
+              listStudySessions.length > 0 && (
+                <>
+                  <ScrollArea style={{ width: "100%" }}>
+                    <Table verticalSpacing="xs" highlightOnHover style={{ width: "100%", minWidth: "900px" }}>
+                      <thead>
+                        <tr>
+                          <th>Tên buổi học</th>
+                          <th>Ngày diễn ra</th>
+                          <th>Giờ học</th>
+                          <th>Giáo viên</th>
+                          <th>Trợ giảng</th>
+                          <th>Phòng học</th>
+                          {getCourseStatus(course) !== CourseStatus.Closed && (
+                            <th>
+                              <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
+                                onClick={() => setIsOpenCreateStudySessionModal(true)}>
+                                <IconSquarePlus size={20} />
+                              </ThemeIcon>
+                            </th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {listStudySessions.map((studySession: StudySession, index: number) => (
+                          <tr key={index}>
+                            <td>{studySession.name}</td>
+                            <td>{moment(studySession.date).format("DD/MM/YYYY")}</td>
+                            <td>{moment(studySession.shifts[0].startTime).format("HH:mm")
+                              + "-" + moment(studySession.shifts[studySession.shifts.length - 1].endTime).format("HH:mm")
+                            }</td>
+                            <td>
+                              <Text>{studySession.teacher.worker.user.fullName}</Text>
+                              <Text color="dimmed" style={{ fontSize: "1rem" }}>MSGV: {studySession.teacher.worker.user.id}</Text>
+                            </td>
+                            <td>
+                              <Text>{studySession.tutor.worker.user.fullName}</Text>
+                              <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {studySession.tutor.worker.user.id}</Text>
+                            </td>
+                            <td>
+                              <Text>{studySession.classroom?.name || "Không có thông tin"}</Text>
+                              {studySession.classroom && (
+                                <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
+                              )}
+                            </td>
+                            {getCourseStatus(course) !== CourseStatus.Closed && (
+                              <td>
+                                <ThemeIcon size="lg" style={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setCurrentStudySession(studySession);
+                                    setIsOpenModifyStudySessionModal(true);
+                                  }}>
+                                  <IconPencil size={20} />
+                                </ThemeIcon>
+                                <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setCurrentStudySession(studySession);
+                                    setIsOpenRemoveSessionModal(true);
+                                  }} ml={10}>
+                                  <IconTrash size={20} />
+                                </ThemeIcon>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </ScrollArea>
+                  <Space h={20} />
+                  {currentPageStudySesion > 0 && maxPageStudySession > 0 && (
+                    <Container style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }} p={0}>
+                      <Pagination
+                        className={styles.pagination}
+                        page={currentPageStudySesion}
+                        total={maxPageStudySession}
+                        onChange={(choosedPage: number) => onClickPaginationPageStudySession(choosedPage)}
+                      />
+                    </Container>
+                  )}
+                </>
+              )}
           </Container>
           <Space h={20} />
         </Container >

@@ -7,18 +7,18 @@ import { useEffect, useState } from "react";
 import { TimeZoneOffset, UserRole } from "../../../../helpers/constants";
 import { getGenderName } from "../../../../helpers/getGenderName";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
-import UserTutor from "../../../../models/userTutor.model";
+import UserEmployee from "../../../../models/userEmployee.model";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
 
 
 interface IProps {
   userRole?: UserRole | null;
-  userTutor: UserTutor | null;
+  userEmployee: UserEmployee | null;
 }
 
 
-const TutorPersonalScreen = (props: IProps) => {
+const EmployeePersonalScreen = (props: IProps) => {
   const isLargeTablet = useMediaQuery('(max-width: 1024px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
   const [didMount, setDidMount] = useState(false);
@@ -26,7 +26,7 @@ const TutorPersonalScreen = (props: IProps) => {
 
 
   useEffect(() => {
-    if (props.userTutor === null)
+    if (props.userEmployee === null)
       router.replace('/not-found');
     else setDidMount(true);
   }, []);
@@ -65,7 +65,7 @@ const TutorPersonalScreen = (props: IProps) => {
               }
               style={{ maxWidth: "300px" }}
               radius="md"
-              src={getAvatarImageUrl(props.userTutor?.worker.user.avatar)}
+              src={getAvatarImageUrl(props.userEmployee?.worker.user.avatar)}
               alt="Hình đại diện"
             />
           </Container>
@@ -74,18 +74,18 @@ const TutorPersonalScreen = (props: IProps) => {
             <Grid.Col span={isLargeTablet ? 12 : 5}>
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Họ và tên: </Text>
-                <Text color="#444">{props.userTutor?.worker.user.fullName}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.fullName}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Giới tính: </Text>
-                <Text color="#444">{getGenderName(props.userTutor?.worker.user.sex)}</Text>
+                <Text color="#444">{getGenderName(props.userEmployee?.worker.user.sex)}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Ngày sinh: </Text>
                 <Text color="#444">
-                  {moment(props.userTutor?.worker.user.dateOfBirth)
+                  {moment(props.userEmployee?.worker.user.dateOfBirth)
                     .utcOffset(TimeZoneOffset)
                     .format("DD/MM/YYYY")}
                 </Text>
@@ -93,12 +93,12 @@ const TutorPersonalScreen = (props: IProps) => {
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>CMND/CCCD: </Text>
-                <Text color="#444">{props.userTutor?.worker.passport}</Text>
+                <Text color="#444">{props.userEmployee?.worker.passport}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Dân tộc: </Text>
-                <Text color="#444">{props.userTutor?.worker.nation}</Text>
+                <Text color="#444">{props.userEmployee?.worker.nation}</Text>
               </Group>
             </Grid.Col>
             {!isLargeTablet && (
@@ -107,22 +107,22 @@ const TutorPersonalScreen = (props: IProps) => {
             <Grid.Col span={isLargeTablet ? 12 : 5}>
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Nguyên quán: </Text>
-                <Text color="#444">{props.userTutor?.worker.homeTown}</Text>
+                <Text color="#444">{props.userEmployee?.worker.homeTown}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Địa chỉ: </Text>
-                <Text color="#444">{props.userTutor?.worker.user.address}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.address}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Email: </Text>
-                <Text color="#444">{props.userTutor?.worker.user.email}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.email}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Số điện thoại: </Text>
-                <Text color="#444">{props.userTutor?.worker.user.phone}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.phone}</Text>
               </Group>
             </Grid.Col>
           </Grid>
@@ -132,23 +132,23 @@ const TutorPersonalScreen = (props: IProps) => {
           <Divider />
           <Group position="apart">
             <Text weight={600} color="#444" mr={5}>Tên chi nhánh: </Text>
-            <Text color="#444">{props.userTutor?.worker.branch.name}</Text>
+            <Text color="#444">{props.userEmployee?.worker.branch.name}</Text>
           </Group>
           <Space h={10} />
           <Group position="apart">
             <Text weight={600} color="#444" mr={5}>Địa chỉ: </Text>
-            <Text color="#444">{props.userTutor?.worker.branch.address}</Text>
+            <Text color="#444">{props.userEmployee?.worker.branch.address}</Text>
           </Group>
           <Space h={10} />
           <Group position="apart">
             <Text weight={600} color="#444" mr={5}>Số điện thoại: </Text>
-            <Text color="#444">{props.userTutor?.worker.branch.phoneNumber}</Text>
+            <Text color="#444">{props.userEmployee?.worker.branch.phoneNumber}</Text>
           </Group>
           <Space h={10} />
           <Group position="apart">
             <Text weight={600} color="#444" mr={5}>Quản lý: </Text>
-            <Text color="#444">{props.userTutor?.worker.branch.userEmployee?.worker.user.fullName ?
-              `${props.userTutor?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userTutor?.worker.branch.userEmployee.worker.user.id})` :
+            <Text color="#444">{props.userEmployee?.worker.branch.userEmployee?.worker.user.fullName ?
+              `${props.userEmployee?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userEmployee?.worker.branch.userEmployee.worker.user.id})` :
               "Không có thông tin"}</Text>
           </Group>
 
@@ -165,4 +165,4 @@ const TutorPersonalScreen = (props: IProps) => {
 }
 
 
-export default TutorPersonalScreen;
+export default EmployeePersonalScreen;

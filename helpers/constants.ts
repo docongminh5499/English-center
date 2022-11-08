@@ -93,7 +93,8 @@ export const TeacherConstants = {
 
 export const EmployeeConstants = {
   limitCourse: 12,
-  limitStudySession: 12,
+  limitStudySession: 6,
+  limitClassroom: 6,
 }
 
 export const StudentConstants = {
@@ -108,7 +109,9 @@ export const TutorConstants = {
 }
 
 export const ChatConstants = {
-  limitMessage: 10
+  limitMessage: 10,
+  limitFindContacts: 8,
+  limitMessageBox: 10,
 }
 
 export const NotificationConstants = {
@@ -179,6 +182,7 @@ export const Url = {
   },
   employees: {
     getPersonalInformation: "/api/employees/personal/get-personal-information",
+    modifyPersonalInformation: "/api/employees/personal/modify-personal-information",
     getCurriculumList: "/api/employees/curriculum/get-curriculum",
     getBranches: "/api/employees/courses/get-branches",
     getTeachers: "/api/employees/courses/get-teachers",
@@ -200,6 +204,10 @@ export const Url = {
     removeStudySession: "/api/employees/courses/remove-study-session",
     getAvailableStudentCount: "/api/employees/courses/get-available-student-count",
     removeCourse: "/api/employees/courses/remove-course",
+    getClassrooms: "/api/employees/classroom/get-classrooms",
+    updateClassroom: "/api/employees/classroom/modify-classroom",
+    addClassroom: "/api/employees/classroom/add-classroom",
+    removeClassroom: "/api/employees/classroom/remove-classroom",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",
@@ -211,6 +219,7 @@ export const Url = {
     getSchedules: "/api/tutors/schedule",
     getCourseDetail: "/api/tutors/courses/get-course/",
     getStudents: "/api/tutors/courses/get-students",
+    getStudentDetails: "/api/tutors/courses/get-student-detail",
     getStudySessions: "/api/tutors/courses/get-study-sessions",
     getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
     getEmployeeByBranch: "/api/tutors/courses/get-employee-by-branch",

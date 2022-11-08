@@ -127,15 +127,17 @@ const TutorScheduleScreen = () => {
                 {listSchedules.length > 0 &&
                   listSchedules.map((studySession: StudySession, index: number) => (
                     <tr key={index}>
-                      <td>{studySession.course.id}</td>
-                      <td>{studySession.course.name}</td>
+                      <td style={{ textAlign: "center" }}>{studySession.course.id}</td>
+                      <td style={{ width: "40%" }}>{studySession.course.name}</td>
                       <td>{moment(studySession.date).format("DD/MM/YYYY")}</td>
                       <td>{moment(studySession.shifts[0].startTime).format("HH:mm")
                         + "-" + moment(studySession.shifts[studySession.shifts.length - 1].endTime).format("HH:mm")
                       }</td>
                       <td>
-                        <Text>{studySession.classroom.name}</Text>
-                        <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
+                        <Text>{studySession.classroom?.name || "Không có thông tin"}</Text>
+                        {studySession.classroom && (
+                          <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
+                        )}
                       </td>
                       <td>
                         {getStudySessionState(studySession) !== StudySessionState.Ready && (

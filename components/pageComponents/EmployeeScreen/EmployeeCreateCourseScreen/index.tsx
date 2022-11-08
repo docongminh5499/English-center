@@ -238,6 +238,11 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
   }, []);
 
 
+  useEffect(() => {
+    createCourseForm.setFieldValue("timeTables", []);
+  }, [createCourseForm.values.maxNumberOfStudent]);
+
+
 
   return (
     <>
@@ -483,6 +488,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
                     teacherId={createCourseForm.values['teacher']}
                     beginingDate={createCourseForm.values['openingDate']}
                     onAddTimeTable={onAddTimeTable}
+                    maximumStudentNumber={createCourseForm.values.maxNumberOfStudent}
                   />
                 )}
               </>

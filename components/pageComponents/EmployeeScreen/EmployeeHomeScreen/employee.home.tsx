@@ -41,8 +41,9 @@ const EmployeeHomeScreen = (props: IProps) => {
   const [courses, setCourses] = useState(props.courses);
   const [error, setError] = useState(props.error || false);
   const [loading, setLoading] = useState(false);
-  const [maxPage, setMaxPage] = useState(Math.ceil((
-    props.pageable?.total || 1) / (props.pageable?.limit || EmployeeConstants.limitCourse)));
+  const [limit, setLimit] = useState(props.pageable?.limit || EmployeeConstants.limitCourse);
+  const [total, setTotal] = useState(props.pageable?.total || 1)
+  const [maxPage, setMaxPage] = useState(Math.ceil(total / limit));
   const [currentPage, setCurrentPage] = useState(1);
   const [course, setCourse] = useState<any>(formatCourse(courses));
   const [authState] = useAuth();
@@ -68,11 +69,20 @@ const EmployeeHomeScreen = (props: IProps) => {
         courseSlug: currentCourse?.slug,
       });
       if (responses == true) {
+        const currentLimit = (currentPage - 1) * EmployeeConstants.limitCourse;
+        const updatedTotal = total - 1;
+        const updatedPage = currentLimit < updatedTotal ? currentPage : currentPage - 1
+        if (updatedPage < 1) {
+          const result = formatCourse([]);
+          const total = props.pageable?.total || 1;
+          const limit = props.pageable?.limit || EmployeeConstants.limitCourse;
+          setCourses([]);
+          setCourse(result);
+          setMaxPage(Math.ceil(total / limit));
+          setLimit(limit);
+          setTotal(total);
+        } else onClickPaginationPage(updatedPage, name, closed, open, longTerm, shortTerm);
         toast.success("Xóa khóa học thành công");
-        const updatedCourses = courses?.filter(c => c.id !== currentCourse?.id);
-        const course = formatCourse(updatedCourses);
-        setCourse(course);
-        setCourses(updatedCourses);
       } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
       setIsOnSendRemoveCourseRequest(false);
       setIsOpenRemoveCourseModal(false);
@@ -81,7 +91,12 @@ const EmployeeHomeScreen = (props: IProps) => {
       setIsOpenRemoveCourseModal(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
-  }, [authState.token, currentCourse?.slug, formatCourse, courses, currentCourse?.id]);
+  }, [
+    authState.token, currentCourse?.slug, formatCourse,
+    courses, currentCourse?.id, total, currentPage, EmployeeConstants.limitCourse,
+    props.pageable?.total, props.pageable?.limit,
+    name, closed, open, longTerm, shortTerm
+  ]);
 
 
   const getCourse = useCallback(async (limit: number, skip: number,
@@ -94,6 +109,8 @@ const EmployeeHomeScreen = (props: IProps) => {
     setCourses(responses.courses);
     setCourse(result);
     setMaxPage(Math.ceil(responses.total / responses.limit));
+    setLimit(responses.limit);
+    setTotal(responses.total);
   }, []);
 
 
@@ -146,6 +163,12 @@ const EmployeeHomeScreen = (props: IProps) => {
       <div className={styles.employeeHomePage}>
         <p className={styles.title}>Danh sách khóa học</p>
         <Space h="md" />
+        <Container p={0}>
+          <Button variant="light" color="green" onClick={() => router.push(router.asPath + "/create")}>
+            Tạo khóa học mới
+          </Button>
+        </Container>
+        <Space h="xl" />
         <div className={styles.filterComponent}>
           <Grid>
             <Grid.Col span={isSmallerThan768 ? 12 : 9}>

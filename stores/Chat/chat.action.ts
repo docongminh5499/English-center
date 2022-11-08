@@ -10,23 +10,40 @@ import ChatMessage from "../../models/chatMessage.model";
 
 export const getContacts =
   (token: string): Action<State> =>
-    async ({ setState }) => {
-      const responses = await API.get(Url.users.getContacts, { token });
-      setState({ contacts: responses.contacts });
+    async ({ getState, setState }) => {
+      const messageBoxesLength = getState().contacts?.length || 0;
+      const responses = await API.post(Url.users.getContacts, {
+        token,
+        skip: messageBoxesLength,
+        limit: ChatConstants.limitMessageBox
+      });
+      setState({
+        contacts: (getState().contacts || []).concat(responses.contacts),
+        totalContacts: responses.total,
+      });
     };
+
 
 export const findContacts =
   (token: string, name: string): Action<State> =>
-    async ({ setState }) => {
-      const responses = await API.post(Url.users.findContacts, { token, name });
-      setState({ searchResults: responses.contacts });
+    async ({ getState, setState }) => {
+      const findContactsLength = getState().searchResults.length;
+      const responses = await API.post(Url.users.findContacts, {
+        token, name,
+        skip: findContactsLength,
+        limit: ChatConstants.limitFindContacts
+      });
+      setState({
+        searchResults: getState().searchResults.concat(responses.contacts),
+        totalSearchResults: responses.total
+      });
     };
 
 
 export const clearSearchResults =
   (): Action<State> =>
     async ({ setState }) => {
-      setState({ searchResults: [] });
+      setState({ searchResults: [], totalSearchResults: 0 });
     };
 
 
