@@ -20,6 +20,8 @@ import CloseCourseModal from "../Modal/closeCourse.modal";
 import CreateStudySessionModal from "../Modal/createStudySession.modal";
 import RemoveStudySessionModal from "../Modal/modal";
 import styles from "./course.module.css";
+import UserStudent from "../../../../models/userStudent.model";
+import { getGenderName } from "../../../../helpers/getGenderName";
 
 
 interface IProps {
@@ -36,6 +38,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
 
   const [authState] = useAuth();
   const [didMount, setDidMount] = useState(false);
+  // Study session state
   const [listStudySessions, setListStudySessions] = useState<StudySession[]>([]);
   const [totalStudySession, setTotalStudySession] = useState(0);
   const [loadingStudySession, setLoadingStudySession] = useState(true);
@@ -43,11 +46,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const [currentPageStudySesion, setCurrentPageStudySession] = useState(1);
   const [maxPageStudySession, setMaxPageStudySession] = useState(1);
   const [queryStudySession, setQueryStudySession] = useInputState("");
+  // Student state
+  const [listStudents, setListStudents] = useState<UserStudent[]>([]);
+  const [totalStudent, setTotalStudent] = useState(0);
+  const [loadingStudent, setLoadingStudent] = useState(true);
+  const [errorStudent, setErrorStudent] = useState(false);
+  const [currentPageStudent, setCurrentPageStudent] = useState(1);
+  const [maxPageStudent, setMaxPageStudent] = useState(1);
+  const [queryStudent, setQueryStudent] = useInputState("");
+  // Course state
   const [course, setCourse] = useState(props.course);
   const [isOpenCourseModalOpened, setIsOpenCourseModalOpened] = useState(false);
   const [isCloseCourseModalOpened, setIsCloseCourseModalOpened] = useState(false);
   const [isSendingOpenRequest, setIsSendingOpenRequest] = useState(false);
   const [isSendingCloseRequest, setIsSendingCloseRequest] = useState(false);
+  // Modify, create, remove study session
   const [isOpenModifyStudySessionModal, setIsOpenModifyStudySessionModal] = useState(false);
   const [isOpenCreateStudySessionModal, setIsOpenCreateStudySessionModal] = useState(false);
   const [currentStudySession, setCurrentStudySession] = useState<StudySession>();
@@ -65,6 +78,17 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       skip: skip,
       courseSlug: course?.slug,
       query: query
+    });
+  }, [authState.token, course?.slug]);
+
+
+  const getStudents = useCallback(async (limit: number, skip: number, query: string) => {
+    return await API.post(Url.employees.getStudents, {
+      token: authState.token,
+      limit: limit,
+      skip: skip,
+      query: query,
+      courseSlug: course?.slug
     });
   }, [authState.token, course?.slug]);
 
@@ -89,6 +113,28 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   }, [queryStudySession]);
 
 
+
+
+  const queryStudents = useCallback(async () => {
+    try {
+      setLoadingStudent(true);
+      setErrorStudent(false);
+      const responses = await getStudents(EmployeeConstants.limitStudent, 0, queryStudent);
+      setCurrentPageStudent(1);
+      setTotalStudent(responses.total);
+      setMaxPageStudent(Math.ceil(responses.total / EmployeeConstants.limitStudent));
+      setListStudents(responses.students);
+      setLoadingStudent(false);
+      setErrorStudent(false);
+    } catch (error) {
+      setLoadingStudent(false);
+      setErrorStudent(true);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [queryStudent]);
+
+
+
   const onClickPaginationPageStudySession = useCallback(async (page: number) => {
     try {
       if (page < 1) return;
@@ -110,6 +156,30 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setErrorStudySession(true);
     }
   }, [queryStudySession]);
+
+
+
+  const onClickPaginationPageStudent = useCallback(async (page: number) => {
+    try {
+      if (page < 1) return;
+      setLoadingStudent(true);
+      setErrorStudent(false);
+      const responses = await getStudents(
+        EmployeeConstants.limitStudent,
+        (page - 1) * EmployeeConstants.limitStudent,
+        queryStudent
+      );
+      setTotalStudent(responses.total);
+      setMaxPageStudent(Math.ceil(responses.total / EmployeeConstants.limitStudent));
+      setListStudents(responses.students);
+      setLoadingStudent(false);
+      setCurrentPageStudent(page);
+    } catch (err) {
+      setLoadingStudent(false);
+      setCurrentPageStudent(page);
+      setErrorStudent(true);
+    }
+  }, [queryStudent]);
 
 
 
@@ -247,18 +317,27 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   useEffect(() => {
     const didMountFunc = async () => {
       try {
-        const [responseStudySessions] = await Promise.all([
+        const [responseStudySessions, responseStudents] = await Promise.all([
           getStudySessions(EmployeeConstants.limitStudySession, 0, queryStudySession),
+          getStudents(EmployeeConstants.limitStudent, 0, queryStudent),
         ]);
         setTotalStudySession(responseStudySessions.total);
         setMaxPageStudySession(Math.ceil(responseStudySessions.total / EmployeeConstants.limitStudySession));
         setListStudySessions(responseStudySessions.studySessions);
         setLoadingStudySession(false);
         setErrorStudySession(false);
+        setTotalStudent(responseStudents.total);
+        setMaxPageStudent(Math.ceil(responseStudents.total / EmployeeConstants.limitStudent));
+        setListStudents(responseStudents.students);
+        setLoadingStudent(false);
+        setErrorStudent(false);
         setDidMount(true);
       } catch (error) {
         setLoadingStudySession(false);
         setErrorStudySession(true);
+        setLoadingStudent(false);
+        setErrorStudent(true);
+        setDidMount(true);
         toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
@@ -513,6 +592,118 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
               />
             </Container>
           </Container>
+          <Container size="xl" style={{ width: "100%" }} p={0}>
+            <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} mb={10} transform="uppercase">
+              Danh sách học viên
+            </Text>
+            <Grid mb={20}>
+              {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
+              <Grid.Col span={isTablet ? (isMobile ? 12 : 8) : 4}>
+                <Input
+                  styles={{ input: { color: "#444" } }}
+                  value={queryStudent}
+                  placeholder="Tìm kiếm theo tên hoặc MSHV"
+                  onChange={setQueryStudent}
+                />
+              </Grid.Col>
+              <Grid.Col span={isTablet ? (isMobile ? 12 : 4) : 2}>
+                <Button fullWidth onClick={() => queryStudents()} disabled={loadingStudent}>
+                  Tìm kiếm
+                </Button>
+              </Grid.Col>
+            </Grid>
+            {loadingStudent && (
+              <Container style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "400px",
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
+                <Loading />
+              </Container>
+            )}
+            {!loadingStudent && errorStudent && (
+              <div className={styles.errorContainer}>
+                <p>Có lỗi xảy ra, vui lòng thử lại</p>
+                <Button
+                  color="primary"
+                  onClick={() => onClickPaginationPageStudent(currentPageStudent)}>
+                  Thử lại
+                </Button>
+              </div>
+            )}
+            {!loadingStudent &&
+              !errorStudent &&
+              listStudents.length == 0 && (
+                <div className={styles.emptyResultContainer}>
+                  <p>Không có kết quả</p>
+                </div>
+              )}
+            {!loadingStudent &&
+              !errorStudent &&
+              listStudents.length > 0 && (
+                <>
+                  <ScrollArea style={{ width: "100%" }}>
+                    <Table verticalSpacing="xs" highlightOnHover style={{ width: "100%", minWidth: "900px" }}>
+                      <thead>
+                        <tr>
+                          <th>MSHV</th>
+                          <th>Tên học viên</th>
+                          <th>Giới tính</th>
+                          <th>Ngày sinh</th>
+                          <th>Email</th>
+                          <th>Số điện thoại</th>
+                          <th>
+                            <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
+                              onClick={() => { }}>
+                              <IconSquarePlus size={20} />
+                            </ThemeIcon>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {listStudents.map((student: UserStudent, index: number) => (
+                          <tr key={index}>
+                            <td>{student.user.id}</td>
+                            <td>{student.user.fullName}</td>
+                            <td>{getGenderName(student.user.sex)}</td>
+                            <td>{moment(student.user.dateOfBirth).format("DD/MM/YYYY")}</td>
+                            <td>{student.user.email || "Không có thông tin"}</td>
+                            <td>{student.user.phone || "Không có thông tin"}</td>
+                            <td>
+                              <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                onClick={() => {
+
+                                }}>
+                                <IconTrash size={20} />
+                              </ThemeIcon>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </ScrollArea>
+                  <Space h={20} />
+                  {currentPageStudent > 0 && maxPageStudent > 0 && (
+                    <Container style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }} p={0}>
+                      <Pagination
+                        className={styles.pagination}
+                        page={currentPageStudent}
+                        total={maxPageStudent}
+                        onChange={(choosedPage: number) => onClickPaginationPageStudent(choosedPage)}
+                      />
+                    </Container>
+                  )}
+                </>
+              )}
+          </Container>
+          <Space h={40} />
           <Container size="xl" style={{ width: "100%" }} p={0}>
             <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} mb={10} transform="uppercase">
               Danh sách buổi học

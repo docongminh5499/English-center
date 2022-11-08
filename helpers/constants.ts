@@ -95,6 +95,8 @@ export const EmployeeConstants = {
   limitCourse: 12,
   limitStudySession: 6,
   limitClassroom: 6,
+  limitStudent: 6,
+  limitParent: 6,
 }
 
 export const StudentConstants = {
@@ -204,6 +206,11 @@ export const Url = {
     updateClassroom: "/api/employees/classroom/modify-classroom",
     addClassroom: "/api/employees/classroom/add-classroom",
     removeClassroom: "/api/employees/classroom/remove-classroom",
+    getStudents: "/api/employees/courses/get-students",
+    getAllStudents: "/api/employees/student/get-students",
+    getStudentDetails: "/api/employees/student/get-student-detail",
+    getAllParents: "/api/employees/student/get-parents",
+    modifyParentForStudent: "/api/employees/student/modify-parent",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",

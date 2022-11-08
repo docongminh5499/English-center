@@ -4,4 +4,5 @@ import UserStudent from "./userStudent.model";
 export default interface UserParent {
   userStudents: UserStudent[];
   user: User;
+  version: number;
 }
