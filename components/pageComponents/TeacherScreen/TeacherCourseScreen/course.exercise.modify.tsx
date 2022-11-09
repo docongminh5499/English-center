@@ -303,7 +303,7 @@ const CourseModifyExercise = (props: any) => {
         withCloseButton={false}
       >
         <Group  position="center">
-          <Text size="xl">Xác nhận tạo bài tập?</Text>
+          <Text size="xl">Xác nhận lưu thay đổi bài tập?</Text>
         </Group>
         <Group position="center">
           <Button type="submit" color={"green"} mt="md" onClick={handleModifyExercise}>
@@ -323,7 +323,7 @@ const CourseModifyExercise = (props: any) => {
         withCloseButton={false}
       >
         <Group  position="center">
-          <Text size="xl">Xác nhận hủy tạo bài tập?</Text>
+          <Text size="xl">Xác nhận hủy chỉnh sửa bài tập?</Text>
         </Group>
         <Group position="center">
           <Button type="submit" color={"green"} mt="md" onClick={()=>props.setModifyExercise(false)}>

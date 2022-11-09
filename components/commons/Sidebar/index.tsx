@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { UserRole } from "../../../helpers/constants";
-import { employeeSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "./links";
+import { employeeSidebar, parentSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "./links";
 import { useRouter } from "next/router";
 import { useState } from 'react';
 
@@ -123,6 +123,8 @@ const Sidebar = (props: IProps) => {
       personalSidebar = employeeSidebar;
     else if (props.userRole === UserRole.TUTOR)
       personalSidebar = tutorSidebar;
+    else if (props.userRole === UserRole.PARENT)
+      personalSidebar = parentSidebar;
     return [...personalSidebar, ...userSidebar];
 
     // TODO: another user role

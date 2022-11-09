@@ -182,6 +182,13 @@ export const Url = {
     getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
     getAllDocument: "/api/students/document/get-all-document/",
   },
+  parents: {
+    getPersonalInfo: "/api/parents/personal/get-personal-infomation",
+    getAllStudentCourses: "/api/parents/timetable/get-all-student-courses",
+    getPageableStudentCourses: "/api/parents/course/get-pageable-student-courses",
+    getCourseDetail: "/api/parents/course/get-course/",
+  },
+
   employees: {
     getPersonalInformation: "/api/employees/personal/get-personal-information",
     modifyPersonalInformation: "/api/employees/personal/modify-personal-information",

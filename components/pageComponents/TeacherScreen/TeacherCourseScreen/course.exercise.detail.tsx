@@ -9,6 +9,7 @@ import { useAuth } from "../../../../stores/Auth";
 import { CChart } from "@coreui/react-chartjs";
 import CourseModifyExercise from "./course.exercise.modify";
 import { useWindowScroll } from "@mantine/hooks";
+import { IconArrowBackUp, IconEdit } from "@tabler/icons";
 
 const CourseExerciseDetail = (props: any) => {
 	const [authState] = useAuth();
@@ -205,7 +206,7 @@ const CourseExerciseDetail = (props: any) => {
 
 							<Group position="center" mt={"xl"}>
 								{/* {props.course.closingDate === null && */
-									<Button color={"#33FF33"} onClick={async () => {
+									<Button style={{backgroundColor: "#FFC125"}} leftIcon={<IconEdit />} onClick={async () => {
 										const tag:[] = await API.get(Url.teachers.getAllQuestionTag, {
 											token: authState.token, 
 										});
@@ -222,7 +223,7 @@ const CourseExerciseDetail = (props: any) => {
 									</Button>
 								}
 
-								<Button color={"blue"} onClick={() => props.setSeeExerciseDetail(false)}>
+								<Button leftIcon={<IconArrowBackUp />} onClick={() => props.setSeeExerciseDetail(false)}>
 									Quay lại
 								</Button>
 							</Group>

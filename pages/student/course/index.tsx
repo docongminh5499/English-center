@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             const pageable: Pageable = {
                 limit: responses.limit,
                 skip: responses.skip,
-                total: responses.total
+                total: responses.total,
             };
             const courses = responses.courses;
             return { props: { userRole: user.role, courses, pageable, error: null } };

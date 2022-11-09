@@ -24,6 +24,8 @@ const HomeScreen = (props: IProps) => {
       router.push("/student/timetable");
     else if (props.userRole === UserRole.TUTOR)
       router.push("/tutor/course");
+      else if (props.userRole === UserRole.PARENT)
+      router.push("/parent/timetable");
 
     // TODO: Another user role
 

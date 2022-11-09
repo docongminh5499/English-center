@@ -11,7 +11,7 @@ import LoadingScreen from "../../pageComponents/LoadingScreen";
 import { createStyles, ActionIcon, Drawer, Group, MediaQuery, Indicator } from "@mantine/core";
 import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
 import { UserMenu } from "./user.menu";
-import { employeeSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "../Sidebar/links";
+import { employeeSidebar, parentSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "../Sidebar/links";
 import { useChat } from "../../../stores/Chat";
 import { useNotification } from "../../../stores/Notification";
 
@@ -122,6 +122,8 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
     personalDrawer = employeeSidebar;
   else if (authState.role === UserRole.TUTOR)
     personalDrawer = tutorSidebar;
+  else if (authState.role === UserRole.PARENT)
+    personalDrawer = parentSidebar;
   userDrawer = [...personalDrawer, ...userDrawer];
 
   const links = userDrawer.map((item) => (
