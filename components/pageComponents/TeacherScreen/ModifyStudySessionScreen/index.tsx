@@ -351,7 +351,7 @@ const ModifyStudySessionScreen = (props: IProps) => {
                 <Group position={isSmallTablet ? "apart" : "left"} align="flex-start">
                   <Text color="#444444" mr={5}>Trợ giảng:</Text>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                    <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "Không có thông tin"}</Text>
+                    <Text color="#444444">{infoStudySession?.tutor.worker.user.fullName || "-"}</Text>
                     <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {infoStudySession?.tutor.worker.user.id}</Text>
                   </div>
                 </Group>
@@ -360,7 +360,7 @@ const ModifyStudySessionScreen = (props: IProps) => {
                 <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                   <Text color="#444444" mr={5}>Ngày: </Text>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                    <Text color="#444444">{moment(infoStudySession?.date).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") || 'Không có thông tin'}</Text>
+                    <Text color="#444444">{moment(infoStudySession?.date).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") || '-'}</Text>
                     {
                       infoStudySession && infoStudySession.shifts && infoStudySession.shifts.length > 0 ?
                         <div>
@@ -369,7 +369,7 @@ const ModifyStudySessionScreen = (props: IProps) => {
                             + "-" + moment(infoStudySession.shifts[infoStudySession.shifts.length - 1].endTime).utcOffset(TimeZoneOffset).format("HH:mm")
                           }</Text>
                         </div> :
-                        <Text color="dimmed" style={{ fontSize: "1rem" }}>Không có thông tin</Text>
+                        <Text color="dimmed" style={{ fontSize: "1rem" }}>--/--/----</Text>
                     }
                   </div>
                 </Group>
@@ -378,7 +378,7 @@ const ModifyStudySessionScreen = (props: IProps) => {
                 <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start" >
                   <Text color="#444444" mr={5}>Tình trạng: </Text>
                   {!infoStudySession && (
-                    <Text color="#444444">Không có thông tin</Text>
+                    <Text color="#444444">-</Text>
                   )}
                   {infoStudySession &&
                     getStudySessionState(infoStudySession) === StudySessionState.Finish && (
@@ -398,7 +398,7 @@ const ModifyStudySessionScreen = (props: IProps) => {
                 <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                   <Text color="#444">Phòng học:</Text>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                    <Text color="#444">{infoStudySession?.classroom?.name || "Không có thông tin"}</Text>
+                    <Text color="#444">{infoStudySession?.classroom?.name || "-"}</Text>
                     {infoStudySession?.classroom && (
                       <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
                     )}

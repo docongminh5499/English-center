@@ -1,22 +1,12 @@
 import { Container, Select, Space, Text, Textarea } from "@mantine/core";
 import * as yup from "yup";
-import { DatePicker } from "@mantine/dates";
 import { useForm, yupResolver } from '@mantine/form';
 import 'dayjs/locale/vi';
 import Button from "../../../commons/Button";
-import UserSelectItem from "../../../commons/UserSelectItem";
-import { useCallback, useEffect, useState } from "react";
-import UserEmployee from "../../../../models/userEmployee.model";
-import { useAuth } from "../../../../stores/Auth";
-import { toast } from "react-toastify";
-import API from "../../../../helpers/api";
-import { Url } from "../../../../helpers/constants";
-import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 
 
 
 const schema = yup.object().shape({
-  employeeId: yup.number().required("Vui lòng chọn nhân viên"),
   excuse: yup.string().required("Vui lòng nhập lý do"),
 });
 
@@ -25,35 +15,15 @@ const schema = yup.object().shape({
 interface IProps {
   onSendRequest: (data: any) => void;
   loading: boolean;
-  branchId?: number;
 }
 
 
 
 const RequestOffSessionModal = (props: IProps) => {
-  const [authState] = useAuth();
-  const [employees, setEmployees] = useState<UserEmployee[]>([]);
   const requestOffSessionForm = useForm({
+    initialValues: { excuse: "" },
     validate: yupResolver(schema),
   });
-
-
-  const getEmployeeByBranch = useCallback(async () => {
-    try {
-      const responses = await API.post(Url.tutors.getEmployeeByBranch, {
-        token: authState.token,
-        branchId: props.branchId
-      });
-      setEmployees(responses);
-    } catch (error) {
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
-    }
-  }, [authState.token, props.branchId]);
-
-
-  useEffect(() => {
-    getEmployeeByBranch();
-  }, []);
 
 
   return (
@@ -70,27 +40,6 @@ const RequestOffSessionModal = (props: IProps) => {
           flexDirection: "column",
           gap: "1rem"
         }}>
-        <Select
-          withAsterisk
-          label="Chọn nhân viên nhận yêu cầu"
-          placeholder="Nhân viên"
-          itemComponent={UserSelectItem}
-          data={employees.map(employee => ({
-            avatar: getAvatarImageUrl(employee.worker.user.avatar),
-            name: employee.worker.user.fullName,
-            label: employee.worker.user.fullName,
-            id: employee.worker.user.id,
-            value: employee.worker.user.id.toString(),
-          }))}
-          searchable
-          maxDropdownHeight={400}
-          nothingFound="Không có nhân viên phù hợp"
-          filter={(value, item) =>
-            item.name.toLowerCase().includes(value.toLowerCase().trim()) ||
-            item.id.toString().toLowerCase().includes(value.toLowerCase().trim())
-          }
-          {...requestOffSessionForm.getInputProps('employeeId')}
-        />
         <Textarea
           withAsterisk
           minRows={6}
@@ -98,7 +47,7 @@ const RequestOffSessionModal = (props: IProps) => {
           placeholder="Nhập lý do của bạn"
           {...requestOffSessionForm.getInputProps('excuse')}
         />
-        <Space h={20} />
+        <Space h={10} />
         <Button color="pink" type="submit" loading={props.loading}>Gửi yêu cầu</Button>
       </form>
     </Container>

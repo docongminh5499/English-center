@@ -71,12 +71,12 @@ const StudentDetailScreen = (props: IProps) => {
       {didMount && (
         <Container size="xl" style={{ width: "100%" }} pb={'5rem'} >
           <InfoUser
-            title={'Thông tin học sinh'}
+            title={'Học sinh'}
             data={props.student?.user}
           />
           <Space h={30} />
           <InfoUserParent
-            title={'Thông tin phụ huynh'}
+            title={'Phụ huynh'}
             data={userParent?.user}
             onChooseParent={onChooseParent}
           />

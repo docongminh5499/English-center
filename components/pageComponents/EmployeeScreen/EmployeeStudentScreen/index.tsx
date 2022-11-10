@@ -180,7 +180,10 @@ const EmployeeStudentScreen = (props: IProps) => {
                     <th>Email</th>
                     <th>Số điện thoại</th>
                     <th>
-                      <Button color="green" fullWidth>Đăng ký mới</Button>
+                      <Button color="green" fullWidth
+                        onClick={() => router.push(router.asPath + "/register")}>
+                        Đăng ký mới
+                      </Button>
                     </th>
                   </tr>
                 </thead>
@@ -191,8 +194,8 @@ const EmployeeStudentScreen = (props: IProps) => {
                       <td>{student.user.fullName}</td>
                       <td>{getGenderName(student.user.sex)}</td>
                       <td>{moment(student.user.dateOfBirth).format("DD/MM/YYYY")}</td>
-                      <td>{student.user.email || "Không có thông tin"}</td>
-                      <td>{student.user.phone || "Không có thông tin"}</td>
+                      <td>{student.user.email || "-"}</td>
+                      <td>{student.user.phone || "-"}</td>
                       <td style={{ width: "80px" }}>
                         <Button fullWidth compact
                           onClick={() => router.push(router.asPath + "/" + student.user.id)}>

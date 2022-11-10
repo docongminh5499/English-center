@@ -12,7 +12,7 @@ import styles from './employeeCreateCourse.module.css';
 
 
 interface IProps {
-  onChooseParent: (parentId: number) => Promise<void>;
+  onChooseParent: (parent: UserParent) => Promise<void>;
   loading: boolean;
 }
 
@@ -129,7 +129,7 @@ const FindParentModal = (props: IProps) => {
         </Container>
       )}
 
-      {!loading && !error && listParents.length === 0 && (
+      {!loading && !props.loading && !error && listParents.length === 0 && (
         <Container style={{
           display: "flex",
           flexDirection: "column",
@@ -145,7 +145,7 @@ const FindParentModal = (props: IProps) => {
         </Container>
       )}
 
-      {!loading && !error && listParents.length > 0 && (
+      {!loading && !props.loading && !error && listParents.length > 0 && (
         <ScrollArea
           style={{ height: 300 }}
           mt={10}
@@ -156,7 +156,7 @@ const FindParentModal = (props: IProps) => {
               <Group
                 key={index}
                 noWrap
-                onClick={() => props.onChooseParent(parent.user.id)}
+                onClick={() => props.onChooseParent(parent)}
                 style={{ flexDirection: "column" }}
                 className={styles.teacherCard}>
                 <Avatar

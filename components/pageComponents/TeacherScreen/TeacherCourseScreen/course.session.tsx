@@ -66,14 +66,24 @@ const CourseSession = (props: IProps) => {
 
 
   const onSendOffSessionRequest = useCallback(async (data: any) => {
-    setIsSendingRequest(true);
-    const message = `Giáo viên: ${currentStudySession?.teacher.worker.user.fullName}, MSGV: ${currentStudySession?.teacher.worker.user.id}.
-    Yêu cầu nghỉ buổi học: ${currentStudySession?.name}, thuộc khóa học: ${currentStudySession?.course.name}.
-    Lý do: ${data.excuse}.`;
-    socketAction.emit('notification', { token: authState.token, userId: data.employeeId, content: message });
-    setIsSendingRequest(false);
-    setIsOpenRequestOffModal(false);
-  }, [socketAction, authState.token, currentStudySession]);
+    try {
+      setIsSendingRequest(true);
+      const responses: any = await API.post(Url.teachers.requestOffStudySession, {
+        token: authState.token,
+        studySessionId: currentStudySession?.id,
+        excuse: data.excuse,
+      });
+      if (responses == true)
+        toast.success("Gửi yêu cầu thành công.")
+      else toast.error("Gửi yêu cầu thất bại. Vui lòng thử lại.")
+      setIsSendingRequest(false);
+      setIsOpenRequestOffModal(false);
+    } catch (error) {
+      setIsSendingRequest(false);
+      setIsOpenRequestOffModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [authState.token, currentStudySession]);
 
 
   useEffect(() => {
@@ -108,7 +118,6 @@ const CourseSession = (props: IProps) => {
         <RequestOffSessionModal
           onSendRequest={onSendOffSessionRequest}
           loading={isSendingRequest}
-          branchId={props.branchId}
         />
       </Modal>
 
@@ -149,7 +158,7 @@ const CourseSession = (props: IProps) => {
                   </Text>
 
                   <Space h={8} />
-                  <Text color="#444">Phòng học: {item.classroom?.name || "Không có thông tin"}</Text>
+                  <Text color="#444">Phòng học: {item.classroom?.name || "-"}</Text>
                   {item.classroom && (
                     <Text color="dimmed" style={{ fontSize: "1rem" }}>
                       {item.classroom.branch.name}

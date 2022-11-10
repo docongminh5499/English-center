@@ -112,17 +112,17 @@ const EmployeePersonalScreen = (props: IProps) => {
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Địa chỉ: </Text>
-                <Text color="#444">{props.userEmployee?.worker.user.address}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.address || "-"}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Email: </Text>
-                <Text color="#444">{props.userEmployee?.worker.user.email}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.email || "-"}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Số điện thoại: </Text>
-                <Text color="#444">{props.userEmployee?.worker.user.phone}</Text>
+                <Text color="#444">{props.userEmployee?.worker.user.phone || "-"}</Text>
               </Group>
             </Grid.Col>
           </Grid>
@@ -149,7 +149,7 @@ const EmployeePersonalScreen = (props: IProps) => {
             <Text weight={600} color="#444" mr={5}>Quản lý: </Text>
             <Text color="#444">{props.userEmployee?.worker.branch.userEmployee?.worker.user.fullName ?
               `${props.userEmployee?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userEmployee?.worker.branch.userEmployee.worker.user.id})` :
-              "Không có thông tin"}</Text>
+              "-"}</Text>
           </Group>
 
           <Space h={40} />

@@ -161,8 +161,8 @@ export const Url = {
     addPreferredCurriculums: "/api/teachers/curriculum/add-prefered-curriculums",
     removePreferredCurriculums: "/api/teachers/curriculum/remove-prefered-curriculums",
     getSchedules: "/api/teachers/schedule",
-    getEmployeeByBranch: "/api/teachers/courses/get-employee-by-branch",
     getCurriculumTags: "/api/teachers/curriculum/get-curriculum-tags",
+    requestOffStudySession: "/api/teachers/courses/request-off-study-session",
     //Hoc
     createExercise: "/api/teachers/exercise/create-exercise",
     addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",
@@ -236,7 +236,7 @@ export const Url = {
     getStudentDetails: "/api/tutors/courses/get-student-detail",
     getStudySessions: "/api/tutors/courses/get-study-sessions",
     getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
-    getEmployeeByBranch: "/api/tutors/courses/get-employee-by-branch",
+    requestOffStudySession: "/api/tutors/courses/request-off-study-session",
   }
 };
 

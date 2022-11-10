@@ -159,7 +159,7 @@ const ParentHomeScreen = (props: any) => {
                       <tr key={data.studySession.id}>
                         <td>{data.courseName}</td>
                         <td>{`${startTime} - ${endTime}`}</td>
-                        <td>{data.studySession.classroom.name === null ? "-" : data.studySession.classroom.name}</td>
+                        <td>{data.studySession.classroom?.name || "-"}</td>
                       </tr>
                     );
                   });

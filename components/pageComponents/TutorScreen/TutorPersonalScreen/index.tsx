@@ -149,7 +149,7 @@ const TutorPersonalScreen = (props: IProps) => {
             <Text weight={600} color="#444" mr={5}>Quản lý: </Text>
             <Text color="#444">{props.userTutor?.worker.branch.userEmployee?.worker.user.fullName ?
               `${props.userTutor?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userTutor?.worker.branch.userEmployee.worker.user.id})` :
-              "Không có thông tin"}</Text>
+              "-"}</Text>
           </Group>
 
           <Space h={40} />

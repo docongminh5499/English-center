@@ -117,12 +117,12 @@ const TeacherPersonalScreen = (props: IProps) => {
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Email: </Text>
-                <Text color="#444">{props.userTeacher?.worker.user.email}</Text>
+                <Text color="#444">{props.userTeacher?.worker.user.email || "-"}</Text>
               </Group>
               <Space h={10} />
               <Group position="apart">
                 <Text weight={600} color="#444" mr={5}>Số điện thoại: </Text>
-                <Text color="#444">{props.userTeacher?.worker.user.phone}</Text>
+                <Text color="#444">{props.userTeacher?.worker.user.phone || "-"}</Text>
               </Group>
             </Grid.Col>
           </Grid>
@@ -149,7 +149,7 @@ const TeacherPersonalScreen = (props: IProps) => {
             <Text weight={600} color="#444" mr={5}>Quản lý: </Text>
             <Text color="#444">{props.userTeacher?.worker.branch.userEmployee?.worker.user.fullName ?
               `${props.userTeacher?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userTeacher?.worker.branch.userEmployee.worker.user.id})` :
-              "Không có thông tin"}</Text>
+              "-"}</Text>
           </Group>
 
           <Space h={40} />
@@ -160,7 +160,7 @@ const TeacherPersonalScreen = (props: IProps) => {
             pt={10}
             size="xl"
             style={{ color: "#444", textAlign: "justify" }}
-            dangerouslySetInnerHTML={{ __html: props.userTeacher?.shortDesc || "" }} />
+            dangerouslySetInnerHTML={{ __html: props.userTeacher?.shortDesc || "-" }} />
 
           <Space h={40} />
           <Text color="#444" weight={700} style={{ fontSize: "1.8rem" }}>Kinh nghiệm giảng dạy</Text>
@@ -170,7 +170,7 @@ const TeacherPersonalScreen = (props: IProps) => {
             pt={10}
             size="xl"
             style={{ color: "#444", textAlign: "justify" }}
-            dangerouslySetInnerHTML={{ __html: props.userTeacher?.experience || "" }} />
+            dangerouslySetInnerHTML={{ __html: props.userTeacher?.experience || "-" }} />
 
           <Space h={40} />
           <Container p={0} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

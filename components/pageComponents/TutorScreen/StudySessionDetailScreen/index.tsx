@@ -180,7 +180,7 @@ const StudySessionDetailScreen = (props: IProps) => {
               <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                 <Text color="#444444" mr={5}>Giáo viên:</Text>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                  <Text color="#444444">{infoStudySession?.teacher.worker.user.fullName || "Không có thông tin"}</Text>
+                  <Text color="#444444">{infoStudySession?.teacher.worker.user.fullName || "-"}</Text>
                   <Text color="dimmed" style={{ fontSize: "1rem" }}>MSGV: {infoStudySession?.teacher.worker.user.id}</Text>
                 </div>
               </Group>
@@ -189,7 +189,7 @@ const StudySessionDetailScreen = (props: IProps) => {
               <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                 <Text color="#444444" mr={5}>Ngày: </Text>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                  <Text color="#444444">{moment(infoStudySession?.date).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") || 'Không có thông tin'}</Text>
+                  <Text color="#444444">{moment(infoStudySession?.date).utcOffset(TimeZoneOffset).format("DD/MM/YYYY") || '--/--/----'}</Text>
                   {
                     infoStudySession && infoStudySession.shifts && infoStudySession.shifts.length > 0 ?
                       <div>
@@ -198,7 +198,7 @@ const StudySessionDetailScreen = (props: IProps) => {
                           + "-" + moment(infoStudySession.shifts[infoStudySession.shifts.length - 1].endTime).utcOffset(TimeZoneOffset).format("HH:mm")
                         }</Text>
                       </div> :
-                      <Text color="dimmed" style={{ fontSize: "1rem" }}>Không có thông tin</Text>
+                      <Text color="dimmed" style={{ fontSize: "1rem" }}>--:--</Text>
                   }
                 </div>
               </Group>
@@ -207,7 +207,7 @@ const StudySessionDetailScreen = (props: IProps) => {
               <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start" >
                 <Text color="#444444" mr={5}>Tình trạng: </Text>
                 {!infoStudySession && (
-                  <Text color="#444444">Không có thông tin</Text>
+                  <Text color="#444444">-</Text>
                 )}
                 {infoStudySession &&
                   getStudySessionState(infoStudySession) === StudySessionState.Finish && (
@@ -227,7 +227,7 @@ const StudySessionDetailScreen = (props: IProps) => {
               <Group position={isSmallTablet ? 'apart' : 'left'} align="flex-start">
                 <Text color="#444">Phòng học:</Text>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: isSmallTablet ? "flex-end" : "flex-start" }}>
-                  <Text color="#444">{infoStudySession?.classroom?.name || "Không có thông tin"}</Text>
+                  <Text color="#444">{infoStudySession?.classroom?.name || "-"}</Text>
                   {infoStudySession?.classroom && (
                     <Text color="dimmed" style={{ fontSize: "1rem" }}>{infoStudySession?.classroom.branch.name}</Text>
                   )}
@@ -242,7 +242,7 @@ const StudySessionDetailScreen = (props: IProps) => {
             pt={10}
             size="xl"
             style={{ color: "#444444", textAlign: "justify" }}
-            dangerouslySetInnerHTML={{ __html: infoStudySession?.notes || 'Không có thông tin' }} />
+            dangerouslySetInnerHTML={{ __html: infoStudySession?.notes || '-' }} />
           <Space h={20} />
           <Text color="#444444" weight={700} style={{ fontSize: "1.8rem" }}>Điểm danh</Text>
           <Space h={20} />

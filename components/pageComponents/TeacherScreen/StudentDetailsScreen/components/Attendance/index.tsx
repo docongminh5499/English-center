@@ -17,7 +17,7 @@ const Timekeeping = (props: IProps) => {
     <>
       <Grid>
         <Grid.Col span={isMobile ? 4 : 3}><Text color="#222222" weight={500} mr={5}>Buổi học:</Text></Grid.Col>
-        <Grid.Col span={isMobile ? 8 : 9}><Text color="#222222" >{props.data.studySession.name || 'Không có thông tin'}</Text></Grid.Col>
+        <Grid.Col span={isMobile ? 8 : 9}><Text color="#222222" >{props.data.studySession.name || '-'}</Text></Grid.Col>
       </Grid>
       <Grid>
         <Grid.Col span={isMobile ? 4 : 3}><Text color="#222222" weight={500} mr={5}>Ca học:</Text></Grid.Col>

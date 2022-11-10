@@ -669,8 +669,8 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                             <td>{student.user.fullName}</td>
                             <td>{getGenderName(student.user.sex)}</td>
                             <td>{moment(student.user.dateOfBirth).format("DD/MM/YYYY")}</td>
-                            <td>{student.user.email || "Không có thông tin"}</td>
-                            <td>{student.user.phone || "Không có thông tin"}</td>
+                            <td>{student.user.email || "-"}</td>
+                            <td>{student.user.phone || "-"}</td>
                             <td>
                               <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
                                 onClick={() => {
@@ -793,7 +793,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                               <Text color="dimmed" style={{ fontSize: "1rem" }}>MSTG: {studySession.tutor.worker.user.id}</Text>
                             </td>
                             <td>
-                              <Text>{studySession.classroom?.name || "Không có thông tin"}</Text>
+                              <Text>{studySession.classroom?.name || "-"}</Text>
                               {studySession.classroom && (
                                 <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
                               )}

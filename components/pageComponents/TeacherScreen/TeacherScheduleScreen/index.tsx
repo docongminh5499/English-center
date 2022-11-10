@@ -135,7 +135,7 @@ const TeacherScheduleScreen = () => {
                         + "-" + moment(studySession.shifts[studySession.shifts.length - 1].endTime).format("HH:mm")
                       }</td>
                       <td>
-                        <Text>{studySession.classroom?.name || "Không có thông tin"}</Text>
+                        <Text>{studySession.classroom?.name || "-"}</Text>
                         {studySession.classroom && (
                           <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
                         )}

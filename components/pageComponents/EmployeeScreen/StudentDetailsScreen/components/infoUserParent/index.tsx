@@ -7,6 +7,8 @@ import moment from "moment";
 import User from '../../../../../../models/user.model';
 import { getGenderName } from '../../../../../../helpers/getGenderName';
 import FindParentModal from '../../../Modal/findParent.modal';
+import ConfirmChooseModal from '../../../Modal/modal';
+import UserParent from '../../../../../../models/userParent.model';
 
 interface IProps {
   title: string,
@@ -19,16 +21,28 @@ const InfoUserParent = (props: IProps) => {
   const isMobile = useMediaQuery('(max-width: 480px)');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isSendingRequest, setIsSendingRequest] = useState(false);
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
+  const [currentParent, setCurrentParent] = useState<UserParent | null>(null);
 
 
-  const onChooseParent = useCallback(async (parentId: number) => {
+
+  const onChooseParent = useCallback(async (parent: UserParent) => {
+    setCurrentParent(parent);
+    setIsOpenConfirmModal(true);
+  }, []);
+
+
+
+  const onConfirmChooseParent = useCallback(async () => {
+    if (currentParent === null) throw 'Invalid parent';
+    setIsOpenConfirmModal(false);
     setIsSendingRequest(true);
-    await props.onChooseParent(parentId);
+    await props.onChooseParent(currentParent.user.id);
     setIsSendingRequest(false);
     setIsOpenModal(false);
-  }, [props.onChooseParent]);
+  }, [props.onChooseParent, currentParent]);
 
-  
+
   return (
     <Container style={{ width: "100%" }} mt={20} p={0} size="xl">
       <Container style={{
@@ -45,7 +59,7 @@ const InfoUserParent = (props: IProps) => {
           mt={isMobile ? 10 : 0}
           size="xs" compact
           onClick={() => setIsOpenModal(true)}>
-          Thay đổi</Button>
+          Thay đổi phụ huynh</Button>
       </Container>
       <Space h={30} />
       <Modal
@@ -58,6 +72,22 @@ const InfoUserParent = (props: IProps) => {
         <FindParentModal
           onChooseParent={onChooseParent}
           loading={isSendingRequest}
+        />
+      </Modal>
+      <Modal
+        opened={isOpenConfirmModal}
+        onClose={() => setIsOpenConfirmModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <ConfirmChooseModal
+          title='Thay đổi phụ huynh'
+          message={`Bạn có muốn thay đổi phụ huynh thành "${currentParent?.user.fullName}" chứ?`}
+          buttonLabel="Xác nhận"
+          colorButton='red'
+          loading={false}
+          callBack={onConfirmChooseParent}
         />
       </Modal>
 
