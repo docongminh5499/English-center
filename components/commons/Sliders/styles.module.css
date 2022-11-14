@@ -1,0 +1,28 @@
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-60%);
+    left: 5px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: rgba(255,255,255,0.25)
+}
+
+.arrow.arrow_right {
+    left: unset;
+    right: 5px;
+    transform: rotate(180deg) translateY(60%);;
+}
+
+.arrow:hover {
+    background-color: black;
+}
+
+.arrow:hover svg {
+    filter: brightness(0) invert(1);
+    transition: all .3s;
+}
