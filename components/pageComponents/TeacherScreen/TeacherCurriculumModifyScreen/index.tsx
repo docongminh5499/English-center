@@ -67,9 +67,10 @@ const TeacherCurriculumModifyScreen = (props: IProps) => {
 
 
 
-
   useEffect(() => {
-    if (props.curriculum === null)
+    if (authState.isManager !== true)
+      router.replace('/not-found');
+    else if (props.curriculum === null)
       router.replace('/not-found');
     else {
       const pseudoIdLectures = props.curriculum.lectures.map(cur => ({ ...cur, pseudoId: uuidv4() }));

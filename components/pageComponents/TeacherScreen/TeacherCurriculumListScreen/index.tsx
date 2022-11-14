@@ -184,34 +184,36 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       <Container style={{
                         display: "flex",
                         justifyContent: "center"
-                      }} p={0} my={10}>
+                      }} p={0} mt={10}>
                         <Badge>
-                          <Text style={{ fontSize: "1.1rem" }}>Đã đăng ký</Text>
+                          <Text style={{ fontSize: "1.1rem" }}>Được chỉ định</Text>
                         </Badge>
                       </Container>
                     )}
-                    <Container
-                      p={0}
-                      style={{
-                        display: "flex",
-                        flexDirection: isTablet ? "column" : "row",
-                        width: "100%",
-                        gap: "0.5rem"
-                      }}>
-                      <Button compact fullWidth
-                        onClick={(e?: any) => {
-                          e?.stopPropagation()
-                          router.push("/teacher/curriculum/" + curriculum.id + "/modify")
-                        }}>Sửa</Button>
-                      <Button color="red" compact fullWidth
-                        onClick={(e?: any) => {
-                          e?.stopPropagation()
-                          setCurrentCurriculum(curriculum);
-                          setIsOpenDeleteModal(true);
+                    {authState.isManager && (
+                      <Container
+                        p={0} mt={10}
+                        style={{
+                          display: "flex",
+                          flexDirection: isTablet ? "column" : "row",
+                          width: "100%",
+                          gap: "0.5rem"
                         }}>
-                        Xóa
-                      </Button>
-                    </Container>
+                        <Button compact fullWidth
+                          onClick={(e?: any) => {
+                            e?.stopPropagation()
+                            router.push("/teacher/curriculum/" + curriculum.id + "/modify")
+                          }}>Sửa</Button>
+                        <Button color="red" compact fullWidth
+                          onClick={(e?: any) => {
+                            e?.stopPropagation()
+                            setCurrentCurriculum(curriculum);
+                            setIsOpenDeleteModal(true);
+                          }}>
+                          Xóa
+                        </Button>
+                      </Container>
+                    )}
                   </Container>
                 </Card>
               ))}
@@ -263,34 +265,36 @@ const TeacherCurriculumListScreen = (props: IProps) => {
                       <Container style={{
                         display: "flex",
                         justifyContent: "center"
-                      }} p={0} my={10}>
+                      }} p={0} mt={10}>
                         <Badge>
-                          <Text style={{ fontSize: "1.1rem" }}>Đã đăng ký</Text>
+                          <Text style={{ fontSize: "1.1rem" }}>Được chỉ định</Text>
                         </Badge>
                       </Container>
                     )}
-                    <Container
-                      p={0}
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        flexDirection: isTablet ? "column" : "row",
-                        gap: "0.5rem"
-                      }}>
-                      <Button compact fullWidth
-                        onClick={(e?: any) => {
-                          e?.stopPropagation()
-                          router.push("/teacher/curriculum/" + curriculum.id + "/modify")
-                        }}>Sửa</Button>
-                      <Button color="red" compact fullWidth
-                        onClick={(e?: any) => {
-                          e?.stopPropagation()
-                          setCurrentCurriculum(curriculum);
-                          setIsOpenDeleteModal(true);
+                    {authState.isManager && (
+                      <Container
+                        p={0} mt={10}
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          flexDirection: isTablet ? "column" : "row",
+                          gap: "0.5rem"
                         }}>
-                        Xóa
-                      </Button>
-                    </Container>
+                        <Button compact fullWidth
+                          onClick={(e?: any) => {
+                            e?.stopPropagation()
+                            router.push("/teacher/curriculum/" + curriculum.id + "/modify")
+                          }}>Sửa</Button>
+                        <Button color="red" compact fullWidth
+                          onClick={(e?: any) => {
+                            e?.stopPropagation()
+                            setCurrentCurriculum(curriculum);
+                            setIsOpenDeleteModal(true);
+                          }}>
+                          Xóa
+                        </Button>
+                      </Container>
+                    )}
                   </Container>
                 </Card>
               ))}
@@ -298,12 +302,13 @@ const TeacherCurriculumListScreen = (props: IProps) => {
             <Space h={40} />
           </>
         )}
-
-        <Container my={20}>
-          <Button onClick={() => router.push("/teacher/curriculum/create")}>
-            Tạo chương trình dạy mới
-          </Button>
-        </Container>
+        {authState.isManager && (
+          <Container my={20}>
+            <Button onClick={() => router.push("/teacher/curriculum/create")}>
+              Tạo chương trình dạy mới
+            </Button>
+          </Container>
+        )}
 
       </Container>
     </>

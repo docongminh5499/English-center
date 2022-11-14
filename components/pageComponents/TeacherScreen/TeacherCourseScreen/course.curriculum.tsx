@@ -1,4 +1,4 @@
-import { Container, Grid, NavLink, Text } from "@mantine/core";
+import { Container, Grid, NavLink, ScrollArea, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useState } from "react";
 import Curriculum from "../../../../models/cirriculum.model";
@@ -18,30 +18,32 @@ const CourseCurriculum = (props: IProps) => {
     <Container size="xl" p={0}>
       {props.curriculum && (
         <Container size="xl" style={{ display: "flex", flexDirection: isTablet ? "column" : "row" }} p={0}>
-          <Grid style={{ width: isTablet ? "100%" : "175px", minWidth: isTablet ? "0px" : "175px" }}>
-            {props.curriculum.lectures.map((item, index) => (
-              <Grid.Col span={isTablet ? (isMobile ? 4 : 3) : 12} key={index}>
-                <NavLink
-                  style={{ borderRadius: 5 }}
-                  active={index === active}
-                  label={
-                    isTablet ? (
-                      <Text color={index === active ? "blue" : "#444"} style={{ fontSize: "1.4rem" }} weight={700}>
-                        <Text align="center">Bài {item.order}</Text>
-                      </Text>
-                    ) : (
-                      <Text color={index === active ? "blue" : "#444"} style={{ fontSize: "1.4rem" }}>
-                        <Text weight={600} component="span">
-                          {"Bài " + item.order + ": "}
+          <ScrollArea type="never" style={{ width: isTablet ? "100%" : "175px", minWidth: isTablet ? "0px" : "175px" }}>
+            <Grid style={{ maxHeight: isTablet ? 100 : 500 }}>
+              {props.curriculum.lectures.map((item, index) => (
+                <Grid.Col span={isTablet ? (isMobile ? 4 : 3) : 12} key={index}>
+                  <NavLink
+                    style={{ borderRadius: 5 }}
+                    active={index === active}
+                    label={
+                      isTablet ? (
+                        <Text color={index === active ? "blue" : "#444"} style={{ fontSize: "1.4rem" }} weight={700}>
+                          <Text align="center">Bài {item.order}</Text>
                         </Text>
-                        {item.name}
-                      </Text>
-                    )}
-                  onClick={() => setActive(index)}
-                />
-              </Grid.Col>
-            ))}
-          </Grid>
+                      ) : (
+                        <Text color={index === active ? "blue" : "#444"} style={{ fontSize: "1.4rem" }}>
+                          <Text weight={600} component="span">
+                            {"Bài " + item.order + ": "}
+                          </Text>
+                          {item.name}
+                        </Text>
+                      )}
+                    onClick={() => setActive(index)}
+                  />
+                </Grid.Col>
+              ))}
+            </Grid>
+          </ScrollArea>
           <Container style={{ flexGrow: 1 }} pl={isTablet ? 0 : 8} pr={0} mt={isTablet ? 16 : 0} mx={0}>
             {active >= 0 && (
               <Container

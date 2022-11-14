@@ -89,6 +89,7 @@ export const TeacherConstants = {
   maxTopComments: 3,
   limitStudySession: 12,
   limitSchedule: 12,
+  limitTeacher: 6,
 }
 
 export const EmployeeConstants = {
@@ -163,6 +164,8 @@ export const Url = {
     getSchedules: "/api/teachers/schedule",
     getCurriculumTags: "/api/teachers/curriculum/get-curriculum-tags",
     requestOffStudySession: "/api/teachers/courses/request-off-study-session",
+    getTeachersPreferedCurriculum: "/api/teachers/curriculum/get-teachers-by-prefered-curriculum",
+    getTeachersByBranchAndNotPreferedCurriculum: "/api/teachers/curriculum/get-teachers-by-branch-and-not-prefered-curriculum",
     //Hoc
     createExercise: "/api/teachers/exercise/create-exercise",
     addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",

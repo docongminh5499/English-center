@@ -31,6 +31,7 @@ export const loadUserFromLocalStorage =
             expireTime: response.exp,
             userId: response.userId,
             avatar: response.avatar,
+            isManager: response.isManager,
           }, new Date(response.exp * 1000));
           setState({
             token: tokenPayload.token,
@@ -40,6 +41,7 @@ export const loadUserFromLocalStorage =
             expireTime: response.exp,
             userId: response.userId,
             avatar: response.avatar,
+            isManager: response.isManager,
           });
           SocketStoreInstance.actions.emit("signin", { userId: response.userId, token: tokenPayload.token });
         } catch (error: any) {
@@ -78,6 +80,7 @@ export const logOut =
         role: UserRole.GUEST,
         expireTime: undefined,
         avatar: undefined,
+        isManager: undefined,
       });
       SocketStoreInstance.actions.emit("signout", { token });
     };

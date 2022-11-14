@@ -11,6 +11,7 @@ export type State = {
   expireTime?: number;
   avatar?: string;
   loggingOut?: boolean;
+  isManager?: boolean;
 };
 
 const initialState: State = {
@@ -22,6 +23,7 @@ const initialState: State = {
   expireTime: undefined,
   avatar: undefined,
   loggingOut: false,
+  isManager: undefined,
 };
 
 const actions = {

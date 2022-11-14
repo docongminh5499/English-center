@@ -151,6 +151,13 @@ const TutorPersonalScreen = (props: IProps) => {
               `${props.userTutor?.worker.branch.userEmployee.worker.user.fullName} (MSNV: ${props.userTutor?.worker.branch.userEmployee.worker.user.id})` :
               "-"}</Text>
           </Group>
+          <Space h={10} />
+          <Group position="apart">
+            <Text weight={600} color="#444" mr={5}>Quản lý học vụ: </Text>
+            <Text color="#444">{props.userTutor?.worker.branch.userTeacher?.worker.user.fullName ?
+              `${props.userTutor?.worker.branch.userTeacher.worker.user.fullName} (MSGV: ${props.userTutor?.worker.branch.userTeacher.worker.user.id})` :
+              "-"}</Text>
+          </Group>
 
           <Space h={40} />
 

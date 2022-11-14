@@ -20,6 +20,7 @@ import ChangeModifiedLectureModal from "../Modal/changeModifiedLecture.modal";
 import API from "../../../../helpers/api";
 import { useAuth } from "../../../../stores/Auth";
 import Tag from "../../../../models/tag.model";
+import Loading from "../../../commons/Loading";
 
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tiêu đề").max(255, "Tiêu đề có độ dài quá lớn, tối đa 255 ký tự"),
@@ -63,7 +64,7 @@ const TeacherCurriculumAddScreen = (props: IProps) => {
   const [isOpenHaveNotSaveLectureModal, setIsOpenHaveNotSaveLectureModal] = useState(false);
   const [currentRemovedLecture, setCurrentRemovedLecture] = useState<Lecture | null>();
   const [tags, setTags] = useState(props.tags);
-
+  const [didMount, setDidMount] = useState(false);
 
 
   const createCurriculumInfoForm = useForm({
@@ -245,6 +246,13 @@ const TeacherCurriculumAddScreen = (props: IProps) => {
   }, [lectures])
 
 
+  useEffect(() => {
+    if (authState.isManager !== true)
+      router.replace('/not-found');
+    else setDidMount(true);
+  }, []);
+
+
 
   return (
     <>
@@ -316,187 +324,200 @@ const TeacherCurriculumAddScreen = (props: IProps) => {
           <Text align="center" style={{ color: "#444" }}>Bạn chưa lưu bài học.</Text>
           <Text align="center" style={{ color: "#444" }}>Hãy lưu bài học trước khi kết thúc.</Text>
         </Container>
-
       </Modal>
 
+      {!didMount && (
+        <Container style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <Loading />
+        </Container>
+      )}
 
-      <Container size="xl" style={{ width: "100%" }} p={isMobile ? 8 : 20}>
-        <Title transform="uppercase" color="#444" size="2.6rem" my={20} align="center">
-          Thêm chương trình dạy
-        </Title>
 
-        <form
-          encType='multipart/form-data'
-          onSubmit={createCurriculumInfoForm.onSubmit((values) => onSubmit(values))}>
+      {didMount && (
+        <Container size="xl" style={{ width: "100%" }} p={isMobile ? 8 : 20}>
+          <Title transform="uppercase" color="#444" size="2.6rem" my={20} align="center">
+            Thêm chương trình dạy
+          </Title>
 
-          <TextInput
-            style={{ flex: 1 }}
-            placeholder="Tiêu đề"
-            label="Tiêu đề"
-            withAsterisk
-            {...createCurriculumInfoForm.getInputProps("name")}
-          />
+          <form
+            encType='multipart/form-data'
+            onSubmit={createCurriculumInfoForm.onSubmit((values) => onSubmit(values))}>
 
-          <Space h={10} />
-
-          <Textarea
-            withAsterisk
-            placeholder="Mô tả ngắn"
-            label="Mô tả ngắn"
-            minRows={6}
-            {...createCurriculumInfoForm.getInputProps('desc')}
-          />
-
-          <Space h={10} />
-
-          <Select
-            style={{ flex: 1 }}
-            withAsterisk
-            placeholder="Loại chương trình"
-            label="Loại chương trình"
-            data={[
-              { value: CourseType.SHORT_TERM, label: 'Ngắn hạn' },
-              { value: CourseType.LONG_TERM, label: 'Dài hạn' },
-            ]}
-            {...createCurriculumInfoForm.getInputProps('type')}
-          />
-
-          <Space h={10} />
-
-          <Select
-            style={{ flex: 1 }}
-            withAsterisk
-            placeholder="Trình độ"
-            label="Trình độ"
-            data={[
-              { value: CurriculumLevel.Beginer, label: 'Sơ cấp' },
-              { value: CurriculumLevel.Intermediate, label: 'Trung cấp' },
-              { value: CurriculumLevel.Advance, label: 'Cao cấp' },
-            ]}
-            {...createCurriculumInfoForm.getInputProps('level')}
-          />
-
-          <Space h={10} />
-
-          <TextInput
-            style={{ flex: 1 }}
-            placeholder="Số ca học mỗi buổi học"
-            label="Số ca học mỗi buổi học"
-            withAsterisk
-            {...createCurriculumInfoForm.getInputProps("shiftsPerSession")}
-          />
-
-          <Space h={10} />
-
-          <MultiSelect
-            data={tags.map(tag => tag.name)}
-            label="Thể loại"
-            placeholder="Thể loại"
-            searchable
-            creatable
-            getCreateLabel={(query) => `+ Thêm "${query}"`}
-            onCreate={(query) => {
-              const item = { name: query, type: TagsType.Curriculum };
-              setTags((current) => [...current, item]);
-              return query;
-            }}
-            nothingFound="Không tìm thấy kết quả"
-            {...createCurriculumInfoForm.getInputProps('tags')}
-          />
-
-          <Space h={10} />
-
-          <Text weight={600} style={{ fontSize: "14px" }}>
-            Hình minh họa <Text component="span" color='red'>*</Text>
-          </Text>
-          <Container style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative"
-          }}>
-            <Image
-              withPlaceholder
-              placeholder={
-                <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", maxWidth: "300px" }}>
-                  <Loader variant="dots" />
-                </Container>
-              }
-              imageRef={avatarImgRef}
-              style={{ maxWidth: "300px" }}
-              radius="md"
-              src={getImageUrl(undefined)}
-              alt="Hình minh họa chương trình dạy"
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Tiêu đề"
+              label="Tiêu đề"
+              withAsterisk
+              {...createCurriculumInfoForm.getInputProps("name")}
             />
-            <FileInput
-              accept="image/*"
-              style={{ display: 'none' }}
-              ref={avatarInputRef}
-              {...createCurriculumInfoForm.getInputProps('image')}
+
+            <Space h={10} />
+
+            <Textarea
+              withAsterisk
+              placeholder="Mô tả ngắn"
+              label="Mô tả ngắn"
+              minRows={6}
+              {...createCurriculumInfoForm.getInputProps('desc')}
             />
-            <Button
-              style={{
-                position: "absolute",
-                bottom: "1rem",
-                left: "50%",
-                zIndex: 10,
-                transform: "translateX(-50%)"
+
+            <Space h={10} />
+
+            <Select
+              style={{ flex: 1 }}
+              withAsterisk
+              placeholder="Loại chương trình"
+              label="Loại chương trình"
+              data={[
+                { value: CourseType.SHORT_TERM, label: 'Ngắn hạn' },
+                { value: CourseType.LONG_TERM, label: 'Dài hạn' },
+              ]}
+              {...createCurriculumInfoForm.getInputProps('type')}
+            />
+
+            <Space h={10} />
+
+            <Select
+              style={{ flex: 1 }}
+              withAsterisk
+              placeholder="Trình độ"
+              label="Trình độ"
+              data={[
+                { value: CurriculumLevel.Beginer, label: 'Sơ cấp' },
+                { value: CurriculumLevel.Intermediate, label: 'Trung cấp' },
+                { value: CurriculumLevel.Advance, label: 'Cao cấp' },
+              ]}
+              {...createCurriculumInfoForm.getInputProps('level')}
+            />
+
+            <Space h={10} />
+
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Số ca học mỗi buổi học"
+              label="Số ca học mỗi buổi học"
+              withAsterisk
+              {...createCurriculumInfoForm.getInputProps("shiftsPerSession")}
+            />
+
+            <Space h={10} />
+
+            <MultiSelect
+              data={tags.map(tag => tag.name)}
+              label="Thể loại"
+              placeholder="Thể loại"
+              searchable
+              creatable
+              getCreateLabel={(query) => `+ Thêm "${query}"`}
+              onCreate={(query) => {
+                const item = { name: query, type: TagsType.Curriculum };
+                setTags((current) => [...current, item]);
+                return query;
               }}
-              onClick={() => avatarInputRef.current.click()}
-            >Thay đổi</Button>
-          </Container>
-          {createCurriculumInfoForm.errors['image'] && (
-            <Text color="red" style={{ fontSize: "12px" }}>
-              {createCurriculumInfoForm.errors['image']}
-            </Text>
-          )}
-          <Space h={10} />
+              nothingFound="Không tìm thấy kết quả"
+              {...createCurriculumInfoForm.getInputProps('tags')}
+            />
 
-          <Text weight={600} style={{ fontSize: "14px" }}>
-            Chương trình dạy <Text component="span" color='red'>*</Text>
-          </Text>
-          {createCurriculumInfoForm.errors['lectures'] && (
-            <Text color="red" style={{ fontSize: "12px" }}>
-              {createCurriculumInfoForm.errors['lectures']}
+            <Space h={10} />
+
+            <Text weight={600} style={{ fontSize: "14px" }}>
+              Hình minh họa <Text component="span" color='red'>*</Text>
             </Text>
-          )}
-          <Container p={0} size="xl" style={{ width: "100%" }}>
-            <Container p={0} style={{ width: "100%" }} size="xl">
-              <Button
-                color="green"
-                my={10}
-                onClick={onClickAddLectureButton}>
-                Thêm bài học
-              </Button>
-              <LectureList
-                activeId={currentModifiedLecture?.pseudoId}
-                data={lectures}
-                onDragItem={onDragItem}
-                onClickItem={onClickLecture}
-                onDeleteItem={onDeleteItem}
+            <Container style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative"
+            }}>
+              <Image
+                withPlaceholder
+                placeholder={
+                  <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", maxWidth: "300px" }}>
+                    <Loader variant="dots" />
+                  </Container>
+                }
+                imageRef={avatarImgRef}
+                style={{ maxWidth: "300px" }}
+                radius="md"
+                src={getImageUrl(undefined)}
+                alt="Hình minh họa chương trình dạy"
               />
+              <FileInput
+                accept="image/*"
+                style={{ display: 'none' }}
+                ref={avatarInputRef}
+                {...createCurriculumInfoForm.getInputProps('image')}
+              />
+              <Button
+                style={{
+                  position: "absolute",
+                  bottom: "1rem",
+                  left: "50%",
+                  zIndex: 10,
+                  transform: "translateX(-50%)"
+                }}
+                onClick={() => avatarInputRef.current.click()}
+              >Thay đổi</Button>
             </Container>
-            <Space h={20} />
-            {isOpenLectureForm && (
+            {createCurriculumInfoForm.errors['image'] && (
+              <Text color="red" style={{ fontSize: "12px" }}>
+                {createCurriculumInfoForm.errors['image']}
+              </Text>
+            )}
+            <Space h={10} />
+
+            <Text weight={600} style={{ fontSize: "14px" }}>
+              Chương trình dạy <Text component="span" color='red'>*</Text>
+            </Text>
+            {createCurriculumInfoForm.errors['lectures'] && (
+              <Text color="red" style={{ fontSize: "12px" }}>
+                {createCurriculumInfoForm.errors['lectures']}
+              </Text>
+            )}
+            <Container p={0} size="xl" style={{ width: "100%" }}>
               <Container p={0} style={{ width: "100%" }} size="xl">
-                <LectureForm
-                  submitRef={saveLectureFormRef}
-                  lecture={currentModifiedLecture}
-                  onSave={onSaveModifiedLecture}
-                  onCancel={onCancelModifiedLecture}
-                  onErrorCallback={() => setIsOpenChangeModifiedModal(false)}
+                <Button
+                  color="green"
+                  my={10}
+                  onClick={onClickAddLectureButton}>
+                  Thêm bài học
+                </Button>
+                <LectureList
+                  activeId={currentModifiedLecture?.pseudoId}
+                  data={lectures}
+                  onDragItem={onDragItem}
+                  onClickItem={onClickLecture}
+                  onDeleteItem={onDeleteItem}
                 />
               </Container>
-            )}
-          </Container>
+              <Space h={20} />
+              {isOpenLectureForm && (
+                <Container p={0} style={{ width: "100%" }} size="xl">
+                  <LectureForm
+                    submitRef={saveLectureFormRef}
+                    lecture={currentModifiedLecture}
+                    onSave={onSaveModifiedLecture}
+                    onCancel={onCancelModifiedLecture}
+                    onErrorCallback={() => setIsOpenChangeModifiedModal(false)}
+                  />
+                </Container>
+              )}
+            </Container>
 
-          <Space h={40} />
-          <Container p={0} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-            <Button type="submit">Lưu thông tin</Button>
-          </Container>
-          <Space h={40} />
-        </form>
-      </Container >
+            <Space h={40} />
+            <Container p={0} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+              <Button type="submit">Lưu thông tin</Button>
+            </Container>
+            <Space h={40} />
+          </form>
+        </Container >
+      )}
     </>
   );
 }
