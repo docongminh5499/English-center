@@ -1,12 +1,14 @@
-import { Container, Divider, Grid, Group, Image, Loader, Space, Text } from "@mantine/core";
+import { Anchor, Container, Divider, Grid, Group, Image, Loader, ScrollArea, Space, Table, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { TimeZoneOffset, UserRole } from "../../../../helpers/constants";
+import { formatCurrency } from "../../../../helpers/formatCurrency";
 import { getGenderName } from "../../../../helpers/getGenderName";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
+import Salary from "../../../../models/salary.model";
 import UserTeacher from "../../../../models/userTeacher.model";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
@@ -15,6 +17,7 @@ import Loading from "../../../commons/Loading";
 interface IProps {
   userRole?: UserRole | null;
   userTeacher: UserTeacher | null;
+  salaries: { total: number, salaries: Salary[] };
 }
 
 
@@ -178,6 +181,57 @@ const TeacherPersonalScreen = (props: IProps) => {
             size="xl"
             style={{ color: "#444", textAlign: "justify" }}
             dangerouslySetInnerHTML={{ __html: props.userTeacher?.experience || "-" }} />
+
+          <Space h={40} />
+          <Group position="apart">
+            <Text color="#444" weight={700} style={{ fontSize: "1.8rem" }}>Lương</Text>
+            {props.salaries.total > props.salaries.salaries.length && (
+              <Anchor component="button" onClick={() => router.push("/teacher/personal/salaries")}>
+                Xem tất cả
+              </Anchor>
+            )}
+          </Group>
+          <Divider />
+          {props.salaries.salaries.length === 0 && (
+            <Container style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100px"
+            }}>
+              <Text style={{ fontSize: "2.4rem", color: "#CED4DA" }} weight={600}>
+                Không có dữ liệu
+              </Text>
+            </Container>
+          )}
+
+          {props.salaries.salaries.length > 0 && (
+            <ScrollArea style={{ width: "100%" }}>
+              <Table verticalSpacing="xs" highlightOnHover style={{ width: "100%", minWidth: "900px" }}>
+                <thead>
+                  <tr>
+                    <th>Mã giao dịch</th>
+                    <th>Nội dung</th>
+                    <th>Số tiền</th>
+                    <th>Ngày giao dịch</th>
+                    <th>Người thực hiện</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.salaries.salaries.map((salary, index) => (
+                    <tr key={index}>
+                      <td>{salary.transCode.transCode}</td>
+                      <td>{salary.transCode.content}</td>
+                      <td>{formatCurrency(salary.transCode.amount)}</td>
+                      <td>{moment(salary.transCode.payDate).utcOffset(TimeZoneOffset).format("HH:mm:ss DD/MM/YYYY")}</td>
+                      <td>{salary.transCode.userEmployee.worker.user.fullName}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </ScrollArea>
+          )}
 
           <Space h={40} />
           <Container p={0} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

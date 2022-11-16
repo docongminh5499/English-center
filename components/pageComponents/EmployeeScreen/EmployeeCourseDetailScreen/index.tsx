@@ -22,6 +22,7 @@ import RemoveStudySessionModal from "../Modal/modal";
 import styles from "./course.module.css";
 import UserStudent from "../../../../models/userStudent.model";
 import { getGenderName } from "../../../../helpers/getGenderName";
+import { formatCurrency } from "../../../../helpers/formatCurrency";
 
 
 interface IProps {
@@ -537,7 +538,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Giá tiền</Text>
-                <Text align="center">{course?.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</Text>
+                <Text align="center">{formatCurrency(course?.price)}</Text>
               </Container>
               <Container size="xl" style={{ width: "100%" }} p={0}>
                 <Text weight={600} align="center">Chi nhánh</Text>

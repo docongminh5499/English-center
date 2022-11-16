@@ -72,6 +72,12 @@ export enum ClassroomFunction {
   CLASSROOM = "Phòng học",
 }
 
+export enum TransactionType {
+  Salary = "Salary",
+  Fee = "Fee",
+  Refund = "Refund",
+}
+
 export const LocalStorageKey = {
   USER: "EnglishCenter-User",
 };
@@ -90,6 +96,8 @@ export const TeacherConstants = {
   limitStudySession: 12,
   limitSchedule: 12,
   limitTeacher: 6,
+  maxTopSalary: 3,
+  limitSalary: 8,
 }
 
 export const EmployeeConstants = {
@@ -98,6 +106,8 @@ export const EmployeeConstants = {
   limitClassroom: 6,
   limitStudent: 6,
   limitParent: 6,
+  maxTopSalary: 3,
+  limitSalary: 8,
 }
 
 export const StudentConstants = {
@@ -109,6 +119,8 @@ export const TutorConstants = {
   limitSchedule: 12,
   limitStudySession: 12,
   limitStudent: 12,
+  maxTopSalary: 3,
+  limitSalary: 8,
 }
 
 export const ChatConstants = {
@@ -166,6 +178,7 @@ export const Url = {
     requestOffStudySession: "/api/teachers/courses/request-off-study-session",
     getTeachersPreferedCurriculum: "/api/teachers/curriculum/get-teachers-by-prefered-curriculum",
     getTeachersByBranchAndNotPreferedCurriculum: "/api/teachers/curriculum/get-teachers-by-branch-and-not-prefered-curriculum",
+    getSalaries: "/api/teachers/personal/get-salaries",
     //Hoc
     createExercise: "/api/teachers/exercise/create-exercise",
     addNewQuestionTag: "/api/teachers/exercise/add-new-question-tag",
@@ -225,6 +238,7 @@ export const Url = {
     getStudentDetails: "/api/employees/student/get-student-detail",
     getAllParents: "/api/employees/student/get-parents",
     modifyParentForStudent: "/api/employees/student/modify-parent",
+    getSalaries: "/api/employees/personal/get-salaries",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",
@@ -240,6 +254,7 @@ export const Url = {
     getStudySessions: "/api/tutors/courses/get-study-sessions",
     getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
     requestOffStudySession: "/api/tutors/courses/request-off-study-session",
+    getSalaries: "/api/tutors/personal/get-salaries",
   }
 };
 
