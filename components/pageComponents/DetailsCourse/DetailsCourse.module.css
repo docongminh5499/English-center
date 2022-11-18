@@ -1,0 +1,401 @@
+.wrapPage {
+    /* width: 100%; */
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    flex: 1;
+    background-color: #F5F7FA;
+}
+
+.contentPage {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 40rem;
+    grid-column-gap: 3rem;
+}
+
+.contentPage .contentLeft,
+.contentPage .contentRight {
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .contentPage {
+        grid-template-columns: 1fr;
+        grid-row-gap: 3rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wrapPage {
+        padding-top: 3rem;
+    }
+}
+
+/* BOX PRICE */
+.wrapPice {
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.wrapPice .wrapThumbnail {
+    width: 100%;
+    height: 22rem;
+}
+
+.wrapPice .wrapThumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wrapPice .infoPrice {
+    padding: 2rem 3rem 5rem
+}
+
+.wrapPice .infoPrice .txtPrice {
+    width: 100%;
+    text-align: center;
+    font-size: 4rem;
+    font-weight: 500;
+}
+
+.wrapPice .infoPrice .buttonBuy {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%; 
+    text-align: center; 
+    background-color:#F85846;
+    color: #FDF6FF;
+    padding: 1.7rem 1rem;
+    font-size: 2rem;
+    margin-top: 2rem;
+    border-radius: 100px;
+    box-shadow: 0 7px 25px rgba(248,88,70,0.2);
+}
+
+@media screen and (max-width: 768px) {
+    .wrapPice .wrapThumbnail {
+        height: 25rem;
+    }
+    
+    .wrapPice .infoPrice {
+        padding: 1rem 2rem 3rem
+    }
+    
+    .wrapPice .infoPrice .txtPrice {
+        font-size: 2.5rem;
+    }
+    
+    .wrapPice .infoPrice .buttonBuy {
+        padding: 1.3rem 1rem;
+        font-size: 1.6rem;
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wrapPice .wrapThumbnail {
+        height: 20rem;
+    }
+}
+
+/* INFO AUTHO */
+.wrapInfoAuthor {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr
+}
+
+.infoAuthor {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    align-items: center;
+    grid-column-gap: 2rem;
+}
+
+.infoAuthor .wrapAvatar {
+    width: 100%;
+    height: 9rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.infoAuthor .wrapAvatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.infoAuthor .wrapNameAuthor {
+    width: 100%;
+}
+
+.wrapInfoAuthor .txtDes {
+    color: #A5A6AA;
+    font-weight: 500;
+    font-size:1.6rem
+}
+
+.wrapInfoAuthor .txtName {
+    font-size: 2rem;
+    line-height: 2.3rem;
+    font-weight: 500;
+    color: #010305;
+    margin-top: 0.5rem
+}
+
+.wrapInfoAuthor .wrapCategory {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    grid-column-gap: 2rem
+}
+
+.wrapInfoAuthor .wrapCategory svg {
+    width: 9rem;
+    height: 9rem;
+    color: #FF5B4A
+}
+
+@media screen and (max-width: 768px) {
+    .infoAuthor {
+        grid-template-columns: 7rem 1fr;
+        grid-column-gap: 1rem;
+    }
+    
+    .infoAuthor .wrapAvatar {
+        height: 7rem;
+    }
+    
+    .wrapInfoAuthor .txtDes {
+        font-size: 1.4rem
+    }
+    
+    .wrapInfoAuthor .txtName {
+        font-size: 1.6rem;
+        line-height: 2rem;
+        margin-top: 0.2rem
+    }
+    
+    .wrapInfoAuthor .wrapCategory {
+        grid-column-gap: 1rem
+    }
+    
+    .wrapInfoAuthor .wrapCategory svg {
+        width: 7rem;
+        height: 7rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .wrapInfoAuthor {
+        grid-template-columns: 1fr;
+        grid-row-gap: 2rem;
+    }
+    
+    .infoAuthor {
+        grid-template-columns: 5rem 1fr;
+    }
+    
+    .infoAuthor .wrapAvatar {
+        height: 5rem;
+    }
+    
+    .wrapInfoAuthor .txtDes {
+        font-size: 1.4rem
+    }
+    
+    .wrapInfoAuthor .txtName {
+        margin-top: 0;
+    }
+    
+    .wrapInfoAuthor .wrapCategory svg {
+        width: 5rem;
+        height: 5rem;
+    }
+}
+
+/* INFO COURSE */
+.wrapInfoCourse {
+    width: 100%;
+    margin-top: 3rem
+}
+
+.wrapInfoCourse .nameCourse {
+    font-size: 3.8rem;
+    line-height: 4.8rem;
+    font-weight: 500;
+}
+
+.wrapInfoCourse .listInfo {
+    width: 100%;
+    margin-top: 2rem;
+    display:flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.wrapInfoCourse .listInfo .infoItem {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.wrapInfoCourse .listInfo .infoItem svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #FF5B4A
+}
+
+.wrapInfoCourse .listInfo .infoItem .txtLabel {
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+@media screen and (max-width: 768px) {
+    .wrapInfoCourse {
+        margin-top: 3rem
+    }
+    
+    .wrapInfoCourse .nameCourse {
+        font-size: 2.5rem;
+        line-height: 3rem;
+    }
+    
+    .wrapInfoCourse .listInfo {
+        gap: 0;
+        margin-top: 1.5rem
+    }
+
+    .wrapInfoCourse .listInfo .infoItem {
+        width: 50%;
+        padding: .5rem 0
+    }
+    
+    .wrapInfoCourse .listInfo .infoItem .txtLabel {
+        font-size: 1.4rem;
+    }
+}
+
+/* DESCRIPTION COURSE */
+.wrapContentTab {
+    padding: 1rem 0
+}
+
+.wrapContentTab .contentTabCurriculum .title {
+    font-size: 2.2rem;
+    font-weight: 500
+}
+
+.wrapContentTab .contentTabCurriculum .des {
+    font-size: 1.6rem;
+    color: #797C7F;
+    margin-top: .3rem
+}
+
+.wrapContentTab .contentTabCurriculum .listCurriculum {
+    width: 100%;
+    background-color: white;
+    padding: 3rem;
+    margin-top: 3rem;
+}
+
+.wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.6rem;
+    color: #010305;
+    font-weight: 500;
+}
+
+.wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem svg {
+    color: #F85846
+}
+@media screen and (max-width: 480px) {
+    .wrapContentTab .contentTabCurriculum .listCurriculum {
+        padding: 2rem;
+    }
+
+    .wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem {
+        font-size: 1.4rem;
+    }
+}
+
+.wrapContentTab .tabInstructor {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.wrapContentTab .tabInstructor .instructorItem {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    grid-column-gap: 1rem;
+}
+
+.wrapContentTab .tabInstructor .instructorItem .wrapThumbnail {
+    width: 100%;
+    height: 5rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.wrapContentTab .tabInstructor .instructorItem .wrapThumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wrapContentTab .tabInstructor .instructorItem .infoInstructor {
+    width: 100%;
+}
+
+.wrapContentTab .tabInstructor .instructorItem .infoInstructor .name {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #010305
+}
+
+.wrapContentTab .tabInstructor .instructorItem .infoInstructor .des {
+    font-size: 1.6rem;
+    color: #797C7F;
+    margin-top: .5rem
+}
+
+@media screen and (max-width: 480px) {
+    .wrapContentTab .tabInstructor .instructorItem {
+        grid-template-columns: 1fr;
+        grid-row-gap: 1rem;
+        justify-items: center;
+    }
+    
+    .wrapContentTab .tabInstructor .instructorItem .wrapThumbnail {
+        width: 7rem;
+        height: 7rem;
+    }
+    
+    .wrapContentTab .tabInstructor .instructorItem .infoInstructor .name {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+    
+    .wrapContentTab .tabInstructor .instructorItem .infoInstructor .des {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+}
+
+/* CONTENT RICHTEXT */
+.contentRichtext p {
+    font-size: 1.6rem;
+    color: #797C7F;
+}
+
+.contentRichtext p:not(:first-child) {
+    margin-top:  1rem;
+}
