@@ -82,7 +82,6 @@ const EmployeeSalaryScreen = (props: IProps) => {
         (page - 1) * EmployeeConstants.limitSalary,
         date[0], date[1]
       );
-      console.log(responses)
       setTotal(responses.total);
       setMaxPage(Math.ceil(responses.total / EmployeeConstants.limitSalary));
       setListSalaries(responses.salaries);
@@ -171,7 +170,7 @@ const EmployeeSalaryScreen = (props: IProps) => {
                     <th>Nội dung</th>
                     <th>Số tiền</th>
                     <th>Ngày giao dịch</th>
-                    <th>Người thực hiện</th>
+                    <th>Người giao dịch</th>
                   </tr>
                 </thead>
                 <tbody>

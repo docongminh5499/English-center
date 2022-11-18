@@ -23,6 +23,7 @@ import styles from "./course.module.css";
 import UserStudent from "../../../../models/userStudent.model";
 import { getGenderName } from "../../../../helpers/getGenderName";
 import { formatCurrency } from "../../../../helpers/formatCurrency";
+import FindStudentModal from "../Modal/findStudent.modal";
 
 
 interface IProps {
@@ -69,6 +70,13 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const [isOnSendCreateSession, setIsOnSendCreateSession] = useState(false);
   const [isOpenRemoveSessionModal, setIsOpenRemoveSessionModal] = useState(false);
   const [isOnSendRemoveSession, setIsOnSendRemoveSession] = useState(false);
+  // Search student to add participate course
+  const [isOpenSearchStudentModal, setIsOpenSearchStudentModal] = useState(false);
+  const [isSendingFeeAmountRequest, setIsSendingFeeAmountRequest] = useState(false);
+  const [isSendingAddStudentRequest, setIsSendingAddStudentRequest] = useState(false);
+  const [isOpenConfirmAddStudentModal, setIsOpenConfirmAddStudentModal] = useState(false);
+
+  const [currentStudent, setCurrentStudent] = useState<UserStudent | null>(null);
   const router = useRouter();
 
 
@@ -437,6 +445,19 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         />
       </Modal>
 
+      <Modal
+        opened={isOpenSearchStudentModal}
+        onClose={() => setIsOpenSearchStudentModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <FindStudentModal
+          onChooseStudent={async () => { }}
+          loading={isSendingAddStudentRequest}
+        />
+      </Modal>
+
       {!didMount && (
         <Container style={{
           display: "flex",
@@ -655,12 +676,14 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                           <th>Ngày sinh</th>
                           <th>Email</th>
                           <th>Số điện thoại</th>
-                          <th>
-                            <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
-                              onClick={() => { }}>
-                              <IconSquarePlus size={20} />
-                            </ThemeIcon>
-                          </th>
+                          {getCourseStatus(course) != CourseStatus.Closed && (
+                            <th>
+                              <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
+                                onClick={() => setIsOpenSearchStudentModal(true)}>
+                                <IconSquarePlus size={20} />
+                              </ThemeIcon>
+                            </th>
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -672,14 +695,16 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                             <td>{moment(student.user.dateOfBirth).format("DD/MM/YYYY")}</td>
                             <td>{student.user.email || "-"}</td>
                             <td>{student.user.phone || "-"}</td>
-                            <td>
-                              <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
-                                onClick={() => {
+                            {getCourseStatus(course) != CourseStatus.Closed && (
+                              <td>
+                                <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                  onClick={() => {
 
-                                }}>
-                                <IconTrash size={20} />
-                              </ThemeIcon>
-                            </td>
+                                  }}>
+                                  <IconTrash size={20} />
+                                </ThemeIcon>
+                              </td>
+                            )}
                           </tr>
                         ))}
                       </tbody>

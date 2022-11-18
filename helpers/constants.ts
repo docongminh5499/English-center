@@ -108,6 +108,12 @@ export const EmployeeConstants = {
   limitParent: 6,
   maxTopSalary: 3,
   limitSalary: 8,
+  limitSalaryTransaction: 6,
+  limitFee: 6,
+  limitRefund: 6,
+  limitTeacher: 6,
+  limitTutor: 6,
+  limitEmployee: 6,
 }
 
 export const StudentConstants = {
@@ -146,6 +152,7 @@ export const Url = {
     getUnreadNotificationCount: "/api/users/notification/get-unread-notification-count",
     signUp: "/api/users/sign-up",
     checkOldEmail: "/api/users/sign-up/check-old-email",
+    modifyAccount: "/api/users/modify-account",
   },
   teachers: {
     getCourse: "/api/teachers/courses/get-course",
@@ -239,6 +246,12 @@ export const Url = {
     getAllParents: "/api/employees/student/get-parents",
     modifyParentForStudent: "/api/employees/student/modify-parent",
     getSalaries: "/api/employees/personal/get-salaries",
+    getSalariesByBranch: "/api/employees/transaction/get-salaries",
+    getFeesByBranch: "/api/employees/transaction/get-fees",
+    getRefundsByBranch: "/api/employees/transaction/get-refunds",
+    getTeachersByBranch: "/api/employees/workers/get-teachers",
+    getTutorsByBranch: "/api/employees/workers/get-tutors",
+    getEmployeesByBranch: "/api/employees/workers/get-employees",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",

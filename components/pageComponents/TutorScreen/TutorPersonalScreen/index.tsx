@@ -194,7 +194,7 @@ const TutorPersonalScreen = (props: IProps) => {
                     <th>Nội dung</th>
                     <th>Số tiền</th>
                     <th>Ngày giao dịch</th>
-                    <th>Người thực hiện</th>
+                    <th>Người giao dịch</th>
                   </tr>
                 </thead>
                 <tbody>

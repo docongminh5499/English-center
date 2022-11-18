@@ -7,6 +7,7 @@ import {
   IconLamp2,
   IconUsers,
   IconBrandCashapp,
+  IconCoin,
 } from '@tabler/icons';
 import { UserRole } from "../../../helpers/constants";
 
@@ -61,6 +62,16 @@ export const employeeSidebar: Array<SidebarItem> = [
     src: IconUsers,
     name: "Học viên",
     href: "/employee/student",
+  },
+  {
+    src: IconCoin,
+    name: "Giao dịch",
+    href: "/employee/transactions",
+  },
+  {
+    src: IconUsers,
+    name: "Nhân sự",
+    href: "/employee/workers",
   }
 ];
 

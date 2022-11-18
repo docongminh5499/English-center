@@ -19,6 +19,7 @@ import SearchTutorFormCreateSession from "../Form/searchTutorFormCreateSession";
 import SearchClassroomFormCreateSession from "../Form/searchClassroomFormCreateSession";
 import { toast } from "react-toastify";
 
+
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tên"),
   date: yup.date().nullable().required("Vui lòng chọn ngày học"),
@@ -49,15 +50,19 @@ interface ShiftLabel {
 
 
 function getMininumValidDate(startDate?: Date) {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0);
-  tomorrow.setMinutes(0);
-  tomorrow.setSeconds(0);
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
   if (startDate) {
     const openingDate = new Date(startDate);
-    return openingDate.getTime() > tomorrow.getTime() ? openingDate : tomorrow;
-  } else return tomorrow;
+    openingDate.setHours(0);
+    openingDate.setMinutes(0);
+    openingDate.setSeconds(0);
+    openingDate.setMilliseconds(0);
+    return openingDate.getTime() > today.getTime() ? openingDate : today;
+  } else return today;
 }
 
 
@@ -280,7 +285,7 @@ const CreateStudySessionModal = (props: IProps) => {
               placeholder="Ngày diễn ra"
               label="Ngày diễn ra"
               locale="vi"
-              minDate={props.openingDate ? new Date(props.openingDate) : undefined}
+              minDate={getMininumValidDate(props.openingDate)}
               {...createStudySessionForm.getInputProps('date')}
             />
             <Select

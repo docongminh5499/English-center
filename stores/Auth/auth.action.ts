@@ -77,7 +77,7 @@ export const logOut =
         fullName: undefined,
         userName: undefined,
         token: undefined,
-        role: UserRole.GUEST,
+        role: undefined,
         expireTime: undefined,
         avatar: undefined,
         isManager: undefined,

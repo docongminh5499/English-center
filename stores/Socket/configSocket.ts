@@ -2,6 +2,7 @@ import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { Store as ChatStore } from "../Chat";
 import { Store as NotificationStore } from "../Notification";
+import { Store as AuthStore } from "../Auth";
 import { defaultRegistry } from "react-sweet-state";
 import { toast } from "react-toastify";
 
@@ -62,4 +63,10 @@ export default function configureSocket(socket: Socket<DefaultEventsMap, Default
     NotificationStoreInstance.actions.readNotification(json);
   });
 
+  socket.on("modifyAccount", async () => {
+    const AuthStoreInstance = defaultRegistry.getStore(AuthStore);
+    await AuthStoreInstance.actions.startLoggingOut();
+    await AuthStoreInstance.actions.endLoggingOut();
+    await AuthStoreInstance.actions.logOut();
+  });
 }

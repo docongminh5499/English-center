@@ -46,10 +46,11 @@ const InfoUserParent = (props: IProps) => {
   return (
     <Container style={{ width: "100%" }} mt={20} p={0} size="xl">
       <Container style={{
+        width: "100%",
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
         alignItems: "center"
-      }} p={0}>
+      }} p={0} size="xl">
         <Title transform="uppercase" color="#444444" size="2.6rem" align="left">
           {props.title}
         </Title>

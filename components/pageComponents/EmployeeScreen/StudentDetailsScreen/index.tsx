@@ -69,7 +69,7 @@ const StudentDetailScreen = (props: IProps) => {
       )}
 
       {didMount && (
-        <Container size="xl" style={{ width: "100%" }} pb={'5rem'} >
+        <Container size="xl" style={{ width: "100%" }}>
           <InfoUser
             title={'Học sinh'}
             data={props.student?.user}
