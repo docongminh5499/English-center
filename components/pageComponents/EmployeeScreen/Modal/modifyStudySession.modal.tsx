@@ -48,6 +48,23 @@ interface ShiftLabel {
 }
 
 
+function getMininumValidDate(startDate?: Date) {
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  if (startDate) {
+    const openingDate = new Date(startDate);
+    openingDate.setHours(0);
+    openingDate.setMinutes(0);
+    openingDate.setSeconds(0);
+    openingDate.setMilliseconds(0);
+    return openingDate.getTime() > today.getTime() ? openingDate : today;
+  } else return today;
+}
+
+
 const ModifyStudySessionModal = (props: IProps) => {
   const modifyStudySessionForm = useForm({
     initialValues: {
@@ -278,7 +295,7 @@ const ModifyStudySessionModal = (props: IProps) => {
               placeholder="Ngày diễn ra"
               label="Ngày diễn ra"
               locale="vi"
-              minDate={props.studySession ? new Date(props.studySession.course.openingDate) : undefined}
+              minDate={getMininumValidDate(props.studySession?.course.openingDate)}
               {...modifyStudySessionForm.getInputProps('date')}
             />
             <Select

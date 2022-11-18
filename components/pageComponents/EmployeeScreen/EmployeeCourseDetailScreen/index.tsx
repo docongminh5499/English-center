@@ -32,6 +32,24 @@ interface IProps {
 }
 
 
+function getMininumValidDate(startDate?: Date) {
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  if (startDate) {
+    const openingDate = new Date(startDate);
+    openingDate.setHours(0);
+    openingDate.setMinutes(0);
+    openingDate.setSeconds(0);
+    openingDate.setMilliseconds(0);
+    return openingDate.getTime() > today.getTime() ? openingDate : today;
+  } else return today;
+}
+
+
+
 const EmployeeCourseDetailScreen = (props: IProps) => {
   const isLargeTablet = useMediaQuery('(max-width: 1024px)');
   const isTablet = useMediaQuery('(max-width: 768px)');
@@ -824,24 +842,25 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                                 <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
                               )}
                             </td>
-                            {getCourseStatus(course) !== CourseStatus.Closed && (
-                              <td>
-                                <ThemeIcon size="lg" style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setCurrentStudySession(studySession);
-                                    setIsOpenModifyStudySessionModal(true);
-                                  }}>
-                                  <IconPencil size={20} />
-                                </ThemeIcon>
-                                <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setCurrentStudySession(studySession);
-                                    setIsOpenRemoveSessionModal(true);
-                                  }} ml={10}>
-                                  <IconTrash size={20} />
-                                </ThemeIcon>
-                              </td>
-                            )}
+                            {getCourseStatus(course) !== CourseStatus.Closed &&
+                              (new Date(studySession.date)) >= getMininumValidDate(course?.openingDate) && (
+                                <td>
+                                  <ThemeIcon size="lg" style={{ cursor: "pointer" }}
+                                    onClick={() => {
+                                      setCurrentStudySession(studySession);
+                                      setIsOpenModifyStudySessionModal(true);
+                                    }}>
+                                    <IconPencil size={20} />
+                                  </ThemeIcon>
+                                  <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                    onClick={() => {
+                                      setCurrentStudySession(studySession);
+                                      setIsOpenRemoveSessionModal(true);
+                                    }} ml={10}>
+                                    <IconTrash size={20} />
+                                  </ThemeIcon>
+                                </td>
+                              )}
                           </tr>
                         ))}
                       </tbody>
