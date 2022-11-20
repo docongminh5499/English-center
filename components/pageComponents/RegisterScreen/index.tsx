@@ -67,7 +67,10 @@ const RegisterScreen = (props: IProps) => {
           });
           setActive((current) => (current < 2 ? current + 1 : current));
           setCompleted(true);
-          await router.push("/login");
+          await router.push({
+            pathname: "/login",
+            query: { returnUrl: router.query.returnUrl || "/" },
+          });
         } catch (error: any) {
           if (error.status && error.status == 409) {
             form2.setErrors({ username: "Username đã tồn tại!" });

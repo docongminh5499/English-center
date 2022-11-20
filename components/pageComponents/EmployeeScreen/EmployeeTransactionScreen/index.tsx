@@ -385,7 +385,7 @@ const EmployeeTransactionScreen = (props: IProps) => {
         {!loading && !error && getListData().length > 0 && (
           <>
             <ScrollArea style={{ width: "100%", flex: 1 }}>
-              <Table verticalSpacing="xs" highlightOnHover style={{ width: "100%", minWidth: "900px" }}>
+              <Table verticalSpacing="xs" highlightOnHover style={{ width: "100%", minWidth: "max-content" }}>
                 <thead>
                   <tr>
                     <th>Mã giao dịch</th>

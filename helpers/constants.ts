@@ -139,6 +139,11 @@ export const NotificationConstants = {
   limitNotification: 10
 }
 
+export const GuestConstants = {
+  topLatestCourse: 6,
+  limitCourse: 12,
+}
+
 export const Url = {
   baseUrl: "http://localhost:5000",
   users: {
@@ -268,6 +273,15 @@ export const Url = {
     getStudySessionDetail: "/api/tutors/courses/get-study-session-detail",
     requestOffStudySession: "/api/tutors/courses/request-off-study-session",
     getSalaries: "/api/tutors/personal/get-salaries",
+  },
+  guests: {
+    getCourses: "/api/guests/get-courses",
+    getStudentCount: "/api/guests/get-student-count",
+    getCompletedCourseCount: "/api/guests/get-completed-course-count",
+    getCurriculumTags: "/api/guests/get-curriculum-tags",
+    getBranches: "/api/guests/get-branches",
+    getTopComments: "/api/guests/get-top-comments",
+    getCourseDetail: "/api/guests/get-course-detail",
   }
 };
 

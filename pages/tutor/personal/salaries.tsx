@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
     return {
       props: {
         userRole: user.role || null,
-        salaries: []
+        salaries: null
       }
     };
   }

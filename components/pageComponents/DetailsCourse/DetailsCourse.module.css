@@ -65,13 +65,12 @@
     cursor: pointer;
     width: 100%; 
     text-align: center; 
-    background-color:#F85846;
+    background-color:#228BE6;
     color: #FDF6FF;
     padding: 1.7rem 1rem;
     font-size: 2rem;
     margin-top: 2rem;
     border-radius: 100px;
-    box-shadow: 0 7px 25px rgba(248,88,70,0.2);
 }
 
 @media screen and (max-width: 768px) {
@@ -156,7 +155,7 @@
 .wrapInfoAuthor .wrapCategory svg {
     width: 9rem;
     height: 9rem;
-    color: #FF5B4A
+    color: #228BE6;
 }
 
 @media screen and (max-width: 768px) {
@@ -246,7 +245,7 @@
 .wrapInfoCourse .listInfo .infoItem svg {
     width: 2.5rem;
     height: 2.5rem;
-    color: #FF5B4A
+    color: #228BE6;
 }
 
 .wrapInfoCourse .listInfo .infoItem .txtLabel {
@@ -291,7 +290,8 @@
 .wrapContentTab .contentTabCurriculum .des {
     font-size: 1.6rem;
     color: #797C7F;
-    margin-top: .3rem
+    margin-top: .3rem;
+    text-align: justify;
 }
 
 .wrapContentTab .contentTabCurriculum .listCurriculum {
@@ -312,7 +312,7 @@
 }
 
 .wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem svg {
-    color: #F85846
+    color: #228BE6;
 }
 @media screen and (max-width: 480px) {
     .wrapContentTab .contentTabCurriculum .listCurriculum {
@@ -364,7 +364,8 @@
 .wrapContentTab .tabInstructor .instructorItem .infoInstructor .des {
     font-size: 1.6rem;
     color: #797C7F;
-    margin-top: .5rem
+    margin-top: .5rem;
+    text-align: justify;
 }
 
 @media screen and (max-width: 480px) {

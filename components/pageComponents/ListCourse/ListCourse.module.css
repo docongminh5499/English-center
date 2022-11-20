@@ -1,12 +1,13 @@
 .wrapPage {
     /* width: 100%; */
     padding-bottom: 5rem;
-    flex: 1
+    flex: 1;
+    min-width: 0px;
 }
 
 .banner {
     width: 100%;
-    height: 550px;
+    height: calc(100vh - 91px);
 }
 
 .slider {
@@ -25,8 +26,8 @@
     height: 100%;
     position: relative;
     display: flex;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
 }
 
 .slideItem .pictureBanner {
@@ -45,7 +46,7 @@
     height: 100%;
     position: absolute;
     z-index: 2;
-    background-color:rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     top: 0;
     left: 0;
 }
@@ -56,7 +57,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap : 1rem
+    gap: 1rem
 }
 
 .slideItem .infoSlide .desSlide {
@@ -78,7 +79,7 @@
     border: none;
     outline: none;
     cursor: pointer;
-    background-color: #495BED;
+    background-color: #228BE6;
     padding: 1.5rem 3rem;
     border-radius: 100px;
     font-size: 1.5rem;
@@ -91,8 +92,8 @@
 .wrapService {
     width: 100%;
     background-color: #F5F7FA;
-    padding-top:10rem;
-    padding-bottom:10rem;
+    padding-top: 10rem;
+    padding-bottom: 10rem;
 }
 
 .gridService {
@@ -105,7 +106,7 @@
 .gridService .serviceItem {
     width: 100%;
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     align-items: center;
     gap: 1rem;
     cursor: pointer;
@@ -114,26 +115,26 @@
 .gridService .serviceItem .wrapIcon {
     width: 10rem;
     height: 10rem;
-    border-radius:50%;
+    border-radius: 50%;
     display: flex;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     box-shadow: 0 6px 30px rgb(0 0 0 / 3%);
     transition: all 0.4s;
 }
 
 .gridService .serviceItem .wrapIcon svg {
-    color:#F85947;
+    color: #228BE6;
     transition: all 0.4s;
 }
 
 .gridService .serviceItem .titleService {
     text-align: center;
-    color:#010305;
+    color: #010305;
     font-weight: 500;
     font-size: 2.5rem;
-    margin-top:1.5rem
+    margin-top: 1.5rem
 }
 
 .gridService .serviceItem .desService {
@@ -167,7 +168,7 @@
     text-transform: uppercase;
 }
 
-.wrapCourse  .titleSection {
+.wrapCourse .titleSection {
     font-size: 4rem;
     width: 100%;
     text-align: center;
@@ -184,6 +185,20 @@
     margin-top: 4rem
 }
 
+
+.wrapCourse .buttonCTA {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 7px 25px rgba(73, 91, 237, 0.2);
+    background-color: #228BE6;
+    color: white;
+    padding: 1.5rem 5rem;
+    font-size: 1.5rem;
+    border-radius: 100px;
+    margin-top: 3rem
+}
+
 /* SUBSCRIBE */
 .wrapSubscribe {
     padding-top: 6rem;
@@ -195,11 +210,11 @@
 .wrapSubscribe .wrapIconSection {
     width: 6rem;
     height: 6rem;
-    border-radius:50%;
-    background-color:#495BED;
+    border-radius: 50%;
+    background-color: #228BE6;
     display: flex;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
     margin-left: auto;
     margin-right: auto;
 }
@@ -234,7 +249,7 @@
     border-radius: 100px;
     overflow: hidden;
     display: flex;
-    box-shadow: 0 3px 25px rgba(0,0,0,.05);
+    box-shadow: 0 3px 25px rgba(0, 0, 0, .05);
 }
 
 .wrapSubscribe .wrapFormSubscribe .formSubscribe .txtInput {
@@ -242,7 +257,7 @@
     height: 50%;
     border: none;
     outline: none;
-    padding:0 3rem;
+    padding: 0 3rem;
     padding-right: 1rem;
     position: relative;
     font-size: 1.8rem;
@@ -259,16 +274,16 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding:0 3rem;
+    padding: 0 3rem;
     font-size: 1.5rem;
     font-weight: 500;
     color: #06080B;
-    background-color:transparent;
+    background-color: transparent;
     transition: all 0.2s;
 }
 
 .wrapSubscribe .wrapFormSubscribe .buttonSubmit:hover {
-    color: #495BED;
+    color: #228BE6;
     transition: all 0.2s;
 }
 
@@ -285,8 +300,8 @@
     width: 100%;
     height: 600px;
     display: flex;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
 }
 
 .wrapVideoDemo .videoDemo .thumbnail {
@@ -307,7 +322,7 @@
     width: 100%;
     height: 100%;
     z-index: 2;
-    background-color: rgba(0,0,0, .2)
+    background-color: rgba(0, 0, 0, .2)
 }
 
 .wrapVideoDemo .videoDemo .buttonPlay {
@@ -318,7 +333,7 @@
     cursor: pointer;
     width: 7rem;
     height: 7rem;
-    border-radius:50%;
+    border-radius: 50%;
     background-color: white
 }
 
@@ -327,7 +342,7 @@
     position: absolute;
     width: 9rem;
     height: 9rem;
-    border-radius:50%;
+    border-radius: 50%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -337,17 +352,17 @@
 .videoModalContainer {
     line-height: 0;
     width: 100%;
-    max-width: min(85vw,900px);
+    max-width: min(85vw, 900px);
     background-color: #000;
-  }
-  
-  .videoModalIframe {
+}
+
+.videoModalIframe {
     width: 100%;
     height: 100%;
     position: relative;
-  }
-  
-  .videoModalClose {
+}
+
+.videoModalClose {
     position: absolute;
     top: -23px;
     right: 0px;
@@ -357,9 +372,9 @@
     width: 15px;
     height: 15px;
     cursor: pointer;
-  }
-  
-  .videoIframe {
+}
+
+.videoIframe {
     display: block;
     width: 100%;
     height: 100%;
@@ -367,15 +382,16 @@
     background: #000;
     max-width: 100%;
     border: none;
-  }
-  .video {
+}
+
+.video {
     width: min(85vw, 900px);
     height: 550px;
     box-shadow: 0 0 8px rgb(0 0 0 / 60%);
     background: transparent;
     border: none;
     overflow: hidden;
-  }
+}
 
 /* ANALYSIS */
 .wrapAnalysis {
@@ -406,7 +422,7 @@
     font-size: 6rem;
     line-height: 6.1rem;
     font-weight: bold;
-    margin-top:  .5rem;
+    margin-top: .5rem;
 }
 
 .wrapAnalysis .analysis .analysisItem .description {
@@ -420,13 +436,13 @@
     border: none;
     outline: none;
     cursor: pointer;
-    box-shadow: 0 7px 25px rgba(73,91,237,0.2);
-    background-color:#495BED;
+    box-shadow: 0 7px 25px rgba(73, 91, 237, 0.2);
+    background-color: #228BE6;
     color: white;
     padding: 1.5rem 5rem;
     font-size: 1.5rem;
-    border-radius:  100px;
-    margin-top:3rem
+    border-radius: 100px;
+    margin-top: 3rem
 }
 
 .analysis .listAnalysisItem {
@@ -455,8 +471,8 @@
     border-radius: 50%;
     background-color: #DCE0E8;
     display: flex;
-    justify-content:center;
-    align-items:center
+    justify-content: center;
+    align-items: center
 }
 
 .listAnalysisItem .contentAnalysisItem .wrapInfo .wrapIcon svg {
@@ -499,7 +515,7 @@
     text-align: center;
     font-size: 1.6rem;
     text-transform: uppercase;
-    font-weight:500
+    font-weight: 500
 }
 
 .wrapPeopleSay .title {
@@ -507,12 +523,12 @@
     font-weight: bold;
     text-align: center;
     width: 100%;
-    margin-top:1rem
+    margin-top: 1rem
 }
 
 .sliderPeople {
     width: 100%;
-    display:flex;
+    display: flex;
     margin-top: 2rem;
     gap: 3rem;
 }
@@ -544,7 +560,7 @@
     color: #010305
 }
 
-.sliderPeopleItem  .authorQuote {
+.sliderPeopleItem .authorQuote {
     width: 100%;
     display: grid;
     grid-template-columns: 80px 1fr;
@@ -552,28 +568,28 @@
     margin-top: 2.2rem;
 }
 
-.sliderPeopleItem  .authorQuote .wrapAvatar {
+.sliderPeopleItem .authorQuote .wrapAvatar {
     width: 100%;
     height: 80px;
     border-radius: 50%;
     overflow: hidden;
     display: flex;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
 }
 
-.sliderPeopleItem  .authorQuote .wrapAvatar img {
+.sliderPeopleItem .authorQuote .wrapAvatar img {
     width: 100%;
     height: 100%;
-    object-fit:cover
+    object-fit: cover
 }
 
-.sliderPeopleItem  .authorQuote .name {
+.sliderPeopleItem .authorQuote .name {
     font-size: 2rem;
     font-weight: bold;
 }
 
-.sliderPeopleItem  .authorQuote .job {
+.sliderPeopleItem .authorQuote .job {
     font-size: 1.6rem;
     color: #797C7F
 }
@@ -591,7 +607,7 @@
     text-align: center;
     font-size: 1.6rem;
     text-transform: uppercase;
-    font-weight:500
+    font-weight: 500
 }
 
 .wrapArticle .title {
@@ -599,14 +615,30 @@
     font-weight: bold;
     text-align: center;
     width: 100%;
-    margin-top:1rem
+    margin-top: 1rem
 }
 
 .wrapArticle .listArticle {
     width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 2rem;
     gap: 3rem;
+}
+
+.wrapArticle .listArticle .wrapIcon {
+    min-width: 6rem;
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background-color: #E9ECEF;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.wrapArticle .listArticle .wrapIcon svg {
+    color: #343A40;
 }
 
 /* CARD ARTICLE */
@@ -617,7 +649,7 @@
 
 .cardArticle:hover .thumbnailCard img {
     transform: scale(1.1);
-    transition:  all 0.3s;
+    transition: all 0.3s;
 }
 
 .cardArticle .wrapInfoCard {
@@ -634,7 +666,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition:  all 0.3s;
+    transition: all 0.3s;
 }
 
 .cardArticle .wrapInfoCard .infoCard {
@@ -654,7 +686,7 @@
     font-size: 2.2rem;
     line-height: 2.5rem;
     margin-top: .5rem;
-    display:-webkit-box;
+    display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
@@ -665,25 +697,25 @@
     transition: all 0.3s
 }
 
-.cardArticle .wrapInfoCard .infoCard  .moreInfoCard {
+.cardArticle .wrapInfoCard .infoCard .moreInfoCard {
     width: 100%;
-    display:flex;
+    display: flex;
     align-items: center;
     margin-top: 1rem
 }
 
-.cardArticle .wrapInfoCard .infoCard  .moreInfoCard .moreInfoItem {
+.cardArticle .wrapInfoCard .infoCard .moreInfoCard .moreInfoItem {
     font-size: 1.4rem;
     color: #797C7F;
     font-weight: 500
 }
 
-.cardArticle .wrapInfoCard .infoCard  .moreInfoCard .moreInfoItem:last-child {
+.cardArticle .wrapInfoCard .infoCard .moreInfoCard .moreInfoItem:last-child {
     padding-left: 2.8rem;
     position: relative;
 }
 
-.cardArticle .wrapInfoCard .infoCard  .moreInfoCard .moreInfoItem:last-child::before {
+.cardArticle .wrapInfoCard .infoCard .moreInfoCard .moreInfoItem:last-child::before {
     content: "•́";
     position: absolute;
     left: 1rem;
@@ -702,8 +734,8 @@
 
 .wrapBrand .listBranch {
     width: 100%;
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     align-items: center;
     gap: 2rem;
 }
@@ -724,9 +756,161 @@
 
 .wrapBrand .listBranch .wrapIcon img {
     width: auto;
-    max-width:100%;
+    max-width: 100%;
     height: auto;
     object-fit: contain;
+}
+
+@media screen and (max-width: 1024px) {
+    .gridService {
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 2rem;
+        grid-row-gap: 2rem;
+    }
+
+    .wrapCourse .gridCourse {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 2rem;
+        margin-top: 4rem
+    }
+
+    /* ANALYSIS */
+    .wrapAnalysis {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .wrapAnalysis .analysis {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem;
+    }
+
+    .wrapAnalysis .analysis .analysisItem {
+        width: 90%;
+    }
+
+    .wrapAnalysis .analysis .subTitle {
+        font-size: 1.8rem;
+    }
+
+    .wrapAnalysis .analysis .analysisItem .title {
+        font-size: 4rem;
+        line-height: 4.1rem;
+    }
+
+    .wrapAnalysis .analysis .analysisItem .description {
+        font-size: 1.4rem;
+        line-height: 2rem;
+        margin-top: 2rem
+    }
+
+    .wrapAnalysis .analysis .buttonCTA {
+        color: white;
+        padding: 1.5rem 2rem;
+        font-size: 1.2rem;
+        margin-top: 2rem
+    }
+
+    .analysis .listAnalysisItem {
+        gap: 3rem;
+    }
+
+    .listAnalysisItem .contentAnalysisItem {
+        grid-template-columns: 1fr 80px;
+    }
+
+    .listAnalysisItem .contentAnalysisItem .wrapInfo {
+        grid-template-columns: 70px 1fr;
+        gap: 1rem;
+    }
+
+    .listAnalysisItem .contentAnalysisItem .wrapInfo .wrapIcon {
+        height: 70px;
+    }
+
+    .listAnalysisItem .contentAnalysisItem .wrapInfo .info {
+        width: 80%;
+    }
+
+    .listAnalysisItem .contentAnalysisItem .wrapInfo .info .title {
+        font-size: 2rem;
+        line-height: 2.1rem
+    }
+
+    .listAnalysisItem .contentAnalysisItem .wrapInfo .info .description {
+        font-size: 1.4rem;
+    }
+
+    .listAnalysisItem .contentAnalysisItem .number {
+        font-size: 3rem;
+    }
+
+
+    /* PEOPLE SAY */
+    .wrapPeopleSay {
+        padding-top: 3rem;
+        padding-bottom: 2rem;
+    }
+
+    .wrapPeopleSay .subTitle {
+        font-size: 1.4rem;
+    }
+
+    .wrapPeopleSay .title {
+        font-size: 3rem;
+        margin-top: .5rem
+    }
+
+    .sliderPeople {
+        margin-top: 1rem;
+        gap: 0rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+    }
+
+    .sliderPeopleItem {
+        flex-shrink: 0;
+        background-color: white;
+        padding: 2rem;
+        padding-left: 5rem;
+        scroll-snap-align: center;
+    }
+
+    .sliderPeopleItem .iconQuote {
+        width: 4rem;
+        height: 4rem;
+        left: 2rem;
+        top: 2rem;
+    }
+
+    .sliderPeopleItem .contentQuote {
+        font-size: 1.6rem;
+    }
+
+    .sliderPeopleItem .authorQuote {
+        grid-template-columns: 60px 1fr;
+        gap: .8rem;
+        margin-top: 2rem;
+        align-items: center;
+    }
+
+    .sliderPeopleItem .authorQuote .wrapAvatar {
+        height: 60px;
+    }
+
+    .sliderPeopleItem .authorQuote .name {
+        font-size: 1.8rem;
+    }
+
+    .sliderPeopleItem .authorQuote .job {
+        font-size: 1.4rem;
+    }
+
+    .wrapArticle .listArticle {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -735,41 +919,34 @@
     }
 
     .banner {
-        width: calc(100vw - 100px);
         height: 30rem;
     }
-    
+
     .slideItem .infoSlide .desSlide {
         font-size: 1.6rem;
     }
-    
+
     .slideItem .infoSlide .titleSlide {
         font-size: 4rem;
         line-height: 3.6rem;
     }
-    
+
     .slideItem .infoSlide .buttonSlide {
         font-size: 1.4rem;
         margin-top: 2rem;
     }
-    
+
 
     /* SERVICE */
     .wrapService {
         padding-top: 5rem;
         padding-bottom: 5rem;
     }
-    
-    .gridService {
-        grid-template-columns: repeat(2, 1fr);
-        grid-column-gap: 2rem;
-        grid-row-gap: 2rem;
-    }
-    
+
     .gridService .serviceItem {
         gap: 1rem;
     }
-    
+
     .gridService .serviceItem .wrapIcon {
         width: 6rem;
         height: 6rem;
@@ -779,82 +956,77 @@
         width: 4rem;
         height: 4rem;
     }
-    
+
     .gridService .serviceItem .titleService {
         font-size: 2rem;
-        margin-top:1rem
+        margin-top: 1rem
     }
-    
+
     .gridService .serviceItem .desService {
         font-size: 1.4rem;
     }
+
     /* LIST COURSE */
     .wrapCourse {
         padding-top: 5rem;
         padding-bottom: 5rem;
     }
-    
+
     .wrapCourse .desSection {
         font-size: 1.4rem;
     }
-    
-    .wrapCourse  .titleSection {
+
+    .wrapCourse .titleSection {
         font-size: 3rem;
     }
-    
-    .wrapCourse .gridCourse {
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 2rem;
-        margin-top: 4rem
-    }
-    
+
     /* SUBSCRIBE */
     .wrapSubscribe {
         padding-top: 3rem;
         padding-bottom: 2rem;
     }
-    
+
     .wrapSubscribe .wrapIconSection {
         width: 5rem;
         height: 5rem;
     }
-    
+
     .wrapSubscribe .wrapIconSection svg {
         width: 3rem;
         height: 3rem;
     }
-    
+
     .wrapSubscribe .titleSection {
         font-size: 3rem;
         line-height: 3.6rem;
         max-width: 40rem;
         margin-top: 2rem
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe {
         max-width: 40rem;
         margin-top: 3rem;
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe .formSubscribe {
         height: 5rem;
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe .formSubscribe .txtInput {
-        padding:0 3rem;
+        padding: 0 3rem;
         padding-right: 1rem;
         font-size: 1.6rem;
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe .buttonSubmit {
         font-size: 1.3rem;
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe .buttonSubmit:hover {
-        color: #495BED;
+        color: #228BE6;
         transition: all 0.2s;
     }
-    
+
     /* VIDEO */
     .wrapVideoDemo {
         padding-top: 3rem;
@@ -862,179 +1034,60 @@
         width: 100%;
         background-color: #F5F7FA
     }
-    
+
     .wrapVideoDemo .videoDemo {
         height: 30rem;
     }
-    
+
     .wrapVideoDemo .videoDemo .buttonPlay {
         width: 5rem;
         height: 5rem;
     }
-    
+
     .wrapVideoDemo .videoDemo .buttonPlay::after {
         width: 7rem;
         height: 7rem;
     }
-    
-    
+
     /* ANALYSIS */
-    .wrapAnalysis {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
-    
     .wrapAnalysis .analysis {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: .5rem;
+        grid-template-columns: 1fr;
+        grid-row-gap: 3rem;
     }
-    
+
     .wrapAnalysis .analysis .analysisItem {
-        width: 90%;
+        width: 100%;
     }
-    
-    .wrapAnalysis .analysis .subTitle {
-        font-size: 1.8rem;
-    }
-    
-    .wrapAnalysis .analysis .analysisItem .title {
-        font-size: 4rem;
-        line-height: 4.1rem;
-    }
-    
-    .wrapAnalysis .analysis .analysisItem .description {
-        font-size: 1.4rem;
-        line-height: 2rem;
-        margin-top: 2rem
-    }
-    
-    .wrapAnalysis .analysis .buttonCTA {
-        color: white;
-        padding: 1.5rem 2rem;
-        font-size: 1.2rem;
-        margin-top:2rem
-    }
-    
-    .analysis .listAnalysisItem {
-        gap: 3rem;
-    }
-    
+
     .listAnalysisItem .contentAnalysisItem {
-        grid-template-columns: 1fr 80px;
-    }
-    
-    .listAnalysisItem .contentAnalysisItem .wrapInfo {
-        grid-template-columns: 70px 1fr;
+        display: flex;
+        flex-direction: column-reverse;
         gap: 1rem;
     }
-    
-    .listAnalysisItem .contentAnalysisItem .wrapInfo .wrapIcon {
-        height: 70px;
-    }
-    
+
     .listAnalysisItem .contentAnalysisItem .wrapInfo .info {
-        width: 80%;
+        width: 100%;
     }
-    
-    .listAnalysisItem .contentAnalysisItem .wrapInfo .info .title {
-        font-size: 2rem;
-        line-height: 2.1rem
-    }
-    
-    .listAnalysisItem .contentAnalysisItem .wrapInfo .info .description {
-        font-size: 1.4rem;
-    }
-    
+
     .listAnalysisItem .contentAnalysisItem .number {
-        font-size: 3rem;
+        font-size: 4rem;
+        text-align: left;
     }
-    
-    /* PEOPLE SAY */
-    .wrapPeopleSay {
-        padding-top: 3rem;
-        padding-bottom: 2rem;
-    }
-    
-    .wrapPeopleSay .subTitle {
-        font-size: 1.4rem;
-    }
-    
-    .wrapPeopleSay .title {
-        font-size: 3rem;
-        margin-top: .5rem
-    }
-    
-    .sliderPeople {
-        width: calc(100vw - 132px);
-        margin-top: 1rem;
-        gap: 0rem;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-    }
-    
-    .sliderPeopleItem {
-        flex-shrink: 0;
-        background-color:white;
-        padding: 2rem;
-        padding-left: 5rem;
-        scroll-snap-align: center;
-    }
-    
-    .sliderPeopleItem .iconQuote {
-        width: 4rem;
-        height: 4rem;
-        left: 2rem;
-        top: 2rem;
-    }
-    
-    .sliderPeopleItem .contentQuote {
-        font-size: 1.6rem;
-    }
-    
-    .sliderPeopleItem  .authorQuote {
-        grid-template-columns: 60px 1fr;
-        gap: .8rem;
-        margin-top: 2rem;
-        align-items: center;
-    }
-    
-    .sliderPeopleItem  .authorQuote .wrapAvatar {
-        height: 60px;
-    }
-    
-    .sliderPeopleItem  .authorQuote .name {
-        font-size: 1.8rem;
-    }
-    
-    .sliderPeopleItem  .authorQuote .job {
-        font-size: 1.4rem;
-    }
-    
+
     /* ARTICLE */
     .wrapArticle {
         padding-top: 5rem;
         padding-bottom: 3rem;
     }
-    
+
     .wrapArticle .subTitle {
         font-size: 1.4rem;
     }
-    
+
     .wrapArticle .title {
         font-size: 3rem;
     }
-    
-    .wrapArticle .listArticle {
-        width: 100%;
-        display: flex;
-        margin-top: 2rem;
-        gap: 3rem;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-    }
-    
+
     /* CARD ARTICLE */
     .cardArticle {
         width: 100%;
@@ -1042,37 +1095,37 @@
         flex-shrink: 0;
         scroll-snap-align: center;
     }
-    
+
     .cardArticle .wrapInfoCard .thumbnailCard {
         height: 20rem;
     }
-    
+
     .cardArticle .wrapInfoCard .infoCard {
         margin-top: 1rem
     }
-    
+
     .cardArticle .wrapInfoCard .infoCard .categoryCard {
         font-size: 1.2rem;
     }
-    
+
     .cardArticle .wrapInfoCard .infoCard .nameCard {
         font-size: 2rem;
         line-height: 2.3rem;
         margin-top: .3rem;
     }
-    
-    .cardArticle .wrapInfoCard .infoCard  .moreInfoCard {
+
+    .cardArticle .wrapInfoCard .infoCard .moreInfoCard {
         margin-top: .5rem
     }
-    
-    .cardArticle .wrapInfoCard .infoCard  .moreInfoCard .moreInfoItem {
+
+    .cardArticle .wrapInfoCard .infoCard .moreInfoCard .moreInfoItem {
         font-size: 1.2rem;
     }
-    
-    .cardArticle .wrapInfoCard .infoCard  .moreInfoCard .moreInfoItem:last-child::before {
+
+    .cardArticle .wrapInfoCard .infoCard .moreInfoCard .moreInfoItem:last-child::before {
         font-size: 1.5rem
     }
-    
+
     /* BRAND */
     .wrapBrand {
         width: 100%;
@@ -1080,12 +1133,12 @@
         padding-bottom: 8rem;
         background-color: white
     }
-    
+
     .wrapBrand .listBranch {
         gap: 2rem;
         flex-wrap: wrap;
     }
-    
+
     .wrapBrand .listBranch .wrapIcon {
         width: 30%;
         height: 100%;
@@ -1097,19 +1150,15 @@
 }
 
 @media screen and (max-width: 480px) {
-    .banner {
-        width: 100vw;
-    }
-    
     .slideItem .infoSlide .titleSlide {
         line-height: 3.8rem;
     }
-    
+
     /* SERVICE */
     .gridService {
         grid-template-columns: repeat(1, 1fr);
     }
-    
+
     .gridService .serviceItem {
         gap: 1rem;
     }
@@ -1124,73 +1173,48 @@
         grid-gap: 2rem;
         margin-top: 2rem
     }
-    
+
     /* SUBSCRIBE */
     .wrapSubscribe .wrapIconSection {
         width: 4rem;
         height: 4rem;
     }
-    
+
     .wrapSubscribe .wrapIconSection svg {
         width: 2rem;
         height: 2rem;
     }
-    
+
     .wrapSubscribe .titleSection {
         font-size: 2.6rem;
         line-height: 3.1rem;
         max-width: unset;
         margin-top: 2rem
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe {
         max-width: unset;
         margin-top: 2rem;
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe .formSubscribe {
         height: 4.5rem;
     }
-    
+
     .wrapSubscribe .wrapFormSubscribe .formSubscribe .txtInput {
         font-size: 1.2rem;
     }
-    
-    /* ANALYSIS */
-    .wrapAnalysis .analysis {
-        grid-template-columns: 1fr;
-        grid-row-gap: 3rem;
-    }
-    
-    .wrapAnalysis .analysis .analysisItem {
-        width: 100%;
-    }
-    
-    .listAnalysisItem .contentAnalysisItem {
-        display: flex;
-        flex-direction: column-reverse;
-        gap: 1rem;
-    }
-    
-    .listAnalysisItem .contentAnalysisItem .wrapInfo .info {
-        width: 100%;
-    }
-    
-    .listAnalysisItem .contentAnalysisItem .number {
-        font-size: 4rem;
-        text-align: left;
-    }
-    
+
+
     /* PEOPLE SAY */
     .sliderPeople {
         width: 92vw;
         gap: 1rem;
     }
-    
-    
+
+
     /* ARTICLE */
     .wrapArticle .listArticle {
-        width: 92vw;
-        gap: 1rem;
+        grid-template-columns: minmax(0, 1fr);
     }
 }

@@ -51,10 +51,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size:2rem;
+    flex-direction: column;
+    font-size: 1.5rem;
     color: white;
     font-weight: 500;
-    border-radius:50%
+    border-radius: 50%
 }
 
 .courseSale .infoCourse .nameCource {
@@ -63,14 +64,14 @@
     line-height: 2.8rem;
     cursor: pointer;
     transition: all .2s;
-    display:-webkit-box;
+    display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
 }
 
 .courseSale .infoCourse .nameCource:hover {
-    color: #495BED;
+    color: #228BE6;
     transition: all .2s;
 }
 
@@ -78,14 +79,13 @@
     color: #A5A6AA;
     font-weight: bold;
     font-size: 1.5rem;
-    cursor: pointer;
     margin-top: 1.5rem;
     transition: all 0.2s;
 }
 
-.courseSale .infoCourse .authCourse:hover {
-    color: #010305;
-    transition: all 0.2s;
+.courseSale .infoCourse .date {
+    color: #A5A6AA;
+    font-size: 1.5rem;
 }
 
 .courseSale .infoCourse .line {
@@ -101,17 +101,70 @@
     margin-top: 1.5rem;
     width: 100%;
     display: flex;
-    justify-content:space-between
+    justify-content: space-between
 }
 
 .courseSale .infoCourse .moreInfo .moreInfoItem {
     display: flex;
-    align-items:center;
+    align-items: center;
     gap: .3rem;
     font-weight: 500;
     font-size: 1.5rem
 }
 
 .courseSale .infoCourse .moreInfo .moreInfoItem svg {
-    color: #495BED;
+    color: #228BE6;
+}
+
+@media screen and (max-width: 768px) {
+    .courseSale .wrapThumbnail {
+        height: 20rem;
+    }
+
+    .courseSale .infoCourse {
+        padding: 1.5rem;
+        padding-top: 3.1rem;
+    }
+
+    .courseSale .infoCourse .wrapPrice {
+        width: 7rem;
+        height: 7rem;
+        right: 1.5rem;
+    }
+
+    .courseSale .infoCourse .wrapPrice .price {
+        font-size: 1.1rem;
+    }
+
+    .courseSale .infoCourse .nameCource {
+        font-size: 2rem;
+        line-height: 2.4rem;
+    }
+
+    .courseSale .infoCourse .authCourse {
+        font-size: 1.2rem;
+        margin-top: 1rem;
+    }
+
+    .courseSale .infoCourse .date {
+        font-size: 1.2rem;
+    }
+
+    .courseSale .infoCourse .line {
+        margin-top: 1rem;
+    }
+
+    .courseSale .infoCourse .moreInfo {
+        margin-top: 1rem;
+    }
+
+    .courseSale .infoCourse .moreInfo .moreInfoItem {
+        gap: .2rem;
+        font-size: 1.2rem
+    }
+
+    .courseSale .infoCourse .moreInfo .moreInfoItem svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
 }

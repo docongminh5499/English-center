@@ -4,9 +4,11 @@ import {
   IconUserCircle,
   IconSwitchHorizontal,
   IconLogout,
+  IconBrandEdge,
 } from '@tabler/icons';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
+import { UserRole } from '../../../helpers/constants';
 import { getRoleName } from '../../../helpers/getRoleName';
 import { getAvatarImageUrl } from '../../../helpers/image.helper';
 import { useAuth } from '../../../stores/Auth';
@@ -29,11 +31,11 @@ export function UserMenu() {
     await router.push("/");
     await authAction.endLoggingOut();
     await authAction.logOut();
-    await router.replace("/");
+    setTimeout(() => router.replace("/"), 100);
     setIsOpenModal(false);
   }, [authAction]);
 
-  
+
   return (
     <>
       <Modal
@@ -73,18 +75,46 @@ export function UserMenu() {
               <Menu.Divider />
             </div>
           </MediaQuery>
-          <Menu.Item
-            onClick={() => router.push('/personal')}
-            color="#444"
-            icon={<IconUserCircle size={"1.6rem"} color={theme.colors.cyan[6]} stroke={1.5} />}>
-            Tài khoản cá nhân
-          </Menu.Item>
-          <Menu.Item
-            onClick={() => router.push("/modify-personal")}
-            color="#444"
-            icon={<IconSwitchHorizontal size={"1.6rem"} color={theme.colors.violet[6]} stroke={1.5} />}>
-            Chỉnh sửa tài khoản
-          </Menu.Item>
+          {!authState.guestUI &&
+            (authState.role === UserRole.PARENT || authState.role === UserRole.STUDENT) && (
+              <Menu.Item
+                onClick={async () => {
+                  await authAction.turnOnGuestUI();
+                  await router.push("/");
+                }}
+                color="#444"
+                icon={<IconBrandEdge size={"1.6rem"} color={theme.colors.pink[6]} stroke={1.5} />}>
+                Giao diện khách
+              </Menu.Item>
+            )}
+          {authState.guestUI &&
+            (authState.role === UserRole.PARENT || authState.role === UserRole.STUDENT) && (
+              <Menu.Item
+                onClick={async () => {
+                  await authAction.turnOffGuestUI();
+                  await router.push("/");
+                }}
+                color="#444"
+                icon={<IconBrandEdge size={"1.6rem"} color={theme.colors.pink[6]} stroke={1.5} />}>
+                Giao diện cá nhân
+              </Menu.Item>
+            )}
+          {!authState.guestUI && (
+            <>
+              <Menu.Item
+                onClick={() => router.push('/personal')}
+                color="#444"
+                icon={<IconUserCircle size={"1.6rem"} color={theme.colors.cyan[6]} stroke={1.5} />}>
+                Tài khoản cá nhân
+              </Menu.Item>
+              <Menu.Item
+                onClick={() => router.push("/modify-personal")}
+                color="#444"
+                icon={<IconSwitchHorizontal size={"1.6rem"} color={theme.colors.violet[6]} stroke={1.5} />}>
+                Chỉnh sửa tài khoản
+              </Menu.Item>
+            </>
+          )}
           <Menu.Divider />
           <Menu.Item
             color={theme.colors.red[6]}

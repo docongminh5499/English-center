@@ -32,6 +32,7 @@ export const loadUserFromLocalStorage =
             userId: response.userId,
             avatar: response.avatar,
             isManager: response.isManager,
+            guestUI: false,
           }, new Date(response.exp * 1000));
           setState({
             token: tokenPayload.token,
@@ -42,16 +43,17 @@ export const loadUserFromLocalStorage =
             userId: response.userId,
             avatar: response.avatar,
             isManager: response.isManager,
+            guestUI: false,
           });
           SocketStoreInstance.actions.emit("signin", { userId: response.userId, token: tokenPayload.token });
         } catch (error: any) {
           localStorage.removeItem(LocalStorageKey.USER);
           setCookieHelper(CookieKey.USER, null, 0);
-          setState({ role: UserRole.GUEST });
+          setState({ role: UserRole.GUEST, guestUI: true });
         }
       } else {
         setCookieHelper(CookieKey.USER, null, 0);
-        setState({ role: UserRole.GUEST });
+        setState({ role: UserRole.GUEST, guestUI: true });
       }
     };
 
@@ -81,6 +83,7 @@ export const logOut =
         expireTime: undefined,
         avatar: undefined,
         isManager: undefined,
+        guestUI: true,
       });
       SocketStoreInstance.actions.emit("signout", { token });
     };
@@ -103,4 +106,16 @@ export const reload = (token: string): Action<State> =>
     if (typeof window === "undefined") return;
     localStorage.setItem(LocalStorageKey.USER, JSON.stringify({ token }));
     await dispatch(loadUserFromLocalStorage());
+  }
+
+
+export const turnOnGuestUI = (): Action<State> =>
+  async ({ setState }) => {
+    setState({ guestUI: true })
+  }
+
+
+export const turnOffGuestUI = (): Action<State> =>
+  async ({ setState }) => {
+    setState({ guestUI: false })
   }

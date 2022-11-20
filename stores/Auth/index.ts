@@ -1,6 +1,6 @@
 import { createHook, createStore } from "react-sweet-state";
 import { UserRole } from "../../helpers/constants";
-import { reload, endLoggingOut, loadUserFromLocalStorage, logIn, logOut, startLoggingOut } from "./auth.action";
+import { reload, endLoggingOut, loadUserFromLocalStorage, logIn, logOut, startLoggingOut, turnOnGuestUI, turnOffGuestUI } from "./auth.action";
 
 export type State = {
   userId?: string;
@@ -12,6 +12,7 @@ export type State = {
   avatar?: string;
   loggingOut?: boolean;
   isManager?: boolean;
+  guestUI?: boolean;
 };
 
 const initialState: State = {
@@ -24,6 +25,7 @@ const initialState: State = {
   avatar: undefined,
   loggingOut: false,
   isManager: undefined,
+  guestUI: true,
 };
 
 const actions = {
@@ -32,7 +34,9 @@ const actions = {
   logOut,
   startLoggingOut,
   endLoggingOut,
-  reload
+  reload,
+  turnOnGuestUI,
+  turnOffGuestUI,
 };
 
 export const Store = createStore({
