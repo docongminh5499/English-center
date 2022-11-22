@@ -26,4 +26,6 @@ export interface Course {
   maskedComments: MaskedComment[],
   branch: Branch,
   teacher: UserTeacher,
+  lockTime: Date | null,
+  sessionPerWeek: number,
 }

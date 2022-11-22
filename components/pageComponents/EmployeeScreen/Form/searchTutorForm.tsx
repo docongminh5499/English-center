@@ -15,6 +15,8 @@ import styles from './employeeCreateCourse.module.css';
 interface IProps {
   branchId: number;
   beginingDate: Date;
+  closingDate?: Date;
+  courseSlug?: string;
   shiftIds: number[];
   onChooseTutor: (tutor: UserTutor) => void;
 }
@@ -51,6 +53,8 @@ const SearchTutorForm = (props: IProps) => {
         branchId: branchId,
         beginingDate: props.beginingDate,
         shiftIds: props.shiftIds,
+        closingDate: props.closingDate,
+        courseSlug: props.courseSlug,
       });
       setTutors(tutors);
       setLoading(false);
@@ -58,7 +62,7 @@ const SearchTutorForm = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, currentBranchId, props.branchId, props.beginingDate, props.shiftIds]);
+  }, [authState.token, currentBranchId, props.branchId, props.beginingDate, props.shiftIds, props.closingDate, props.courseSlug]);
 
 
 
@@ -74,6 +78,8 @@ const SearchTutorForm = (props: IProps) => {
           branchId: branchId,
           beginingDate: props.beginingDate,
           shiftIds: props.shiftIds,
+          closingDate: props.closingDate,
+          courseSlug: props.courseSlug,
         })
       ]);
       const selectItems: any = [];
@@ -90,7 +96,7 @@ const SearchTutorForm = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, currentBranchId, props.branchId, props.beginingDate, props.shiftIds]);
+  }, [authState.token, currentBranchId, props.branchId, props.beginingDate, props.shiftIds, props.closingDate, props.courseSlug]);
 
 
   useEffect(() => {

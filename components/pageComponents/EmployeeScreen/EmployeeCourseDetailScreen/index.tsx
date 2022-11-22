@@ -24,6 +24,7 @@ import UserStudent from "../../../../models/userStudent.model";
 import { getGenderName } from "../../../../helpers/getGenderName";
 import { formatCurrency } from "../../../../helpers/formatCurrency";
 import FindStudentModal from "../Modal/findStudent.modal";
+import AmountModal from "../Modal/amount.modal";
 
 
 interface IProps {
@@ -88,11 +89,15 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
   const [isOnSendCreateSession, setIsOnSendCreateSession] = useState(false);
   const [isOpenRemoveSessionModal, setIsOpenRemoveSessionModal] = useState(false);
   const [isOnSendRemoveSession, setIsOnSendRemoveSession] = useState(false);
-  // Search student to add participate course
+  // Search student and add participate course
+  const [amount, setAmount] = useState(0);
   const [isOpenSearchStudentModal, setIsOpenSearchStudentModal] = useState(false);
   const [isSendingFeeAmountRequest, setIsSendingFeeAmountRequest] = useState(false);
   const [isSendingAddStudentRequest, setIsSendingAddStudentRequest] = useState(false);
   const [isOpenConfirmAddStudentModal, setIsOpenConfirmAddStudentModal] = useState(false);
+  // Remove participate course
+  const [isSendingRemoveStudentRequest, setIsSendingRemoveStudentRequest] = useState(false);
+  const [isOpenConfirmRemoveStudentModal, setIsOpenConfirmRemoveStudentModal] = useState(false);
 
   const [currentStudent, setCurrentStudent] = useState<UserStudent | null>(null);
   const router = useRouter();
@@ -341,6 +346,106 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
 
 
 
+  const onChooseAddStudent = useCallback(async (student: UserStudent) => {
+    try {
+      setIsOpenConfirmAddStudentModal(true);
+      setIsSendingFeeAmountRequest(true);
+      setCurrentStudent(student);
+      const responses: any = await API.post(Url.employees.checkStudentParticipateCourse, {
+        token: authState.token,
+        courseSlug: course?.slug,
+        studentId: student.user.id,
+      });
+      if (responses == true) {
+        toast.error("Học viên đã tham gia khóa học rồi.");
+        setIsOpenConfirmAddStudentModal(false);
+        setIsSendingFeeAmountRequest(false);
+      } else {
+        const responses: any = await API.post(Url.employees.getLeftMoneyAmount, { token: authState.token, courseSlug: course?.slug });
+        setIsSendingFeeAmountRequest(false);
+        setAmount(responses);
+      }
+    } catch (error) {
+      setIsOpenConfirmAddStudentModal(false);
+      setIsSendingFeeAmountRequest(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, course?.slug]);
+
+
+
+  const onConfirmAddStudent = useCallback(async () => {
+    try {
+      setIsOpenConfirmAddStudentModal(false);
+      setIsSendingFeeAmountRequest(false);
+      setIsSendingAddStudentRequest(true);
+      const responses: any = await API.post(Url.employees.addParticipation, {
+        token: authState.token,
+        courseSlug: course?.slug,
+        studentId: currentStudent?.user.id,
+      });
+      if (responses == true) {
+        toast.success("Đăng ký học viên thàng công");
+        setIsSendingAddStudentRequest(false);
+        setIsOpenSearchStudentModal(false);
+        onClickPaginationPageStudent(currentPageStudent);
+      } else {
+        toast.error("Đăng ký học viên thất bại");
+        setIsSendingAddStudentRequest(false);
+        setIsOpenSearchStudentModal(false);
+      }
+    } catch (error) {
+      setIsSendingAddStudentRequest(false);
+      setIsOpenSearchStudentModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, course?.slug, currentStudent?.user.id, currentPageStudent, onClickPaginationPageStudent]);
+
+
+  const onChooseRemoveStudent = useCallback(async (student: UserStudent) => {
+    try {
+      setIsOpenConfirmRemoveStudentModal(true);
+      setIsSendingRemoveStudentRequest(true);
+      const responses: any = await API.post(Url.employees.getLeftMoneyAmount, { token: authState.token, courseSlug: course?.slug });
+      setAmount(responses);
+      setCurrentStudent(student);
+      setIsSendingRemoveStudentRequest(false);
+    } catch (error) {
+      setIsOpenConfirmRemoveStudentModal(false);
+      setIsSendingRemoveStudentRequest(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, course?.slug]);
+
+
+
+  const onConfirmRemoveStudent = useCallback(async () => {
+    try {
+      setIsSendingRemoveStudentRequest(true);
+      const responses: any = await API.post(Url.employees.removeParticipation, {
+        token: authState.token,
+        courseSlug: course?.slug,
+        studentId: currentStudent?.user.id,
+      });
+      if (responses == true) {
+        toast.success("Xóa học viên thàng công");
+        setIsSendingRemoveStudentRequest(false);
+        setIsOpenConfirmRemoveStudentModal(false);
+        onClickPaginationPageStudent(currentPageStudent);
+      } else {
+        toast.error("Xóa học viên thất bại");
+        setIsSendingRemoveStudentRequest(false);
+        setIsOpenConfirmRemoveStudentModal(false);
+      }
+    } catch (error) {
+      setIsSendingRemoveStudentRequest(false);
+      setIsOpenConfirmRemoveStudentModal(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, course?.slug, currentStudent?.user.id, currentPageStudent, onClickPaginationPageStudent]);
+
+
+
   useEffect(() => {
     const didMountFunc = async () => {
       try {
@@ -471,10 +576,44 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         overlayOpacity={0.55}
         overlayBlur={3}>
         <FindStudentModal
-          onChooseStudent={async () => { }}
+          onChooseStudent={onChooseAddStudent}
           loading={isSendingAddStudentRequest}
         />
       </Modal>
+
+      <Modal
+        opened={isOpenConfirmAddStudentModal}
+        onClose={() => setIsOpenConfirmAddStudentModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <AmountModal
+          callBack={onConfirmAddStudent}
+          amount={amount}
+          loading={isSendingFeeAmountRequest}
+          message={`Số tiền học sinh ${currentStudent?.user.fullName} (MSHS: ${currentStudent?.user.id}) cần đóng`}
+          title="Đăng ký học viên"
+        />
+      </Modal>
+
+
+      <Modal
+        opened={isOpenConfirmRemoveStudentModal}
+        onClose={() => setIsOpenConfirmRemoveStudentModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <AmountModal
+          callBack={onConfirmRemoveStudent}
+          amount={amount}
+          loading={isSendingRemoveStudentRequest}
+          message={`Số tiền cần hoàn trả cho học viên ${currentStudent?.user.fullName} (MSHS: ${currentStudent?.user.id})`}
+          title="Xóa đăng ký học viên"
+        />
+      </Modal>
+
 
       {!didMount && (
         <Container style={{
@@ -716,9 +855,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                             {getCourseStatus(course) != CourseStatus.Closed && (
                               <td>
                                 <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
-                                  onClick={() => {
-
-                                  }}>
+                                  onClick={() => onChooseRemoveStudent(student)}>
                                   <IconTrash size={20} />
                                 </ThemeIcon>
                               </td>

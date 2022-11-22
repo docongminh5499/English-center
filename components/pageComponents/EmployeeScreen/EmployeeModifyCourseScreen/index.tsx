@@ -24,9 +24,10 @@ import TimeTable from "../../../../interfaces/timeTable.interface";
 import { getWeekdayName } from "../../../../helpers/getWeekdayName";
 import moment from "moment";
 import API from "../../../../helpers/api";
-import { Url } from "../../../../helpers/constants";
+import { Url, UserRole } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import { toast } from "react-toastify";
+import { Course } from "../../../../models/course.model";
 
 
 const getMinimumValidDate = () => {
@@ -40,9 +41,28 @@ const getMinimumValidDate = () => {
 }
 
 
+const diffDays = (oldOpeningDate: Date, newOpeningDate: Date) => {
+  const diffTime: number = (new Date(oldOpeningDate)).getTime() - (new Date(newOpeningDate)).getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+
+const getUpdatedExpectedClosingDate = (course: Course | null, openingDate?: Date) => {
+  if (course === null || openingDate === undefined) return undefined;
+  // Calculating expected course
+  let days = diffDays(course.openingDate, openingDate);
+  const expectedClosingDate = new Date(course.expectedClosingDate);
+  expectedClosingDate.setDate(expectedClosingDate.getDate() + days);
+  return expectedClosingDate;
+}
+
+
 interface IProps {
   userEmployee: UserEmployee | null;
-  curriculums: Curriculum[];
+  userRole: UserRole | null;
+  course: Course | null;
+  participationCount: number;
 }
 
 const schema = yup.object().shape({
@@ -50,7 +70,7 @@ const schema = yup.object().shape({
   maxNumberOfStudent: yup.number()
     .required("Vui lòng nhập số lượng học viên tối đa")
     .integer("Vui lòng nhập số nguyên")
-    .min(1, "Số lượng học viên tối đa phải lớn hơn 0"),
+    .min(0, `Số lượng học viên tối đa phải lớn hơn 0`),
   price: yup.number()
     .required("Vui lòng nhập giá tiền khóa học")
     .integer("Vui lòng nhập số nguyên")
@@ -58,16 +78,10 @@ const schema = yup.object().shape({
   openingDate: yup.date()
     .nullable()
     .required("Vui lòng chọn ngày khai giảng")
-    .min(getMinimumValidDate(), "Vui lòng chọn ngày khai giảng sau ngày hiên tại"),
-  image: yup.mixed().required("Vui lòng chọn hình minh họa"),
-  curriculum: yup.number().nullable().required("Vui lòng chọn chương trình dạy"),
-  teacher: yup.number().nullable().required("Vui lòng chọn giáo viên"),
-  branch: yup.number().nullable().required("Vui lòng chọn chi nhánh"),
-  timeTables: yup.array().min(1, "Vui lòng chọn lịch học")
 });
 
 
-const EmployeeCreateCourseScreen = (props: IProps) => {
+const EmployeeModifyCourseScreen = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
   const avatarInputRef = useRef<HTMLInputElement>() as React.MutableRefObject<HTMLInputElement>;
@@ -78,32 +92,20 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
   const [didMount, setDidMount] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [currentTeacher, setCurrentTeacher] = useState<UserTeacher | null>(null);
+  const [currentTeacher, setCurrentTeacher] = useState<UserTeacher | null>(props.course?.teacher || null);
   const [currentData, setCurrentData] = useState();
   const [isOpenFindingTeacherForm, setIsOpenFindingTeacherForm] = useState(false);
   const [isOpenShiftForm, setIsOpenShiftForm] = useState(false);
 
 
-  const curriculums = useMemo(() => {
-    return props.curriculums.map(cur => ({
-      key: cur.id,
-      value: cur.id,
-      label: cur.name,
-      curriculum: cur,
-    }));
-  }, [props.curriculums]);
-
-
   const createCourseForm = useForm({
     initialValues: {
-      name: "",
-      maxNumberOfStudent: 20,
-      price: 1000000,
-      openingDate: getMinimumValidDate(),
+      name: props.course?.name,
+      maxNumberOfStudent: props.course?.maxNumberOfStudent,
+      price: props.course?.price,
+      openingDate: new Date(props.course?.openingDate || new Date()),
       image: null,
-      curriculum: null,
       teacher: null,
-      branch: props.userEmployee?.worker.branch.id,
       timeTables: [] as TimeTable[],
     },
     validate: yupResolver(schema),
@@ -122,9 +124,27 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
 
 
   const onSubmit = useCallback((data: any) => {
-    setCurrentData(data);
-    setIsSaveModalOpen(true);
-  }, []);
+    let error = false;
+    if (data.maxNumberOfStudent && data.maxNumberOfStudent < props.participationCount) {
+      createCourseForm.setFieldError("maxNumberOfStudent", `Hiện tại đã có ${props.participationCount} tham gia khóa học. Số lượng học viên tối đa phải lớn hơn ${props.participationCount}`)
+      error = true;
+    }
+    if (props.participationCount > 0 && data.price !== props.course?.price) {
+      createCourseForm.setFieldError("price", `Hiện tại đã có học sinh tham gia khóa học. Không thể sửa giá khóa học.`)
+      error = true;
+    }
+    if (data.teacher !== null &&
+      !(data.teacher === props.course?.teacher.worker.user.id &&
+        (new Date(createCourseForm.values.openingDate)).getTime() === (new Date(props.course?.openingDate || new Date())).getTime()) &&
+      data.timeTables.length !== props.course?.sessionPerWeek) {
+      createCourseForm.setFieldError("timeTables", `Lịch học hiện tại là ${props.course?.sessionPerWeek} buổi mỗi tuần`)
+      error = true;
+    }
+    if (!error) {
+      setCurrentData(data);
+      setIsSaveModalOpen(true);
+    }
+  }, [props.participationCount, props.course?.teacher.worker.user.id, props.course?.sessionPerWeek, createCourseForm.values.openingDate?.getTime(), (new Date(props.course?.openingDate || new Date())).getTime()]);
 
 
   const onSave = useCallback(async (data: any) => {
@@ -139,14 +159,19 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
       const shifts = timeTables.map((timeTable: any) => timeTable.shifts.map((shift: any) => shift.id));
 
       const formData = new FormData();
-      formData.append("name", courseData['name']);
-      formData.append("maxNumberOfStudent", courseData['maxNumberOfStudent']);
-      formData.append("price", courseData['price']);
-      formData.append("openingDate", courseData['openingDate']);
-      formData.append("image", courseData['image']);
-      formData.append("curriculum", courseData['curriculum']);
-      formData.append("teacher", courseData['teacher']);
-      formData.append("branch", courseData['branch']);
+      if (courseData['name'].trim() !== props.course?.name.trim())
+        formData.append("name", courseData['name']);
+      if (courseData['maxNumberOfStudent'] !== props.course?.maxNumberOfStudent)
+        formData.append("maxNumberOfStudent", courseData['maxNumberOfStudent']);
+      if (courseData['price'] !== props.course?.price)
+        formData.append("price", courseData['price']);
+      if ((new Date(courseData['openingDate'])).getTime() !== (new Date(props.course?.openingDate || new Date())).getTime())
+        formData.append("openingDate", courseData['openingDate']);
+      if (courseData['image'])
+        formData.append("image", courseData['image']);
+      if (courseData['teacher'])
+        formData.append("teacher", courseData['teacher']);
+      formData.append("version", props.course?.version.toString() || "0");
       tutors.forEach((tutor: any, index: any) => {
         formData.append(`tutors[${index}]`, tutor);
       });
@@ -159,9 +184,10 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
           formData.append(`shifts[${index}][${innerIndex}]`, shift);
         })
       });
+      formData.append('courseSlug', props.course?.slug || '');
 
       const responses: any = await API.post(
-        Url.employees.createCourse, formData, {
+        Url.employees.modifyCourse, formData, {
         headers: {
           'x-access-token': authState.token || "",
           'content-type': 'multipart/form-data'
@@ -182,7 +208,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
       setIsSaving(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
-  }, [authState.token]);
+  }, [authState.token, props.course, props.course?.slug]);
 
 
 
@@ -196,10 +222,10 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
 
   const onClickChangeTeacherButton = useCallback(() => {
     createCourseForm.clearFieldError('teacher');
-    if (createCourseForm.values['curriculum'] === null)
-      createCourseForm.setFieldError('teacher', "Vui lòng chọn chương trình dạy trước");
-    else setIsOpenFindingTeacherForm(true)
-  }, [createCourseForm, createCourseForm.values['curriculum']]);
+    if (createCourseForm.values['openingDate'] === null)
+      return createCourseForm.setFieldError('teacher', "Vui lòng chọn ngày khai giảng trước");
+    setIsOpenFindingTeacherForm(true)
+  }, [createCourseForm]);
 
 
 
@@ -231,20 +257,23 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
   }, [createCourseForm.values['image']])
 
 
-
-  useEffect(() => {
-    createCourseForm.setFieldValue('teacher', null);
-    setCurrentTeacher(null);
-  }, [createCourseForm.values['curriculum']])
-
-
   useEffect(() => {
     createCourseForm.setFieldValue('timeTables', []);
-  }, [createCourseForm.values['curriculum'], createCourseForm.values['teacher'], createCourseForm.values['openingDate']?.getTime()])
+  }, [createCourseForm.values['teacher'], createCourseForm.values['openingDate']?.getTime()])
 
 
   useEffect(() => {
-    if (props.userEmployee === null || props.userEmployee.worker.branch === null)
+    if (didMount) {
+      createCourseForm.setFieldValue('teacher', null);
+      setCurrentTeacher(null);
+      setIsOpenShiftForm(false);
+      setIsOpenFindingTeacherForm(false);
+    }
+  }, [createCourseForm.values['openingDate']?.getTime()])
+
+
+  useEffect(() => {
+    if (props.course === null || props.userEmployee === null || props.userEmployee.worker.branch === null)
       router.replace('/not-found');
     else setDidMount(true);
   }, []);
@@ -259,7 +288,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
   return (
     <>
       <Head>
-        <title>Tạo khóa học</title>
+        <title>Chỉnh sửa khóa học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -272,8 +301,8 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
         overlayBlur={3}>
         <SaveModal
           loading={isSaving}
-          title="Xác nhận tạo khóa học"
-          message={`Bạn có chắc muốn tạo khóa học này chứ?`}
+          title="Xác nhận lưu khóa học"
+          message={`Bạn có chắc muốn lưu khóa học này chứ?`}
           buttonLabel="Xác nhận"
           onSave={() => onSave(currentData)}
         />
@@ -294,7 +323,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
       {didMount && (
         <Container size="xl" style={{ width: "100%", minWidth: 0 }}>
           <Title align="center" size="2.6rem" color="#444" transform="uppercase" my={20}>
-            Tạo khóa học mới
+            Chỉnh sửa khóa học
           </Title>
 
           <form
@@ -312,14 +341,13 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
               {...createCourseForm.getInputProps('name')}
             />
 
-            <Select
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Chọn chương trình dạy"
               label="Chương trình dạy"
-              placeholder="Tìm kiếm chương trình dạy"
-              searchable
-              nothingFound="Không có chương trình dạy"
-              itemComponent={CurriculumSelectItem}
-              data={curriculums}
-              {...createCourseForm.getInputProps('curriculum')}
+              withAsterisk
+              value={props.course?.curriculum.name}
+              disabled={true}
             />
 
             <DatePicker
@@ -328,6 +356,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
               label="Ngày khai giảng"
               locale="vi"
               minDate={getMinimumValidDate()}
+              disabled={(new Date()) >= (new Date(props.course?.openingDate || new Date()))}
               {...createCourseForm.getInputProps('openingDate')}
             />
 
@@ -346,11 +375,12 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
               placeholder="Giá tiền"
               label="Giá tiền"
               withAsterisk
+              disabled={props.participationCount > 0}
               {...createCourseForm.getInputProps('price')}
             />
 
             <TextInput
-              disabled
+              disabled={true}
               style={{ flex: 1 }}
               placeholder="Chi nhánh"
               label="Chi nhánh"
@@ -378,7 +408,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
                   imageRef={avatarImgRef}
                   style={{ maxWidth: "300px" }}
                   radius="md"
-                  src={getImageUrl(undefined)}
+                  src={getImageUrl(props.course?.image)}
                   alt="Hình minh họa chương trình dạy"
                 />
                 <FileInput
@@ -411,7 +441,10 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
               </Text>
               {currentTeacher === null
                 ? <Text>Chưa chọn giáo viên
-                  <Button ml={10} compact variant="light" onClick={onClickChangeTeacherButton}>Thay đổi</Button>
+                  <Button
+                    ml={10} compact variant="light"
+                    onClick={onClickChangeTeacherButton}
+                  >Thay đổi</Button>
                 </Text>
                 : (<Group mt={10} style={{ width: "fit-content" }} noWrap>
                   <Avatar
@@ -431,7 +464,10 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
                     </Text>
                     <Text style={{ fontSize: "1rem" }} color="dimmed" align="center">MSGV: {currentTeacher.worker.user.id}</Text>
                   </Container>
-                  <Button ml={10} compact variant="light" onClick={onClickChangeTeacherButton}>Thay đổi</Button>
+                  <Button
+                    ml={10} compact variant="light"
+                    onClick={onClickChangeTeacherButton}
+                  >Thay đổi</Button>
                 </Group>
                 )}
               {createCourseForm.errors['teacher'] && (
@@ -444,7 +480,7 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
               <SearchTeacherForm
                 onChooseTeacher={onChooseTeacher}
                 branchId={props.userEmployee?.worker.branch.id}
-                curriculumId={createCourseForm.values['curriculum'] === null ? undefined : createCourseForm.values['curriculum']}
+                curriculumId={props.course?.curriculum.id}
               />
             )}
 
@@ -491,24 +527,35 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
                   </Container>
                 )}
 
-                {isOpenShiftForm && createCourseForm.values['curriculum'] && (
-                  <ShiftForm
-                    branchId={props.userEmployee?.worker.branch.id || 0}
-                    activeShiftIds={activeShiftIds}
-                    numberShiftsPerSession={props.curriculums.find(
-                      curriculum => curriculum.id === createCourseForm.values['curriculum'])?.shiftsPerSession || 1}
-                    teacherId={createCourseForm.values['teacher']}
-                    beginingDate={createCourseForm.values['openingDate']}
-                    onAddTimeTable={onAddTimeTable}
-                    maximumStudentNumber={createCourseForm.values.maxNumberOfStudent}
-                  />
+                {isOpenShiftForm && (
+                  <>
+                    {createCourseForm.values.teacher === props.course?.teacher.worker.user.id &&
+                      (new Date(createCourseForm.values.openingDate)).getTime() === (new Date(props.course.openingDate)).getTime() && (
+                        <Button
+                          onClick={() => {
+                            setIsOpenShiftForm(false);
+                            createCourseForm.setFieldValue("teacher", null);
+                          }}>Không sửa lịch học</Button>
+                      )}
+                    <ShiftForm
+                      branchId={props.userEmployee?.worker.branch.id || 0}
+                      activeShiftIds={activeShiftIds}
+                      numberShiftsPerSession={props.course?.curriculum.shiftsPerSession || 0}
+                      teacherId={createCourseForm.values['teacher']}
+                      beginingDate={createCourseForm.values['openingDate']}
+                      closingDate={getUpdatedExpectedClosingDate(props.course, createCourseForm.values['openingDate'])}
+                      courseSlug={props.course?.slug}
+                      onAddTimeTable={onAddTimeTable}
+                      maximumStudentNumber={createCourseForm.values.maxNumberOfStudent || 0}
+                    />
+                  </>
                 )}
               </>
             )}
 
             <Space h={20} />
             <Container>
-              <Button type="submit" color="green">Tạo khóa học</Button>
+              <Button type="submit" color="green">Lưu thông tin</Button>
             </Container>
             <Space h={20} />
           </form>
@@ -519,4 +566,4 @@ const EmployeeCreateCourseScreen = (props: IProps) => {
 }
 
 
-export default EmployeeCreateCourseScreen;
+export default EmployeeModifyCourseScreen;

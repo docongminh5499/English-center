@@ -26,6 +26,8 @@ interface IProps {
   branchId: number;
   onSubmit: (data: any) => void;
   maximumStudentNumber: number;
+  closingDate?: Date;
+  courseSlug?: string;
 }
 
 const StudySessionModal = (props: IProps) => {
@@ -156,6 +158,8 @@ const StudySessionModal = (props: IProps) => {
           beginingDate={props.beginingDate}
           shiftIds={props.shifts.map(shift => shift.id)}
           onChooseTutor={onChooseTutor}
+          closingDate={props.closingDate}
+          courseSlug={props.courseSlug}
         />
       )}
 
@@ -165,6 +169,8 @@ const StudySessionModal = (props: IProps) => {
           beginingDate={props.beginingDate}
           shiftIds={props.shifts.map(shift => shift.id)}
           onChooseClassroom={onChooseClassroom}
+          closingDate={props.closingDate}
+          courseSlug={props.courseSlug}
         />
       )}
 

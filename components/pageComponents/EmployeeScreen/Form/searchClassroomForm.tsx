@@ -14,6 +14,8 @@ interface IProps {
   beginingDate: Date;
   shiftIds: number[];
   onChooseClassroom: (classroom: Classroom) => void;
+  closingDate?: Date;
+  courseSlug?: string;
 }
 
 const SearchClassroomForm = (props: IProps) => {
@@ -42,6 +44,8 @@ const SearchClassroomForm = (props: IProps) => {
         branchId: props.branchId,
         beginingDate: props.beginingDate,
         shiftIds: props.shiftIds,
+        closingDate: props.closingDate,
+        courseSlug: props.courseSlug,
       })
       setClassrooms(classrooms);
       setLoading(false);
@@ -49,7 +53,7 @@ const SearchClassroomForm = (props: IProps) => {
       setError(true);
       setLoading(false);
     }
-  }, [authState.token, props.branchId, props.beginingDate, props.shiftIds]);
+  }, [authState.token, props.branchId, props.beginingDate, props.shiftIds, props.closingDate, props.courseSlug]);
 
 
   useEffect(() => {

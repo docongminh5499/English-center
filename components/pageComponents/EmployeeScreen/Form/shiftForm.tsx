@@ -34,6 +34,8 @@ interface IProps {
   beginingDate: Date,
   activeShiftIds: number[],
   onAddTimeTable: (shifts: Shift[], tutor: UserTutor, classroom: Classroom) => void;
+  closingDate?: Date;
+  courseSlug?: string;
 }
 
 const ShiftForm = (props: IProps) => {
@@ -75,6 +77,8 @@ const ShiftForm = (props: IProps) => {
         token: authState.token,
         teacherId: props.teacherId,
         beginingDate: props.beginingDate,
+        closingDate: props.closingDate,
+        courseSlug: props.courseSlug,
       });
       // Classified free shifts into weekdays
       const classifiedFreeShift: { [key: string]: Shift[] } = {};
@@ -125,7 +129,7 @@ const ShiftForm = (props: IProps) => {
       setLoading(false);
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
-  }, [authState.token, props.teacherId, props.beginingDate, weekDays, startHourFirstShift, startHourLastShift]);
+  }, [authState.token, props.teacherId, props.beginingDate, weekDays, startHourFirstShift, startHourLastShift, props.closingDate, props.courseSlug]);
 
 
 
@@ -169,6 +173,8 @@ const ShiftForm = (props: IProps) => {
           shifts={chooseShifts}
           onSubmit={onSubmitModal}
           maximumStudentNumber={props.maximumStudentNumber}
+          closingDate={props.closingDate}
+          courseSlug={props.courseSlug}
         />
       </Modal>
 

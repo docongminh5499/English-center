@@ -227,6 +227,7 @@ export const Url = {
     getAvailableTutors: "/api/employees/courses/get-available-tutors",
     getAvailableClassroom: "/api/employees/courses/get-available-classrooms",
     createCourse: "/api/employees/courses/create-course",
+    modifyCourse: "/api/employees/courses/modify-course",
     getCourse: "/api/employees/courses/get-course",
     getCourseDetail: "/api/employees/courses/get-course/",
     reopenCourse: "/api/employees/courses/reopen-course",
@@ -257,6 +258,10 @@ export const Url = {
     getTeachersByBranch: "/api/employees/workers/get-teachers",
     getTutorsByBranch: "/api/employees/workers/get-tutors",
     getEmployeesByBranch: "/api/employees/workers/get-employees",
+    checkStudentParticipateCourse: "/api/employees/courses/check-student-participate-course",
+    addParticipation: "/api/employees/courses/add-participation",
+    removeParticipation: "/api/employees/courses/remove-participation",
+    getLeftMoneyAmount: "/api/employees/courses/get-left-money-amount",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",
