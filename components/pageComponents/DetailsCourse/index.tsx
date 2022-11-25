@@ -1,19 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./DetailsCourse.module.css";
 import Head from "next/head";
-import { Tabs, Accordion } from "@mantine/core";
+import { Tabs, Accordion, Modal, Loader, ScrollArea, SimpleGrid, Group, Avatar, Title, Badge } from "@mantine/core";
 import { Container, Text } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useAuth } from "../../../stores/Auth";
 import {
-  IconFileDescription, IconClockHour4, IconChartBar, IconBooks, IconZoomQuestion, IconUsers, IconBook, IconCurrentLocation
+  IconFileDescription, IconClockHour4, IconChartBar, IconBooks, IconZoomQuestion, IconUsers, IconBook, IconCurrentLocation, IconCheck
 } from "@tabler/icons";
 import { Course } from "../../../models/course.model";
 import { getAvatarImageUrl, getImageUrl } from "../../../helpers/image.helper";
 import { getLevelName } from "../../../helpers/getLevelName";
 import moment from "moment";
 import { formatCurrency } from "../../../helpers/formatCurrency";
-import { UserRole } from "../../../helpers/constants";
+import { CourseType, Url, UserRole } from "../../../helpers/constants";
+import { getWeekdayName } from "../../../helpers/getWeekdayName";
+import { getWeekdayFromDate } from "../../../helpers/getWeekdayFromDate";
+import Button from "../../commons/Button";
+import Loading from "../../commons/Loading";
+import { PayPalButtons } from "@paypal/react-paypal-js";
+import API from "../../../helpers/api";
+import { toast } from "react-toastify";
+import { boolean } from "yup";
+import UserStudent from "../../../models/userStudent.model";
+import UserParent from "../../../models/userParent.model";
 
 
 
@@ -27,6 +37,7 @@ const diffDays = (date1: Date, date2: Date) => {
 
 interface IProps {
   course: Course | null;
+  isAttended: boolean;
 }
 
 
@@ -34,6 +45,141 @@ const index = (props: IProps) => {
   const [authState, authAction] = useAuth();
   const router = useRouter();
   const [didMount, setDidMount] = useState(false);
+
+  // Attnd course
+  const [isAttended, setIsAttended] = useState(props.isAttended);
+  const [isSendingCheckAttendCourseRequest, setIsSendingCheckAttendCourseRequest] = useState(false);
+  const [isSendingAttendCourseRequest, setIsSendingAttendCourseRequest] = useState(false);
+  const [isOpenConfirmAttendCourseModal, setIsOpenConfirmAttendCourseModal] = useState(false);
+  const [currentStudentId, setCurrentStudentId] = useState<string | null>(null);
+  const [orderDetail, setOrderDetail] = useState<object | null>(null);
+  const [amount, setAmount] = useState<number | null>(null);
+
+  // List students
+  const [students, setStudents] = useState<{ student: UserStudent, isAttended: boolean }[]>([]);
+  const [isSendingFindStudentByParentsRequest, setIsSendingFindStudentByParentsRequest] = useState(false);
+  const [isChooseStudentModalOpened, setIsChooseStudentModalOpened] = useState(false);
+
+
+
+  const onClickAttendCourseByParent = useCallback(async () => {
+    try {
+      setIsChooseStudentModalOpened(true);
+      setIsSendingFindStudentByParentsRequest(true);
+      const userParent: UserParent = await API.get(Url.parents.getPersonalInfo, { token: authState.token });
+      const isAttendedData = await Promise.all(userParent.userStudents.map(student => {
+        return API.post(Url.guests.checkAttendCourse, {
+          token: authState.token,
+          courseSlug: props.course?.slug,
+          studentId: student.user.id
+        });
+      }));
+      const students = userParent.userStudents.map((student, index) => ({
+        student: student,
+        isAttended: isAttendedData[index],
+      }));
+      setStudents(students);
+      setIsSendingFindStudentByParentsRequest(false);
+    } catch (error) {
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      setIsChooseStudentModalOpened(false);
+      setIsSendingFindStudentByParentsRequest(false);
+    }
+  }, [authState.token, props.course?.slug]);
+
+
+
+  const onOpenConfirmAttendCourseModalByParent = useCallback(async (studentId: number) => {
+    try {
+      setIsOpenConfirmAttendCourseModal(true);
+      setIsSendingAttendCourseRequest(true);
+      const responses: any = await API.post(Url.payments.getStudentOrderDetail, {
+        token: authState.token,
+        courseSlug: props.course?.slug,
+        studentId: studentId,
+        parentId: authState.userId,
+      });
+      setOrderDetail(responses.createPaymentJson);
+      setAmount(responses.amount);
+      setIsSendingAttendCourseRequest(false);
+      setCurrentStudentId(studentId.toString());
+    } catch (error) {
+      setIsSendingAttendCourseRequest(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, props.course?.slug, authState.userId]);
+
+
+
+
+
+  const onOpenConfirmAttendCourseModalByStudent = useCallback(async () => {
+    try {
+      setIsOpenConfirmAttendCourseModal(true);
+      setIsSendingAttendCourseRequest(true);
+      const responses: any = await API.post(Url.payments.getStudentOrderDetail, {
+        token: authState.token,
+        courseSlug: props.course?.slug,
+        studentId: authState.userId
+      });
+      setOrderDetail(responses.createPaymentJson);
+      setAmount(responses.amount);
+      setIsSendingAttendCourseRequest(false);
+      setCurrentStudentId(authState.userId || null);
+    } catch (error) {
+      setIsSendingAttendCourseRequest(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+    }
+  }, [authState.token, props.course?.slug, authState.userId]);
+
+
+
+  const createOrder = useCallback((data: any, actions: any) => {
+    return actions.order.create(orderDetail);
+  }, [orderDetail]);
+
+
+
+  const onApprove = useCallback((data: any, actions: any) => {
+    return actions.order.capture().then(async function (detail: any) {
+      try {
+        setIsOpenConfirmAttendCourseModal(true);
+        setIsSendingAttendCourseRequest(true);
+        await API.post(Url.payments.onSuccessParticipateCourse, {
+          token: authState.token,
+          courseSlug: props.course?.slug,
+          studentId: currentStudentId,
+          orderId: detail.id,
+        });
+        setIsOpenConfirmAttendCourseModal(false);
+        // Check attendance
+        if (authState.role === UserRole.STUDENT) {
+          setIsSendingCheckAttendCourseRequest(true)
+          const result = await API.post(Url.guests.checkAttendCourse, {
+            token: authState.token,
+            courseSlug: props.course?.slug,
+            studentId: currentStudentId,
+          });
+          setIsAttended(result);
+        }
+        setIsSendingCheckAttendCourseRequest(false);
+      } catch (error) {
+        setIsSendingCheckAttendCourseRequest(false);
+        setIsOpenConfirmAttendCourseModal(false);
+        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      }
+    })
+  }, [authState.token, props.course?.slug, currentStudentId]);
+
+
+
+  const onError = useCallback((error: any) => {
+    console.log(error)
+    setIsSendingAttendCourseRequest(false);
+    setIsOpenConfirmAttendCourseModal(false);
+  }, []);
+
+
 
   useEffect(() => {
     if (props.course === null)
@@ -50,6 +196,168 @@ const index = (props: IProps) => {
         <title>Chi tiết khóa học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Modal
+        opened={isOpenConfirmAttendCourseModal}
+        onClose={() => setIsOpenConfirmAttendCourseModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <Container p={0} style={{
+          backgroundColor: "white",
+          borderRadius: "5px",
+          margin: "0 1rem",
+        }}>
+          {isSendingAttendCourseRequest && (
+            <Container style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexGrow: 1,
+            }}>
+              <Loading />
+            </Container>
+          )}
+
+          {!isSendingAttendCourseRequest && (
+            <>
+              <Text align="center" transform="uppercase" style={{ fontSize: "1.8rem" }} weight={600}>
+                Tham gia khóa học
+              </Text>
+              <Text align="center">
+                {props.course?.curriculum.type === CourseType.SHORT_TERM
+                  ? "Đây là khóa học ngắn hạn, bạn sẽ thanh toán toàn bộ khóa học trong lần đầu tiên."
+                  : "Đây là khóa học dài hạn, bạn sẽ thanh toán theo từng tháng. Sau đây là khoản tiền tháng đầu tiên."}
+              </Text>
+              <Text align="center" style={{ fontSize: "3rem" }} weight={700} mb={20} mt={8}>
+                {formatCurrency(amount || 0)}
+              </Text>
+              <Container style={{ display: "flex", justifyContent: "center" }} p={0}>
+                <PayPalButtons
+                  style={{
+                    color: "blue",
+                    shape: "pill",
+                    label: "pay",
+                    tagline: false,
+                    layout: "horizontal",
+                  }}
+                  createOrder={createOrder}
+                  onApprove={onApprove}
+                  onError={onError}
+                />
+              </Container>
+            </>
+          )}
+        </Container>
+      </Modal>
+
+
+      <Modal
+        opened={isChooseStudentModalOpened}
+        onClose={() => setIsChooseStudentModalOpened(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <Container p={0} style={{
+          backgroundColor: "white",
+          borderRadius: "5px",
+          margin: "0 1rem",
+        }}>
+          {isSendingFindStudentByParentsRequest && (
+            <Container style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexGrow: 1,
+            }}>
+              <Loading />
+            </Container>
+          )}
+
+          {!isSendingFindStudentByParentsRequest && (
+            <>
+              <Title align="center" transform="uppercase">Chọn học viên</Title>
+              {students.length === 0 && (
+                <Container style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "400px"
+                }} p={10} size="xl">
+                  <Text color="#ADB5BD" style={{ fontSize: "2rem" }} weight={600} align="center">
+                    Không có học viên liên kết
+                  </Text>
+                </Container>
+              )}
+
+              {students.length > 0 && (
+                <ScrollArea style={{ height: 400 }} mt={10}>
+                  <SimpleGrid cols={2} p="md" spacing="sm">
+                    {students.map((studentInfo, index) => (
+                      <Group
+                        key={index}
+                        style={{
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                        onClick={() => {
+                          if (!studentInfo.isAttended) {
+                            setIsChooseStudentModalOpened(false);
+                            onOpenConfirmAttendCourseModalByParent(studentInfo.student.user.id);
+                          }
+                        }}
+                        className={studentInfo.isAttended ? styles.disabledCard : styles.teacherCard}>
+                        <Avatar
+                          size={80}
+                          color="blue"
+                          radius='xl'
+                          src={getAvatarImageUrl(studentInfo.student.user.avatar)}
+                        />
+                        <Container style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          flexGrow: 1,
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }} p={0}>
+                          <Text style={{ fontSize: "1.4rem" }} weight={500}
+                            color={studentInfo.isAttended ? "#ADB5BD" : "#444"} align="center">
+                            {studentInfo.student.user.fullName}
+                          </Text>
+                          <Text style={{ fontSize: "1rem" }}
+                            color={studentInfo.isAttended ? "#ADB5BD" : "dimmed"} align="center">MSHV: {studentInfo.student.user.id}</Text>
+                          {studentInfo.isAttended && (
+                            <Container style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "#69DB7C",
+                              borderRadius: "100px"
+                            }} py={5} mt={5}>
+                              <IconCheck size={12} color="#2B8A3E" />
+                              <Text ml={5} style={{ fontSize: "1rem", color: "#2B8A3E" }} weight={600}>
+                                Đã tham gia
+                              </Text>
+                            </Container>
+                          )}
+                        </Container>
+                      </Group>
+                    ))}
+                  </SimpleGrid>
+                </ScrollArea>
+              )}
+            </>
+          )}
+        </Container>
+      </Modal>
+
+
       {didMount && (
         <div className={styles.wrapPage}>
           <Container size="xl" style={{ width: "100%" }}>
@@ -116,6 +424,7 @@ const index = (props: IProps) => {
                   <Tabs.List>
                     <Tabs.Tab value="tab_curriculum">Chương trình học</Tabs.Tab>
                     <Tabs.Tab value="tab_instructor">Giáo viên</Tabs.Tab>
+                    <Tabs.Tab value="tab_sessions">Lịch học</Tabs.Tab>
                   </Tabs.List>
                   <Tabs.Panel value="tab_curriculum" className={styles.wrapContentTab}>
                     <div className={styles.contentTabCurriculum}>
@@ -128,7 +437,7 @@ const index = (props: IProps) => {
                       <div className={styles.listCurriculum}>
                         <Accordion variant="separated">
                           {props.course?.curriculum.lectures.map((lecture, index) => (
-                            <Accordion.Item value={"value_" + (index + 1)}>
+                            <Accordion.Item value={"value_" + (index + 1)} key={index}>
                               <Accordion.Control>
                                 <div className={styles.titleCurriculumItem}>
                                   <IconBook />
@@ -166,6 +475,29 @@ const index = (props: IProps) => {
                       </div>
                     </div>
                   </Tabs.Panel>
+                  <Tabs.Panel value="tab_sessions" className={styles.wrapContentTab}>
+                    <div className={styles.contentTabCurriculum}>
+                      <p className={styles.title}>
+                        Danh sách buổi học
+                      </p>
+                      <div className={styles.listCurriculum}>
+                        <Accordion variant="separated">
+                          {props.course?.studySessions.map((session, index) => (
+                            <Container p={8} my={10} key={index}>
+                              <Text style={{ fontSize: "1.6rem" }} component="span" weight={600}>Buổi {index + 1}:</Text>
+                              <Text
+                                style={{ fontSize: "1.6rem", display: "inline-block", minWidth: "150px" }}
+                                component="span" align="center">
+                                {getWeekdayName(getWeekdayFromDate(moment(session.date).toDate()) || undefined)}
+                              </Text>
+                              <Text style={{ fontSize: "1.6rem" }} component="span">{moment(session.shifts[0].startTime).format("HH:mm") + " - " + moment(session.shifts[session.shifts.length - 1].endTime).format("HH:mm")}</Text>
+                              <Text style={{ fontSize: "1.6rem" }} component="span" ml={30}>{moment(session.date).format("DD/MM/YYYY")}</Text>
+                            </Container>
+                          ))}
+                        </Accordion>
+                      </div>
+                    </div>
+                  </Tabs.Panel>
                 </Tabs>
 
               </div>
@@ -182,19 +514,44 @@ const index = (props: IProps) => {
                     {authState.role === UserRole.GUEST && (
                       <button type="button" className={styles.buttonBuy}
                         onClick={() => router.push({
-                          pathname: "/register",
+                          pathname: "/login",
                           query: { returnUrl: router.asPath },
                         })}>
                         Đăng ký ngay
                       </button>
                     )}
                     {(authState.role === UserRole.STUDENT) && (
-                      <button type="button" className={styles.buttonBuy}>
-                        Tham gia khóa học
-                      </button>
+                      <>
+                        {isSendingCheckAttendCourseRequest && (
+                          <Container style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexGrow: 1,
+                          }} my={20} p={0}>
+                            <Loader />
+                          </Container>
+                        )}
+                        {!isSendingCheckAttendCourseRequest &&
+                          !isAttended && (
+                            <button
+                              type="button" className={styles.buttonBuy}
+                              onClick={onOpenConfirmAttendCourseModalByStudent}>
+                              Tham gia khóa học
+                            </button>
+                          )}
+                        {!isSendingCheckAttendCourseRequest &&
+                          isAttended && (
+                            <button type="button" className={styles.buttonBuySuccess}>
+                              Đã tham gia khóa học
+                            </button>
+                          )}
+                      </>
                     )}
                     {(authState.role === UserRole.PARENT) && (
-                      <button type="button" className={styles.buttonBuy}>
+                      <button
+                        type="button" className={styles.buttonBuy}
+                        onClick={onClickAttendCourseByParent}>
                         Tham gia khóa học
                       </button>
                     )}

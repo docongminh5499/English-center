@@ -232,6 +232,8 @@ export const Url = {
     getCourseDetail: "/api/employees/courses/get-course/",
     reopenCourse: "/api/employees/courses/reopen-course",
     closeCourse: "/api/employees/courses/close-course",
+    lockCourse: "/api/employees/courses/lock-course",
+    unLockCourse: "/api/employees/courses/unlock-course",
     getStudySessions: "/api/employees/courses/get-study-sessions",
     getShifts: "/api/employees/courses/get-shifts",
     getAvailableTeachersInDate: "/api/employees/courses/get-available-teachers-in-date",
@@ -262,6 +264,11 @@ export const Url = {
     addParticipation: "/api/employees/courses/add-participation",
     removeParticipation: "/api/employees/courses/remove-participation",
     getLeftMoneyAmount: "/api/employees/courses/get-left-money-amount",
+    createSalary: "/api/employees/workers/create-salary",
+    getLateFeeStudent: "/api/employees/student/get-late-fee-students",
+    notifyLateFeeStudent: "/api/employees/student/notify-late-fee-students",
+    getUnpaidFee: "/api/employees/student/get-unpaid-fee",
+    payFee: "/api/employees/student/pay-fee",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",
@@ -287,6 +294,11 @@ export const Url = {
     getBranches: "/api/guests/get-branches",
     getTopComments: "/api/guests/get-top-comments",
     getCourseDetail: "/api/guests/get-course-detail",
+    checkAttendCourse: "/api/guests/check-attend-course",
+  },
+  payments: {
+    getStudentOrderDetail: "/api/payments/get-student-order-detail",
+    onSuccessParticipateCourse: "/api/payments/on-success-student-participate-course",
   }
 };
 

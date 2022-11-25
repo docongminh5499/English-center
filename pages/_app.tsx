@@ -10,6 +10,7 @@ import { usePrevious } from "../helpers/usePrevious";
 import { MantineProvider } from '@mantine/core';
 import Layout from "../components/commons/Layout";
 import { useSocket } from "../stores/Socket";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 function MyApp({ Component, pageProps }: CustomAppProps) {
   const router = useRouter();
@@ -64,22 +65,24 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
 
 
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
-      <Layout
-        loading={!authorized}
-        displaySidebar={Component.displaySidebar === undefined ? true : Component.displaySidebar}
-      >
-        <>
-          <Component {...pageProps} />
-          <ToastContainer
-            style={{ fontSize: "1.4rem" }}
-            theme="colored"
-            hideProgressBar={true}
-            closeButton={true}
-          />
-        </>
-      </Layout>
-    </MantineProvider>
+    <PayPalScriptProvider options={{ "client-id": "AVVDVtodj1uTTJ7Ls3KZPBwMnTnbq_xTAqomMd9iBRScBXQkmDahqkIkr9Fik5L98qUOtV-q_LNEm2Ki" }}>
+      <MantineProvider withGlobalStyles withNormalizeCSS>
+        <Layout
+          loading={!authorized}
+          displaySidebar={Component.displaySidebar === undefined ? true : Component.displaySidebar}
+        >
+          <>
+            <Component {...pageProps} />
+            <ToastContainer
+              style={{ fontSize: "1.4rem" }}
+              theme="colored"
+              hideProgressBar={true}
+              closeButton={true}
+            />
+          </>
+        </Layout>
+      </MantineProvider>
+    </PayPalScriptProvider>
   );
 }
 

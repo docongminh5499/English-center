@@ -69,4 +69,12 @@ export default function configureSocket(socket: Socket<DefaultEventsMap, Default
     await AuthStoreInstance.actions.endLoggingOut();
     await AuthStoreInstance.actions.logOut();
   });
+
+  socket.on("create_salary_completed", () => {
+    toast.success("Hoàn thành tạo lương cho nhân sự trong chi nhánh của bạn");
+  });
+
+  socket.on("create_salary_failed", () => {
+    toast.error("Khởi tạo lương cho nhân sự thất bại. Vui lòng thử lại");
+  });
 }

@@ -29,9 +29,11 @@ export function UserMenu() {
   const onLogout = useCallback(async () => {
     await authAction.startLoggingOut();
     await router.push("/");
-    await authAction.endLoggingOut();
     await authAction.logOut();
-    setTimeout(() => router.replace("/"), 100);
+    setTimeout(() => {
+      authAction.endLoggingOut();
+      router.replace("/");
+    }, 100);
     setIsOpenModal(false);
   }, [authAction]);
 

@@ -290,20 +290,22 @@ const EmployeeHomeScreen = (props: IProps) => {
                               height={180}
                               alt="image-course"
                             />
-                            <Container p={0} style={{
-                              position: "absolute",
-                              top: 10,
-                              right: 10,
-                            }}>
-                              <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setCurrentCourse(courseInfo);
-                                  setIsOpenRemoveCourseModal(true);
-                                }}>
-                                <IconTrash size={20} />
-                              </ThemeIcon>
-                            </Container>
+                            {courseInfo.lockTime && (
+                              <Container p={0} style={{
+                                position: "absolute",
+                                top: 10,
+                                right: 10,
+                              }}>
+                                <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCurrentCourse(courseInfo);
+                                    setIsOpenRemoveCourseModal(true);
+                                  }}>
+                                  <IconTrash size={20} />
+                                </ThemeIcon>
+                              </Container>
+                            )}
                           </Card.Section>
                           <div className={styles.courseInfo}>
                             <Text weight={600} align="center" className={styles.courseName} lineClamp={2}>

@@ -16,7 +16,7 @@ import 'dayjs/locale/vi';
 import UserEmployee from "../../../../models/userEmployee.model";
 import { getGenderName } from "../../../../helpers/getGenderName";
 import Branch from "../../../../models/branch.model";
-
+import CreateSalaryModal from "../Modal/modal";
 
 interface IProps {
   teachers: {
@@ -57,6 +57,9 @@ const EmployeeWorkersScreen = (props: IProps) => {
   const [listEmployees, setListEmployees] = useState<UserEmployee[]>([]);
   const [totalEmployees, setTotalEmployees] = useState(0);
   const [maxPageEmployees, setMaxPageEmployees] = useState(1);
+  // Create salary state
+  const [isConfirmCreateSalaryModalOpened, setIsConfirmCreateSalaryModalOpened] = useState(false);
+  const [isSendingCreateSalaryRequest, setIsSendingCreateSaalaryRequest] = useState(false);
   // Query by name or id
   const [query, setQuery] = useInputState("");
 
@@ -146,6 +149,26 @@ const EmployeeWorkersScreen = (props: IProps) => {
       toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [query])
+
+
+
+  const onConfirmCreateSalary = useCallback(async () => {
+    try {
+      setIsSendingCreateSaalaryRequest(true);
+      const responses = await API.post(Url.employees.createSalary, { token: authState.token });
+      if (responses == true) {
+        toast.success("Gửi yêu cầu khởi tạo lương cho nhân sự");
+      } else toast.error("Tạo lương thất bại. Vui lòng thử lại.");
+      setIsSendingCreateSaalaryRequest(false);
+      setIsConfirmCreateSalaryModalOpened(false);
+    } catch (error) {
+      console.log(error);
+      setIsSendingCreateSaalaryRequest(false);
+      setIsConfirmCreateSalaryModalOpened(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [authState.token])
+
 
 
 
@@ -305,6 +328,26 @@ const EmployeeWorkersScreen = (props: IProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+
+
+      <Modal
+        opened={isConfirmCreateSalaryModalOpened}
+        onClose={() => setIsConfirmCreateSalaryModalOpened(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <CreateSalaryModal
+          loading={isSendingCreateSalaryRequest}
+          title="Tạo lương"
+          message={`Bạn có chắc muốn khởi tạo lương cho nhân sự trong chi nhánh?`}
+          buttonLabel="Xác nhận"
+          colorButton="green"
+          callBack={onConfirmCreateSalary}
+        />
+      </Modal>
+
+
       <Container size="xl" style={{
         width: "100%",
         minWidth: 0,
@@ -331,13 +374,13 @@ const EmployeeWorkersScreen = (props: IProps) => {
           />
         </Container>
         <Divider
-          style={{ width: "300px" }}
+          style={{ maxWidth: "300px" }}
           mx="auto" label={props.branch?.name || ""}
           labelPosition="center"
           variant="dashed"
         />
         <Grid my={15}>
-          {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
+          {!isTablet && (<Grid.Col span={authState.isManager ? 2 : 3}></Grid.Col>)}
           <Grid.Col span={isTablet ? (isMobile ? 12 : 8) : 4}>
             <Input
               styles={{ input: { color: "#444" } }}
@@ -351,6 +394,13 @@ const EmployeeWorkersScreen = (props: IProps) => {
               Tìm kiếm
             </Button>
           </Grid.Col>
+          {authState.isManager && (
+            <Grid.Col span={isTablet ? 12 : 2}>
+              <Button color="green" fullWidth onClick={() => setIsConfirmCreateSalaryModalOpened(true)} disabled={loading}>
+                Tạo lương
+              </Button>
+            </Grid.Col>
+          )}
         </Grid>
         {loading && (
           <Container style={{

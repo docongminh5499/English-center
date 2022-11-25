@@ -10,6 +10,7 @@ import Button from "../../commons/Button";
 import { IconUser, IconLockOpen, IconEye, IconEyeOff } from "@tabler/icons";
 import styles from "./login.module.css";
 import { useState } from "react";
+import { Anchor, Text } from "@mantine/core";
 
 
 
@@ -87,6 +88,12 @@ const LoginScreen = (props: IProps) => {
                   onClick={() => setSeePassword(!seePassword)}
                   size={"1.6rem"} color="#444" stroke={1.5} />)}
             />
+            <Text style={{ fontSize: "1.1rem" }} align="center">
+              Chưa có tài khoản? <Anchor onClick={() => router.push({
+                pathname: "/register",
+                query: { returnUrl: router.query.returnUrl || "/" },
+              })}>Đăng ký ngay</Anchor>
+            </Text>
             <Button type="submit" color="primary" loading={loggingIn}>
               Đăng nhập
             </Button>

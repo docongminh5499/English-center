@@ -1,4 +1,4 @@
-import { Button, Container, Grid, Input, Pagination, ScrollArea, Space, Table, Title, Text } from "@mantine/core";
+import { Button, Container, Grid, Input, Pagination, ScrollArea, Space, Table, Title, Text, Modal } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";
@@ -12,6 +12,8 @@ import UserStudent from "../../../../models/userStudent.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
 import styles from "./student.module.css";
+import CustomModal from "../Modal/modal";
+
 
 interface IProps {
   total: number | null;
@@ -20,7 +22,7 @@ interface IProps {
 }
 
 
-const EmployeeStudentScreen = (props: IProps) => {
+const EmployeeLateFeeStudentScreen = (props: IProps) => {
   const isTablet = useMediaQuery('(max-width: 768px)');
   const isMobile = useMediaQuery('(max-width: 480px)');
 
@@ -33,17 +35,46 @@ const EmployeeStudentScreen = (props: IProps) => {
   const [total, setTotal] = useState(0);
   const [maxPage, setMaxPage] = useState(1);
   const [query, setQuery] = useInputState("");
+  // Notify all student
+  const [isNotifyAllStudentModalOpened, setIsNotifyAllStudentModalOpened] = useState(false);
+  // Notify student
+  const [isNotifyStudentModalOpened, setIsNotifyStudentModalOpened] = useState(false);
+  // Common notify state
+  const [currentStudent, setCurrentStudent] = useState<UserStudent | null>(null);
+  const [isSendingStudentNotificationRequest, setIsSendingStudentNotificationRequest] = useState(false);
 
 
   const getStudents = useCallback(async (limit: number, skip: number, query: string) => {
-    return await API.post(Url.employees.getAllStudents, {
+    return await API.post(Url.employees.getLateFeeStudent, {
       token: authState.token,
       limit: limit,
       skip: skip,
       query: query,
     });
   }, [authState.token]);
-  ''
+
+
+  const notifyStudent = useCallback(async () => {
+    try {
+      setIsSendingStudentNotificationRequest(true);
+      const responses = await API.post(Url.employees.notifyLateFeeStudent, {
+        token: authState.token,
+        studentId: currentStudent?.user.id,
+      });
+      if (responses == true) {
+        toast.success("Gửi thông báo thành công")
+      } else toast.error("Gửi thông báo thất bại. Vui lòng thử lại.")
+      setIsSendingStudentNotificationRequest(false);
+      setIsNotifyAllStudentModalOpened(false);
+      setIsNotifyStudentModalOpened(false);
+    } catch (error) {
+      setIsSendingStudentNotificationRequest(false);
+      setIsNotifyAllStudentModalOpened(false);
+      setIsNotifyStudentModalOpened(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [authState.token, currentStudent])
+
 
   const queryStudents = useCallback(async () => {
     try {
@@ -105,9 +136,45 @@ const EmployeeStudentScreen = (props: IProps) => {
   return (
     <>
       <Head>
-        <title>Danh sách học viên</title>
+        <title>Danh sách học viên trễ học phí</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Modal
+        opened={isNotifyAllStudentModalOpened}
+        onClose={() => setIsNotifyAllStudentModalOpened(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <CustomModal
+          loading={isSendingStudentNotificationRequest}
+          title="Nhắc nhở"
+          message={`Bạn có chắc muốn nhắc nhở toàn bộ học sinh đang nợ học phí chứ?`}
+          buttonLabel="Xác nhận xóa"
+          colorButton="red"
+          callBack={notifyStudent}
+        />
+      </Modal>
+
+      <Modal
+        opened={isNotifyStudentModalOpened}
+        onClose={() => setIsNotifyStudentModalOpened(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <CustomModal
+          loading={isSendingStudentNotificationRequest}
+          title="Nhắc nhở"
+          message={`Bạn có chắc muốn nhắc nhở "${currentStudent?.user.fullName}"?`}
+          buttonLabel="Xác nhận xóa"
+          colorButton="red"
+          callBack={notifyStudent}
+        />
+      </Modal>
+
+
       <Container size="xl" style={{
         width: "100%",
         minWidth: 0,
@@ -115,14 +182,8 @@ const EmployeeStudentScreen = (props: IProps) => {
         flexDirection: "column",
       }}>
         <Title align="center" size="2.6rem" color="#444" transform="uppercase" mt={20} mb={10}>
-          Danh sách học viên
+          Học viên trễ học phí
         </Title>
-        <Container p={0} mb={20}>
-          <Button color="red" variant="light"
-            onClick={() => router.push(router.asPath + "/late-fee")}>
-            Danh sách nợ học phí
-          </Button>
-        </Container>
         <Grid mb={20}>
           {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
           <Grid.Col span={isTablet ? (isMobile ? 12 : 8) : 4}>
@@ -184,8 +245,11 @@ const EmployeeStudentScreen = (props: IProps) => {
                     <th>Số điện thoại</th>
                     <th>
                       <Button color="green" fullWidth
-                        onClick={() => router.push(router.asPath + "/register")}>
-                        Đăng ký mới
+                        onClick={() => {
+                          setCurrentStudent(null);
+                          setIsNotifyAllStudentModalOpened(true);
+                        }}>
+                        Nhắc nhở tất cả
                       </Button>
                     </th>
                   </tr>
@@ -201,8 +265,11 @@ const EmployeeStudentScreen = (props: IProps) => {
                       <td>{student.user.phone || "-"}</td>
                       <td style={{ width: "80px" }}>
                         <Button fullWidth compact
-                          onClick={() => router.push(router.asPath + "/" + student.user.id)}>
-                          Chi tiết</Button>
+                          onClick={() => {
+                            setCurrentStudent(student);
+                            setIsNotifyStudentModalOpened(true);
+                          }}>
+                          Nhắc nhở</Button>
                       </td>
                     </tr>
                   ))}
@@ -227,4 +294,4 @@ const EmployeeStudentScreen = (props: IProps) => {
 }
 
 
-export default EmployeeStudentScreen;
+export default EmployeeLateFeeStudentScreen;

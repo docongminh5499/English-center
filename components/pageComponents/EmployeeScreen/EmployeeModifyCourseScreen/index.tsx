@@ -53,7 +53,7 @@ const getUpdatedExpectedClosingDate = (course: Course | null, openingDate?: Date
   // Calculating expected course
   let days = diffDays(course.openingDate, openingDate);
   const expectedClosingDate = new Date(course.expectedClosingDate);
-  expectedClosingDate.setDate(expectedClosingDate.getDate() + days);
+  expectedClosingDate.setDate(expectedClosingDate.getDate() + days + 7); // Add one more week
   return expectedClosingDate;
 }
 

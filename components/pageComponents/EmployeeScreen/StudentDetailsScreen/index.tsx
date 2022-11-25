@@ -10,17 +10,39 @@ import InfoUserParent from "./components/infoUserParent";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { useAuth } from "../../../../stores/Auth";
+import UnpaidDto from "../../../../models/unpaidFee.model";
+import UnpaidFeeInfos from "./components/UnpaidFeeInfo";
 
 interface IProps {
   userRole?: UserRole | null;
   student: UserStudent | null;
+  unpaidFees: UnpaidDto[];
 }
 
 const StudentDetailScreen = (props: IProps) => {
   const [authState] = useAuth();
   const [didMount, setDidMount] = useState(false);
   const [userParent, setUserParent] = useState(props.student?.userParent);
+  const [unpaidFees, setUnpaidFees] = useState(props.unpaidFees);
   const router = useRouter();
+
+  const [isSendingUnpaidFee, setIsSendingUnpaidFee] = useState(false);
+
+
+  const onPayFeeSuccess = useCallback(async () => {
+    try {
+      setIsSendingUnpaidFee(true);
+      const responses = await API.post(Url.employees.getUnpaidFee, {
+        token: authState.token,
+        studentId: props.student?.user.id,
+      });
+      setUnpaidFees(responses);
+      setIsSendingUnpaidFee(false);
+    } catch (err) {
+      setIsSendingUnpaidFee(false);
+      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [authState.token, props.student?.user.id]);
 
 
   const onChooseParent = useCallback(async (parentId: number) => {
@@ -79,6 +101,13 @@ const StudentDetailScreen = (props: IProps) => {
             title={'Phụ huynh'}
             data={userParent?.user}
             onChooseParent={onChooseParent}
+          />
+          <Space h={30} />
+          <UnpaidFeeInfos
+            title="Khoản học phí chưa thanh toán"
+            data={unpaidFees}
+            onPayFeeSuccess={onPayFeeSuccess}
+            loading={isSendingUnpaidFee}
           />
           <Space h={30} />
         </Container>

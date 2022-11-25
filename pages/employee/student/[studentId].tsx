@@ -7,7 +7,7 @@ import { CookieParser } from "../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../interfaces/page.interface";
 
 const StudentDetailPage: CustomNextPage = (props) => {
-  return <StudentDetailsScreen student={null} {...props} />;
+  return <StudentDetailsScreen unpaidFees={[]} student={null} {...props} />;
 };
 
 StudentDetailPage.allowUsers = [
@@ -20,14 +20,22 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
 
   try {
-    const responses = await API.post(Url.employees.getStudentDetails, {
-      token: user.token,
-      studentId: context.params?.studentId
-    });
+    const [studentInfo, unpaidFees] = await Promise.all([
+      API.post(Url.employees.getStudentDetails, {
+        token: user.token,
+        studentId: context.params?.studentId
+      }),
+      API.post(Url.employees.getUnpaidFee, {
+        token: user.token,
+        studentId: context.params?.studentId
+      }),
+    ]);
+
     return {
       props: {
         userRole: user.role || null,
-        student: responses.student,
+        student: studentInfo.student,
+        unpaidFees: unpaidFees,
       }
     };
   } catch (error: any) {
@@ -35,6 +43,7 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
       props: {
         userRole: user.role || null,
         student: null,
+        unpaidFees: [],
       }
     }
   };

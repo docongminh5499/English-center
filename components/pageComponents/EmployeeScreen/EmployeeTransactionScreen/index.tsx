@@ -330,7 +330,7 @@ const EmployeeTransactionScreen = (props: IProps) => {
           />
         </Container>
         <Divider
-          style={{ width: "300px" }}
+          style={{ maxWidth: "300px" }}
           mx="auto" label={props.branch?.name || ""}
           labelPosition="center"
           variant="dashed"

@@ -1,3 +1,21 @@
+.teacherCard {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.1s ease-in-out;
+}
+
+
+.teacherCard:hover {
+    background-color: #DEE2E6;
+}
+
+.disabledCard {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #DEE2E6;
+}
+
 .wrapPage {
     /* width: 100%; */
     padding-top: 5rem;
@@ -63,9 +81,9 @@
     border: none;
     outline: none;
     cursor: pointer;
-    width: 100%; 
-    text-align: center; 
-    background-color:#228BE6;
+    width: 100%;
+    text-align: center;
+    background-color: #228BE6;
     color: #FDF6FF;
     padding: 1.7rem 1rem;
     font-size: 2rem;
@@ -73,20 +91,42 @@
     border-radius: 100px;
 }
 
+.wrapPice .infoPrice .buttonBuySuccess {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    padding: 1.7rem 1rem;
+    font-size: 2rem;
+    margin-top: 2rem;
+    border-radius: 100px;
+    pointer-events: none;
+}
+
 @media screen and (max-width: 768px) {
     .wrapPice .wrapThumbnail {
         height: 25rem;
     }
-    
+
     .wrapPice .infoPrice {
         padding: 1rem 2rem 3rem
     }
-    
+
     .wrapPice .infoPrice .txtPrice {
         font-size: 2.5rem;
     }
-    
+
     .wrapPice .infoPrice .buttonBuy {
+        padding: 1.3rem 1rem;
+        font-size: 1.6rem;
+        margin-top: 1rem;
+    }
+
+    .wrapPice .infoPrice .buttonBuySuccess {
         padding: 1.3rem 1rem;
         font-size: 1.6rem;
         margin-top: 1rem;
@@ -134,7 +174,7 @@
 .wrapInfoAuthor .txtDes {
     color: #A5A6AA;
     font-weight: 500;
-    font-size:1.6rem
+    font-size: 1.6rem
 }
 
 .wrapInfoAuthor .txtName {
@@ -163,25 +203,25 @@
         grid-template-columns: 7rem 1fr;
         grid-column-gap: 1rem;
     }
-    
+
     .infoAuthor .wrapAvatar {
         height: 7rem;
     }
-    
+
     .wrapInfoAuthor .txtDes {
         font-size: 1.4rem
     }
-    
+
     .wrapInfoAuthor .txtName {
         font-size: 1.6rem;
         line-height: 2rem;
         margin-top: 0.2rem
     }
-    
+
     .wrapInfoAuthor .wrapCategory {
         grid-column-gap: 1rem
     }
-    
+
     .wrapInfoAuthor .wrapCategory svg {
         width: 7rem;
         height: 7rem;
@@ -193,23 +233,23 @@
         grid-template-columns: 1fr;
         grid-row-gap: 2rem;
     }
-    
+
     .infoAuthor {
         grid-template-columns: 5rem 1fr;
     }
-    
+
     .infoAuthor .wrapAvatar {
         height: 5rem;
     }
-    
+
     .wrapInfoAuthor .txtDes {
         font-size: 1.4rem
     }
-    
+
     .wrapInfoAuthor .txtName {
         margin-top: 0;
     }
-    
+
     .wrapInfoAuthor .wrapCategory svg {
         width: 5rem;
         height: 5rem;
@@ -231,7 +271,7 @@
 .wrapInfoCourse .listInfo {
     width: 100%;
     margin-top: 2rem;
-    display:flex;
+    display: flex;
     flex-wrap: wrap;
     gap: 2rem;
 }
@@ -252,16 +292,17 @@
     font-size: 1.6rem;
     font-weight: 500;
 }
+
 @media screen and (max-width: 768px) {
     .wrapInfoCourse {
         margin-top: 3rem
     }
-    
+
     .wrapInfoCourse .nameCourse {
         font-size: 2.5rem;
         line-height: 3rem;
     }
-    
+
     .wrapInfoCourse .listInfo {
         gap: 0;
         margin-top: 1.5rem
@@ -271,7 +312,7 @@
         width: 50%;
         padding: .5rem 0
     }
-    
+
     .wrapInfoCourse .listInfo .infoItem .txtLabel {
         font-size: 1.4rem;
     }
@@ -301,7 +342,7 @@
     margin-top: 3rem;
 }
 
-.wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem {
+.wrapContentTab .contentTabCurriculum .listCurriculum .titleCurriculumItem {
     width: 100%;
     display: flex;
     align-items: center;
@@ -311,15 +352,16 @@
     font-weight: 500;
 }
 
-.wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem svg {
+.wrapContentTab .contentTabCurriculum .listCurriculum .titleCurriculumItem svg {
     color: #228BE6;
 }
+
 @media screen and (max-width: 480px) {
     .wrapContentTab .contentTabCurriculum .listCurriculum {
         padding: 2rem;
     }
 
-    .wrapContentTab .contentTabCurriculum .listCurriculum  .titleCurriculumItem {
+    .wrapContentTab .contentTabCurriculum .listCurriculum .titleCurriculumItem {
         font-size: 1.4rem;
     }
 }
@@ -374,17 +416,17 @@
         grid-row-gap: 1rem;
         justify-items: center;
     }
-    
+
     .wrapContentTab .tabInstructor .instructorItem .wrapThumbnail {
         width: 7rem;
         height: 7rem;
     }
-    
+
     .wrapContentTab .tabInstructor .instructorItem .infoInstructor .name {
         font-size: 1.6rem;
         text-align: center;
     }
-    
+
     .wrapContentTab .tabInstructor .instructorItem .infoInstructor .des {
         font-size: 1.6rem;
         text-align: center;
@@ -398,5 +440,5 @@
 }
 
 .contentRichtext p:not(:first-child) {
-    margin-top:  1rem;
+    margin-top: 1rem;
 }
