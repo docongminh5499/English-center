@@ -21,8 +21,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const studentCourses = await API.get(Url.students.getTimetable, {
             token: user.token,
         });
-        return { props: { userRole: user.role || null, courses: studentCourses} };
+
+        const makeupLessions = await API.get(Url.students.getMakeupLession, {
+            token: user.token,
+        });
+        return { props: { userRole: user.role || null, courses: studentCourses, makeupLessions: makeupLessions} };
     } catch (error: any) {
-        return { props: { userRole: user.role || null, courses: null} }
+        return { props: { userRole: user.role || null, courses: [], makeupLession: []} }
     };
 };

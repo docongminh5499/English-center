@@ -181,12 +181,20 @@ export const Url = {
     submitExercise: "/api/students/exercise/submit-exercise/",
     getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
     getAllDocument: "/api/students/document/get-all-document/",
+
+    getMakeupLessionCompatible: "/api/students/timetable/get-makeup-lession-compatible",
+    registerMakeupLesion: "/api/students/timetable/register-makeup-lession",
+    getMakeupLession: "/api/students/timetable/get-makeup-lession",
+    deleteMakeupLession: "/api/students/timetable/delete-makeup-lession",
   },
   parents: {
     getPersonalInfo: "/api/parents/personal/get-personal-infomation",
     getAllStudentCourses: "/api/parents/timetable/get-all-student-courses",
     getPageableStudentCourses: "/api/parents/course/get-pageable-student-courses",
     getCourseDetail: "/api/parents/course/get-course/",
+    getAttendance: "/api/parents/course/attendance-course/",
+    getAllExercises: "/api/parents/exercise/get-all-exercises/",
+    getStudentDoExercise: "/api/parents/exercise/get-student-do-exercise/",
   },
 
   employees: {

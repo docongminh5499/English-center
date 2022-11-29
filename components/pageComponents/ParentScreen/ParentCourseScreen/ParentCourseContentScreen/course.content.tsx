@@ -7,6 +7,8 @@ import API from "../../../../../helpers/api";
 import { CourseStatus, Url } from "../../../../../helpers/constants";
 import { getCourseStatus } from "../../../../../helpers/getCourseStatus";
 import { useAuth } from "../../../../../stores/Auth";
+import CourseAttendanceTab from "./course.attendance";
+import CourseExerciseTab from "./course.exercise";
 
 function translateCourseStatus2String(courseStatus: CourseStatus){
   if (courseStatus === CourseStatus.Opened)
@@ -23,24 +25,32 @@ const ParentCourseContentScreen = (props: any) => {
 
   const [loading, setLoading] = useState(false);
 	const [course, setCourse] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+	const [attendance, setAttendance] = useState(null);
 
-	const courseSlug = router.query.slug[0] === undefined ? "" : router.query.slug[0];
+	let courseSlug = "";
 	const studentId = router.query.studentId;
+	useEffect(()=>{
+    if(!router.isReady) return;
 
-	useEffect(() => {
-    const didMountFunc = async () => {
+		courseSlug = router.query.slug[0];
+		console.log("====================================================");
+		console.log(courseSlug);
+		const didMountFunc = async () => {
       try {
         setLoading(true);
-        if(selectedStudent === null)
-          return;
-        const course = await API.get(Url.parents.getCourseDetail, {
+        const courseResponse = await API.get(Url.parents.getCourseDetail + courseSlug, {
           token: authState.token,
 					studentId: studentId,
-					courseSlug: courseSlug,
+        });
+
+				const attendanceResponse = await API.get(Url.parents.getAttendance + courseSlug, {
+          token: authState.token,
+					studentId: studentId,
         });
 				//Set state
-        setCourse(course);
+				console.log(courseResponse)
+        setCourse(courseResponse);
+				setAttendance(attendanceResponse);
       } catch (error) {
 				console.log(error);
         toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
@@ -49,15 +59,20 @@ const ParentCourseContentScreen = (props: any) => {
 			}
     };
     didMountFunc();
-  }, [selectedStudent]);
+		
+	}, [router.isReady]);
+	
+	console.log("====================================================");
+	console.log(courseSlug);
 
   let openingDate = new Date();
-  const closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
+	let closingDate = new Date();
 
 	if(course === null){
-    setLoading(true);
+    // setLoading(true);
   }else {
 		openingDate = new Date(course.openingDate);
+		closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
 	}
 
 
@@ -72,6 +87,7 @@ const ParentCourseContentScreen = (props: any) => {
 					<Loader size={"xl"}/>
 				</>
 			}
+
 			{course !== null &&
 				<div style={{width: "100%", margin: "0px 0px 0px 20px"}}>
 					<Title
@@ -111,23 +127,15 @@ const ParentCourseContentScreen = (props: any) => {
 					<Tabs defaultValue="attendance" style={{margin: "20px 0px 0px"}}>
 						<Tabs.List>
 							<Tabs.Tab value="attendance">Điểm danh</Tabs.Tab>
-							<Tabs.Tab value="document">Tài liệu</Tabs.Tab>
 							<Tabs.Tab value="exercise">Bài tập</Tabs.Tab>
-							<Tabs.Tab value="rating">Đánh giá</Tabs.Tab>
 						</Tabs.List>
 
-						{/* <Tabs.Panel value="attendance">
-							<CourseAttendanceTab {...props} />
-						</Tabs.Panel>
-						<Tabs.Panel value="document">
-							<CourseDocumentTab course={course}/>
+						<Tabs.Panel value="attendance">
+							<CourseAttendanceTab course={course} attendance={attendance}/>
 						</Tabs.Panel>
 						<Tabs.Panel value="exercise">
-							<CourseExerciseTab course={course}/>
+							<CourseExerciseTab course={course} studentId={studentId}/>
 						</Tabs.Panel>
-						<Tabs.Panel value="rating">
-							<CourseRatingTab {...course} />
-						</Tabs.Panel> */}
 					</Tabs>
 				</div>
 			}
