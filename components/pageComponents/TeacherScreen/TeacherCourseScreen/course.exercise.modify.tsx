@@ -1,8 +1,9 @@
-import { Button, Container, Divider, FileButton, Grid, Group, Loader, Modal, MultiSelect, Text, Textarea, TextInput, Title } from "@mantine/core";
-import { DateRangePicker, DateRangePickerValue, TimeRangeInput } from "@mantine/dates";
+import { Button, Container, Divider, FileButton, Grid, Group, Input, Loader, Modal, MultiSelect, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { DatePicker, DateRangePicker, DateRangePickerValue, TimeInput, TimeRangeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId, useWindowScroll } from "@mantine/hooks";
 import { IconChevronDown, IconPlus, IconTrash } from "@tabler/icons";
+import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
@@ -14,9 +15,13 @@ const CourseModifyExercise = (props: any) => {
 	const exercise: any = props.exercise;
 	const [loading, setLoading] = useState(true);
 	const [addQuestion, setAddQuestion] = useState(false);
-	const [timeDoExercise, setTimeDoExercise] = useState<[Date, Date]>([new Date(exercise.openTime), new Date(exercise.endTime)]);
-  const [dateDoExercise, setDateDoExercise] = useState<DateRangePickerValue>([new Date(exercise.openTime), new Date(exercise.endTime)]);
 	const [deleteQuestions, setDeleteQuestions] = useState([]);
+
+  const now = new Date();
+  const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
+  const [endTimePopoverOpened, setEndTimePopoverOpened] = useState(false);
+  const [openTime, setOpenTime] = useState(now);
+  const [endTime, setEndTime] = useState(now);
 
 	//Tags
   const [tags, setTags] = useState(props.tags);
@@ -35,8 +40,10 @@ const CourseModifyExercise = (props: any) => {
     initialValues: {
       nameExercise: exercise.name,
       maxTime: exercise.maxTime,
-      dateDoExercise: dateDoExercise,
-      timeDoExercise: timeDoExercise,
+      startDate: now,
+      startTime: now,
+      endDate: now,
+      endTime: now,
     },
 
     validate: {
@@ -356,25 +363,107 @@ const CourseModifyExercise = (props: any) => {
           </Grid.Col>
 
           <Grid.Col span={6}>
-            <Title order={4} mt="md">Ngày bắt đầu - kết thúc</Title>
-            <DateRangePicker
-              mt="md"
-              placeholder="Chọn ngày bắt đầu và kết thúc bài tập"
-              value={dateDoExercise}
-              onChange={setDateDoExercise}
-              locale="vi"
-              {...basicInfo.getInputProps("dateDoExercise")}
-            />
+            <Title order={4} mt="md">Thời gian mở</Title>
+            <Group mt="md" grow>
+              <Popover opened={openTimePopoverOpened} position="bottom" width="target" transition="pop">
+                <Popover.Target>
+                  <div
+                    onFocusCapture={() => setOpenTimePopoverOpened(true)}
+                  >
+                    <Input
+                      placeholder="Thời gian bắt đầu"
+                      value={moment(openTime).format("HH:mm - DD/MM/YYYY")}
+                      onChange={() => {}}
+                    />
+                  </div>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <TimeInput
+                    mt="sm"
+                    defaultValue={new Date()}
+                    label="Chọn giờ"
+                    withSeconds 
+                    {...basicInfo.getInputProps("startTime")}
+                  />
+                  <DatePicker
+                    mt="sm"
+                    locale="vi"
+                    label="Chọn ngày"
+                    defaultValue={new Date()}
+                    {...basicInfo.getInputProps("startDate")}
+                  />
 
-            <Title order={4} mt="md">Giờ ngày bắt đầu/ ngày kết thúc</Title>
-            <TimeRangeInput
-              mt="md"
-              value={timeDoExercise}
-              onChange={setTimeDoExercise}
-              clearable
-              locale="vi"
-              {...basicInfo.getInputProps("timeDoExercise")}
-            />
+                <Button 
+                  mt="sm" 
+                  onClick={() => {
+                    setOpenTimePopoverOpened(false);
+                    const startDate = basicInfo.values.startDate;
+                    const startTime = basicInfo.values.startTime;
+                    setOpenTime(new Date(
+                      startDate.getFullYear(), 
+                      startDate.getMonth(), 
+                      startDate.getDate(), 
+                      startTime.getHours(),
+                      startTime.getMinutes(),
+                      startTime.getSeconds(),
+                    ));
+                  }}>
+                  Chọn
+                </Button>
+                </Popover.Dropdown>
+              </Popover>
+            </Group>
+
+            <Title order={4} mt="md">Thời gian đóng</Title>
+            <Group mt="md" grow>
+              <Popover opened={endTimePopoverOpened} position="bottom" width="target" transition="pop">
+                <Popover.Target>
+                  <div
+                    onFocusCapture={() => setEndTimePopoverOpened(true)}
+                  >
+                    <Input
+                      placeholder="Thời gian kết thúc"
+                      value={moment(endTime).format("HH:mm - DD/MM/YYYY")}
+                      onChange={() => {}}
+                    />
+                  </div>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <TimeInput
+                    mt="sm"
+                    defaultValue={new Date()}
+                    label="Chọn giờ"
+                    withSeconds 
+                    {...basicInfo.getInputProps("endTime")}
+                  />
+                  <DatePicker
+                    mt="sm"
+                    locale="vi"
+                    label="Chọn ngày"
+                    defaultValue={new Date()}
+                    {...basicInfo.getInputProps("endDate")}
+                  />
+
+                <Button 
+                  mt="sm" 
+                  onClick={() => {
+                    setEndTimePopoverOpened(false);
+                    const endDate = basicInfo.values.endDate;
+                    const endTime = basicInfo.values.endTime;
+                    setEndTime(new Date(
+                      endDate.getFullYear(), 
+                      endDate.getMonth(), 
+                      endDate.getDate(), 
+                      endTime.getHours(),
+                      endTime.getMinutes(),
+                      endTime.getSeconds(),
+                    ));
+                  }}>
+                  Chọn
+                </Button>
+                </Popover.Dropdown>
+              </Popover>
+            </Group>
           </Grid.Col>
         </Grid>
       </form>

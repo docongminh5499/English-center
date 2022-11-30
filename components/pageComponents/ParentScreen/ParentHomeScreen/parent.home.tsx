@@ -7,6 +7,7 @@ import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import SelectStudentModal from "../Modal/selectStudent.modal";
+import Head from "next/head";
 
 function getKeyFromDate(date: Date){
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -80,6 +81,10 @@ const ParentHomeScreen = (props: any) => {
 
   return ( 
     <Box m={"md"} style={{width: "100%"}}>
+      <Head>
+        <title>Thời khóa biểu</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       {selectStudentModal &&
         <SelectStudentModal 
           students={parent.userStudents} 

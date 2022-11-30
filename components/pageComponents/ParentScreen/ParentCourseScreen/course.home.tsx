@@ -170,9 +170,9 @@ const ParentCourseScreen = (props: any) => {
 	return ( 
 		<Box m={"md"} style={{width: "100%"}}>
 			<Head>
-        <title>Khóa học</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+				<title>Khóa học</title>
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
 			{selectStudentModal &&
 				<SelectStudentModal 
 					students={parent.userStudents} 

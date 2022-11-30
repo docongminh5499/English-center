@@ -49,7 +49,8 @@ const CourseExerciseDetail = (props: any) => {
     didMountFunc();
   }, []);
   	console.log("||||||||||||||||||||||||||||||||||||||||||||||||");
-	console.log(exercise);
+	if(exercise !== null)
+		console.log((new Date(exercise.openTime)));
 	console.log(studentDoExercise);
 	const now = new Date();
 
@@ -77,7 +78,7 @@ const CourseExerciseDetail = (props: any) => {
 
 							<Grid mt={"md"}>
 								<Grid.Col span={6}>
-									<Text weight={600} size={"lg"}> Ngày tạo: {moment(exercise.createAt).format("hh:mm - DD/MM/YYYY")} </Text>
+									<Text weight={600} size={"lg"}> Ngày tạo: {moment(exercise.createAt).format("HH:mm - DD/MM/YYYY")} </Text>
 								</Grid.Col>
 
 								<Grid.Col span={6}>
@@ -85,11 +86,11 @@ const CourseExerciseDetail = (props: any) => {
 								</Grid.Col>
 
 								<Grid.Col span={6}>
-									<Text weight={600} size={"lg"}> Thời gian bắt đầu: {moment(exercise.openTime).format("hh:mm - DD/MM/YYYY")} </Text>
+									<Text weight={600} size={"lg"}> Thời gian bắt đầu: {moment(exercise.openTime).format("HH:mm - DD/MM/YYYY")} </Text>
 								</Grid.Col>
 
 								<Grid.Col span={6}>
-									<Text weight={600} size={"lg"}> Thời gian kết thúc: {moment(exercise.endTime).format("hh:mm - DD/MM/YYYY")} </Text>
+									<Text weight={600} size={"lg"}> Thời gian kết thúc: {moment(exercise.endTime).format("HH:mm - DD/MM/YYYY")} </Text>
 								</Grid.Col>
 							</Grid>
 
@@ -205,7 +206,7 @@ const CourseExerciseDetail = (props: any) => {
 							}
 
 							<Group position="center" mt={"xl"}>
-								{/* {props.course.closingDate === null && */
+								{ props.course.closingDate === null && (new Date(exercise.openTime)).getTime() > now.getTime() &&
 									<Button style={{backgroundColor: "#FFC125"}} leftIcon={<IconEdit />} onClick={async () => {
 										const tag:[] = await API.get(Url.teachers.getAllQuestionTag, {
 											token: authState.token, 
