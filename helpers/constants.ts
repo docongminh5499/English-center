@@ -142,6 +142,8 @@ export const NotificationConstants = {
 export const GuestConstants = {
   topLatestCourse: 6,
   limitCourse: 12,
+  limitLecture: 10,
+  limitStudySession: 10,
 }
 
 export const Url = {

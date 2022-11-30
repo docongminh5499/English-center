@@ -43,12 +43,26 @@ const MessageScreen = () => {
       await chatAction.getContacts(token);
     }
     getAllContacts().catch((error) => {
-      console.log(error);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     });
     return () => {
-      chatAction.resetData();
-      authState.token && chatAction.getUnreadMessageCount(authState.token);
+      try {
+        chatAction.resetData();
+        authState.token && chatAction.getUnreadMessageCount(authState.token);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, []);
 
@@ -101,9 +115,19 @@ const MessageScreen = () => {
       setFirstEnterChatBox(true);
       setLoadingMessage(false);
       seenMessage(targetUser.userId);
-    } catch (error) {
-      console.log(error);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại")
+    } catch (error: any) {
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token]);
 
@@ -116,9 +140,19 @@ const MessageScreen = () => {
       setIsLoadingFoundContacts(false);
       await chatAction.clearSearchResults();
       await chatAction.findContacts(token, findName)
-    } catch (err) {
-      console.log(err);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+    } catch (error: any) {
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, findName])
 
@@ -152,10 +186,20 @@ const MessageScreen = () => {
         setLoadingMessage(true);
         setPreviusScrollHeight(viewport.current.scrollHeight);
         await chatAction.getMoreMessages(token, currentMessageCount, chatState.currentBox?.user);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
         setLoadingMessage(false);
-        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+        if (error.status < 500) {
+          if (error.data.message && typeof error.data.message === "string")
+            toast.error(error.data.message);
+          else if (error.data.message && Array.isArray(error.data.message)) {
+            const messages: any[] = Array.from(error.data.message);
+            if (messages.length > 0 && typeof messages[0] === "string")
+              toast.error(messages[0]);
+            else if (messages.length > 0 && Array.isArray(messages))
+              toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+            else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
   }, [authState.token, chatState.currentBox, loadingMessage, firstEnterChatBox]);
@@ -171,10 +215,20 @@ const MessageScreen = () => {
         setIsLoadingFoundContacts(true);
         await chatAction.findContacts(authState.token || "", findName);
         setIsLoadingFoundContacts(false);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
         setIsLoadingFoundContacts(false);
-        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+        if (error.status < 500) {
+          if (error.data.message && typeof error.data.message === "string")
+            toast.error(error.data.message);
+          else if (error.data.message && Array.isArray(error.data.message)) {
+            const messages: any[] = Array.from(error.data.message);
+            if (messages.length > 0 && typeof messages[0] === "string")
+              toast.error(messages[0]);
+            else if (messages.length > 0 && Array.isArray(messages))
+              toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+            else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
   }, [authState.token, findName, isLoadingFoundContacts, chatState.totalSearchResults, chatState.searchResults.length, findContactViewport.current]);
@@ -190,10 +244,20 @@ const MessageScreen = () => {
         setIsLoadingExistedContacts(true);
         await chatAction.getContacts(authState.token || "");
         setIsLoadingExistedContacts(false);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
         setIsLoadingExistedContacts(false);
-        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại");
+        if (error.status < 500) {
+          if (error.data.message && typeof error.data.message === "string")
+            toast.error(error.data.message);
+          else if (error.data.message && Array.isArray(error.data.message)) {
+            const messages: any[] = Array.from(error.data.message);
+            if (messages.length > 0 && typeof messages[0] === "string")
+              toast.error(messages[0]);
+            else if (messages.length > 0 && Array.isArray(messages))
+              toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+            else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
   }, [authState.token, isLoadingExistedContacts, chatState.totalContacts, chatState.contacts?.length, getExistedContactViewport.current]);

@@ -30,6 +30,7 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
       })
     ]);
     if (course.closingDate !== null && course.closingDate !== undefined) course = null;
+    if (course.lockTime !== null && course.lockTime !== undefined) course = null;
     return {
       props: {
         userRole: user.role,

@@ -111,10 +111,21 @@ const EmployeeClassroomScreen = () => {
       } else toast.error("Cập nhật phòng học thất bại. Vui lòng thử lại sau.");
       setIsSendingModifyClassroomRequest(false);
       setIsOpenModifyClassroomModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingModifyClassroomRequest(false);
       setIsOpenModifyClassroomModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Cập nhật phòng học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Cập nhật phòng học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, branch, currentPage, currentClassroom]);
 
@@ -136,10 +147,21 @@ const EmployeeClassroomScreen = () => {
       } else toast.error("Thêm phòng học thất bại. Vui lòng thử lại sau.");
       setIsSendingCreateClassroomRequest(false);
       setIsOpenCreateClassroomModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingCreateClassroomRequest(false);
       setIsOpenCreateClassroomModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Thêm phòng học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Thêm phòng học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, branch, currentPage]);
 
@@ -165,10 +187,21 @@ const EmployeeClassroomScreen = () => {
       } else toast.error("Xóa phòng học thất bại. Vui lòng thử lại sau.");
       setIsSendingRemoveClassroomRequest(false);
       setIsOpenRemoveClassroomModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingRemoveClassroomRequest(false);
       setIsOpenRemoveClassroomModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Xóa phòng học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Xóa phòng học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, branch, currentPage, currentClassroom, total]);
 
@@ -187,10 +220,21 @@ const EmployeeClassroomScreen = () => {
         setBranch(responseUserEmployee.worker.branch);
         setLoading(false);
         setError(false);
-      } catch (error) {
+      } catch (error: any) {
         setLoading(false);
         setError(true);
-        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        if (error.status < 500) {
+          if (error.data.message && typeof error.data.message === "string")
+            toast.error(error.data.message);
+          else if (error.data.message && Array.isArray(error.data.message)) {
+            const messages: any[] = Array.from(error.data.message);
+            if (messages.length > 0 && typeof messages[0] === "string")
+              toast.error(messages[0]);
+            else if (messages.length > 0 && Array.isArray(messages))
+              toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+            else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
     didMountFunc();

@@ -13,7 +13,7 @@ import { getAvatarImageUrl, getImageUrl } from "../../../helpers/image.helper";
 import { getLevelName } from "../../../helpers/getLevelName";
 import moment from "moment";
 import { formatCurrency } from "../../../helpers/formatCurrency";
-import { CourseType, Url, UserRole } from "../../../helpers/constants";
+import { CourseType, GuestConstants, Url, UserRole } from "../../../helpers/constants";
 import { getWeekdayName } from "../../../helpers/getWeekdayName";
 import { getWeekdayFromDate } from "../../../helpers/getWeekdayFromDate";
 import Button from "../../commons/Button";
@@ -60,6 +60,9 @@ const index = (props: IProps) => {
   const [isSendingFindStudentByParentsRequest, setIsSendingFindStudentByParentsRequest] = useState(false);
   const [isChooseStudentModalOpened, setIsChooseStudentModalOpened] = useState(false);
 
+  // Limit lectures and study sessions
+  const [currentLectureCount, setCurrentLectureCount] = useState(GuestConstants.limitLecture);
+  const [currentStudySessionCount, setCurrentStudySessionCount] = useState(GuestConstants.limitStudySession);
 
 
   const onClickAttendCourseByParent = useCallback(async () => {
@@ -103,9 +106,20 @@ const index = (props: IProps) => {
       setAmount(responses.amount);
       setIsSendingAttendCourseRequest(false);
       setCurrentStudentId(studentId.toString());
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingAttendCourseRequest(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, props.course?.slug, authState.userId]);
 
@@ -126,9 +140,20 @@ const index = (props: IProps) => {
       setAmount(responses.amount);
       setIsSendingAttendCourseRequest(false);
       setCurrentStudentId(authState.userId || null);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingAttendCourseRequest(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, props.course?.slug, authState.userId]);
 
@@ -163,10 +188,21 @@ const index = (props: IProps) => {
           setIsAttended(result);
         }
         setIsSendingCheckAttendCourseRequest(false);
-      } catch (error) {
+      } catch (error: any) {
         setIsSendingCheckAttendCourseRequest(false);
         setIsOpenConfirmAttendCourseModal(false);
-        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        if (error.status < 500) {
+          if (error.data.message && typeof error.data.message === "string")
+            toast.error(error.data.message);
+          else if (error.data.message && Array.isArray(error.data.message)) {
+            const messages: any[] = Array.from(error.data.message);
+            if (messages.length > 0 && typeof messages[0] === "string")
+              toast.error(messages[0]);
+            else if (messages.length > 0 && Array.isArray(messages))
+              toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+            else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     })
   }, [authState.token, props.course?.slug, currentStudentId]);
@@ -436,7 +472,7 @@ const index = (props: IProps) => {
                       </p>
                       <div className={styles.listCurriculum}>
                         <Accordion variant="separated">
-                          {props.course?.curriculum.lectures.map((lecture, index) => (
+                          {props.course?.curriculum.lectures.slice(0, currentLectureCount).map((lecture, index) => (
                             <Accordion.Item value={"value_" + (index + 1)} key={index}>
                               <Accordion.Control>
                                 <div className={styles.titleCurriculumItem}>
@@ -449,6 +485,18 @@ const index = (props: IProps) => {
                               </Accordion.Panel>
                             </Accordion.Item>
                           ))}
+                          {props.course && props.course.curriculum.lectures.length > currentLectureCount && (
+                            <Container mt={30} p={0} style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}>
+                              <Button
+                                radius={100}
+                                onClick={() => setCurrentLectureCount(currentLectureCount + GuestConstants.limitLecture)}
+                              >Xem thêm</Button>
+                            </Container>
+                          )}
                         </Accordion>
                       </div>
                     </div>
@@ -482,18 +530,34 @@ const index = (props: IProps) => {
                       </p>
                       <div className={styles.listCurriculum}>
                         <Accordion variant="separated">
-                          {props.course?.studySessions.map((session, index) => (
-                            <Container p={8} my={10} key={index}>
+                          {props.course?.studySessions.slice(0, currentStudySessionCount).map((session, index) => (
+                            <Container p={8} my={10} key={index} style={{
+                              display: "flex",
+                              justifyContent: "space-evenly",
+                              alignItems: "center"
+                            }}>
                               <Text style={{ fontSize: "1.6rem" }} component="span" weight={600}>Buổi {index + 1}:</Text>
                               <Text
-                                style={{ fontSize: "1.6rem", display: "inline-block", minWidth: "150px" }}
+                                style={{ fontSize: "1.6rem", display: "inline-block", minWidth: "100px" }}
                                 component="span" align="center">
                                 {getWeekdayName(getWeekdayFromDate(moment(session.date).toDate()) || undefined)}
                               </Text>
                               <Text style={{ fontSize: "1.6rem" }} component="span">{moment(session.shifts[0].startTime).format("HH:mm") + " - " + moment(session.shifts[session.shifts.length - 1].endTime).format("HH:mm")}</Text>
-                              <Text style={{ fontSize: "1.6rem" }} component="span" ml={30}>{moment(session.date).format("DD/MM/YYYY")}</Text>
+                              <Text style={{ fontSize: "1.6rem" }} component="span">{moment(session.date).format("DD/MM/YYYY")}</Text>
                             </Container>
                           ))}
+                          {props.course && props.course.studySessions.length > currentStudySessionCount && (
+                            <Container mt={30} p={0} style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}>
+                              <Button
+                                radius={100}
+                                onClick={() => setCurrentStudySessionCount(currentStudySessionCount + GuestConstants.limitStudySession)}
+                              >Xem thêm</Button>
+                            </Container>
+                          )}
                         </Accordion>
                       </div>
                     </div>

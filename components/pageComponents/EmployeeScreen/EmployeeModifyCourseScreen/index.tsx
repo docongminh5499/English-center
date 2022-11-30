@@ -12,8 +12,6 @@ import SaveModal from "../../TeacherScreen/Modal/save.modal";
 import UserEmployee from "../../../../models/userEmployee.model";
 import Loading from "../../../commons/Loading";
 import { useRouter } from "next/router";
-import Curriculum from "../../../../models/cirriculum.model";
-import CurriculumSelectItem from "../ItemComponent/curriculumSelectItem";
 import UserTeacher from "../../../../models/userTeacher.model";
 import ShiftForm from "../Form/shiftForm";
 import { useMediaQuery } from "@mantine/hooks";
@@ -203,10 +201,21 @@ const EmployeeModifyCourseScreen = (props: IProps) => {
         setIsSaving(false);
         toast.error("Cập nhật thông tin thất bại");
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsSaveModalOpen(false);
       setIsSaving(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, props.course, props.course?.slug]);
 
@@ -542,7 +551,7 @@ const EmployeeModifyCourseScreen = (props: IProps) => {
                       activeShiftIds={activeShiftIds}
                       numberShiftsPerSession={props.course?.curriculum.shiftsPerSession || 0}
                       teacherId={createCourseForm.values['teacher']}
-                      beginingDate={createCourseForm.values['openingDate']}
+                      beginingDate={(new Date()) >= (new Date(createCourseForm.values['openingDate'])) ? new Date() : (new Date(createCourseForm.values['openingDate']))}
                       closingDate={getUpdatedExpectedClosingDate(props.course, createCourseForm.values['openingDate'])}
                       courseSlug={props.course?.slug}
                       onAddTimeTable={onAddTimeTable}

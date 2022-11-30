@@ -145,10 +145,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setListStudySessions(responses.studySessions);
       setLoadingStudySession(false);
       setErrorStudySession(false);
-    } catch (error) {
+    } catch (error: any) {
       setLoadingStudySession(false);
       setErrorStudySession(true);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [queryStudySession]);
 
@@ -190,10 +201,22 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setListStudySessions(responses.studySessions);
       setLoadingStudySession(false);
       setCurrentPageStudySession(page);
-    } catch (err) {
+    } catch (error: any) {
       setLoadingStudySession(false);
       setCurrentPageStudySession(page);
       setErrorStudySession(true);
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [queryStudySession]);
 
@@ -236,10 +259,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Mở khóa học thất bại. Vui lòng thử lại sau.");
       setIsSendingOpenRequest(false);
       setIsOpenCourseModalOpened(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingOpenRequest(false);
       setIsOpenCourseModalOpened(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug]);
 
@@ -257,10 +291,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Khóa khóa học thất bại. Vui lòng thử lại sau.");
       setIsSendingLockRequest(false);
       setIsLockCourseModalOpened(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingLockRequest(false);
       setIsLockCourseModalOpened(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug]);
 
@@ -279,10 +324,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Mở khóa khóa học thất bại. Vui lòng thử lại sau.");
       setIsSendingUnlockRequest(false);
       setIsUnlockCourseModalOpened(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingUnlockRequest(false);
       setIsUnlockCourseModalOpened(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug]);
 
@@ -301,10 +357,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Đóng khóa học thất bại. Vui lòng thử lại sau.");
       setIsSendingCloseRequest(false);
       setIsCloseCourseModalOpened(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingCloseRequest(false);
       setIsCloseCourseModalOpened(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug]);
 
@@ -331,10 +398,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Cập nhật buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendModifySession(false);
       setIsOpenModifyStudySessionModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsOnSendModifySession(false);
       setIsOpenModifyStudySessionModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, currentStudySession?.id, currentStudySession?.version, currentPageStudySesion]);
 
@@ -360,10 +438,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Thêm buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendCreateSession(false);
       setIsOpenCreateStudySessionModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsOnSendCreateSession(false);
       setIsOpenCreateStudySessionModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, listStudySessions, props.course, currentPageStudySesion]);
 
@@ -389,10 +478,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Xóa buổi học thất bại. Vui lòng thử lại sau.");
       setIsOnSendRemoveSession(false);
       setIsOpenRemoveSessionModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsOnSendRemoveSession(false);
       setIsOpenRemoveSessionModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, currentStudySession, currentPageStudySesion, totalStudySession]);
 
@@ -417,10 +517,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         setIsSendingFeeAmountRequest(false);
         setAmount(responses);
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsOpenConfirmAddStudentModal(false);
       setIsSendingFeeAmountRequest(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug]);
 
@@ -446,10 +557,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         setIsSendingAddStudentRequest(false);
         setIsOpenSearchStudentModal(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingAddStudentRequest(false);
       setIsOpenSearchStudentModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug, currentStudent?.user.id, currentPageStudent, onClickPaginationPageStudent]);
 
@@ -466,10 +588,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       setAmount(responses);
       setCurrentStudent(student);
       setIsSendingRemoveStudentRequest(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsOpenConfirmRemoveStudentModal(false);
       setIsSendingRemoveStudentRequest(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug]);
 
@@ -484,7 +617,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         studentId: currentStudent?.user.id,
       });
       if (responses == true) {
-        toast.success("Xóa học viên thàng công");
+        toast.success("Xóa học viên thành công");
         setIsSendingRemoveStudentRequest(false);
         setIsOpenConfirmRemoveStudentModal(false);
         onClickPaginationPageStudent(currentPageStudent);
@@ -493,10 +626,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         setIsSendingRemoveStudentRequest(false);
         setIsOpenConfirmRemoveStudentModal(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingRemoveStudentRequest(false);
       setIsOpenConfirmRemoveStudentModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, course?.slug, currentStudent?.user.id, currentPageStudent, onClickPaginationPageStudent]);
 
@@ -515,10 +659,21 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
       } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
       setIsOnSendRemoveCourseRequest(false);
       setIsOpenRemoveCourseModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsOnSendRemoveCourseRequest(false);
       setIsOpenRemoveCourseModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+        } else toast.error("Xóa khóa học thất bại. Vui lòng thử lại sau.");
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
     }
   }, [authState.token, course?.slug]);
 
@@ -542,13 +697,24 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
         setLoadingStudent(false);
         setErrorStudent(false);
         setDidMount(true);
-      } catch (error) {
+      } catch (error: any) {
         setLoadingStudySession(false);
         setErrorStudySession(true);
         setLoadingStudent(false);
         setErrorStudent(true);
         setDidMount(true);
-        toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        if (error.status < 500) {
+          if (error.data.message && typeof error.data.message === "string")
+            toast.error(error.data.message);
+          else if (error.data.message && Array.isArray(error.data.message)) {
+            const messages: any[] = Array.from(error.data.message);
+            if (messages.length > 0 && typeof messages[0] === "string")
+              toast.error(messages[0]);
+            else if (messages.length > 0 && Array.isArray(messages))
+              toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+            else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
       }
     }
     if (props.course === null)
@@ -767,14 +933,15 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
             width: "100%",
             gap: "1rem"
           }} p={0} mb={20}>
-            {getCourseStatus(course) !== CourseStatus.Closed && (
-              <Tooltip label="Chỉnh sửa khóa học">
-                <ActionIcon variant="light" color="blue"
-                  onClick={() => router.push(router.asPath + "/modify")}>
-                  <IconHighlight size={24} />
-                </ActionIcon>
-              </Tooltip>
-            )}
+            {getCourseStatus(course) !== CourseStatus.Closed &&
+              course?.lockTime === null && (
+                <Tooltip label="Chỉnh sửa khóa học">
+                  <ActionIcon variant="light" color="blue"
+                    onClick={() => router.push(router.asPath + "/modify")}>
+                    <IconHighlight size={24} />
+                  </ActionIcon>
+                </Tooltip>
+              )}
             {course?.lockTime && (
               <Tooltip label="Xoá khóa học">
                 <ActionIcon variant="light" color="red"
@@ -986,6 +1153,12 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
               listStudents.length == 0 && (
                 <div className={styles.emptyResultContainer}>
                   <p>Không có kết quả</p>
+                  {getCourseStatus(course) != CourseStatus.Closed &&
+                    course?.lockTime === null && (
+                      <Button color="green" mt={10} compact onClick={() => setIsOpenSearchStudentModal(true)}>
+                        Thêm học viên
+                      </Button>
+                    )}
                 </div>
               )}
             {!loadingStudent &&
@@ -1002,14 +1175,15 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                           <th>Ngày sinh</th>
                           <th>Email</th>
                           <th>Số điện thoại</th>
-                          {getCourseStatus(course) != CourseStatus.Closed && (
-                            <th>
-                              <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
-                                onClick={() => setIsOpenSearchStudentModal(true)}>
-                                <IconSquarePlus size={20} />
-                              </ThemeIcon>
-                            </th>
-                          )}
+                          {getCourseStatus(course) != CourseStatus.Closed &&
+                            course?.lockTime === null && (
+                              <th>
+                                <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
+                                  onClick={() => setIsOpenSearchStudentModal(true)}>
+                                  <IconSquarePlus size={20} />
+                                </ThemeIcon>
+                              </th>
+                            )}
                         </tr>
                       </thead>
                       <tbody>
@@ -1100,6 +1274,12 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
               listStudySessions.length == 0 && (
                 <div className={styles.emptyResultContainer}>
                   <p>Không có kết quả</p>
+                  {getCourseStatus(course) != CourseStatus.Closed &&
+                    course?.lockTime === null && (
+                      <Button color="green" mt={10} compact onClick={() => setIsOpenCreateStudySessionModal(true)}>
+                        Thêm buổi học
+                      </Button>
+                    )}
                 </div>
               )}
             {!loadingStudySession &&
@@ -1116,14 +1296,15 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                           <th>Giáo viên</th>
                           <th>Trợ giảng</th>
                           <th>Phòng học</th>
-                          {getCourseStatus(course) !== CourseStatus.Closed && (
-                            <th>
-                              <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
-                                onClick={() => setIsOpenCreateStudySessionModal(true)}>
-                                <IconSquarePlus size={20} />
-                              </ThemeIcon>
-                            </th>
-                          )}
+                          {getCourseStatus(course) !== CourseStatus.Closed &&
+                            course?.lockTime === null && (
+                              <th>
+                                <ThemeIcon size="lg" color="green" style={{ cursor: "pointer" }}
+                                  onClick={() => setIsOpenCreateStudySessionModal(true)}>
+                                  <IconSquarePlus size={20} />
+                                </ThemeIcon>
+                              </th>
+                            )}
                         </tr>
                       </thead>
                       <tbody>
@@ -1148,28 +1329,29 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                                 <Text color="dimmed" style={{ fontSize: "1rem" }}>{studySession.classroom.branch.name}</Text>
                               )}
                             </td>
-                            {getCourseStatus(course) !== CourseStatus.Closed && (
-                              <td>
-                                {(new Date(studySession.date)) >= getMininumValidDate(course?.openingDate) && (
-                                  <>
-                                    <ThemeIcon size="lg" style={{ cursor: "pointer" }}
-                                      onClick={() => {
-                                        setCurrentStudySession(studySession);
-                                        setIsOpenModifyStudySessionModal(true);
-                                      }}>
-                                      <IconPencil size={20} />
-                                    </ThemeIcon>
-                                    <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
-                                      onClick={() => {
-                                        setCurrentStudySession(studySession);
-                                        setIsOpenRemoveSessionModal(true);
-                                      }} ml={10}>
-                                      <IconTrash size={20} />
-                                    </ThemeIcon>
-                                  </>
-                                )}
-                              </td>
-                            )}
+                            {getCourseStatus(course) !== CourseStatus.Closed &&
+                              course?.lockTime === null && (
+                                <td>
+                                  {(new Date(studySession.date)) >= getMininumValidDate(course?.openingDate) && (
+                                    <>
+                                      <ThemeIcon size="lg" style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          setCurrentStudySession(studySession);
+                                          setIsOpenModifyStudySessionModal(true);
+                                        }}>
+                                        <IconPencil size={20} />
+                                      </ThemeIcon>
+                                      <ThemeIcon size="lg" color="red" style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          setCurrentStudySession(studySession);
+                                          setIsOpenRemoveSessionModal(true);
+                                        }} ml={10}>
+                                        <IconTrash size={20} />
+                                      </ThemeIcon>
+                                    </>
+                                  )}
+                                </td>
+                              )}
                           </tr>
                         ))}
                       </tbody>

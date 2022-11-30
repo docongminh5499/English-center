@@ -78,10 +78,21 @@ const CourseSession = (props: IProps) => {
       else toast.error("Gửi yêu cầu thất bại. Vui lòng thử lại.")
       setIsSendingRequest(false);
       setIsOpenRequestOffModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingRequest(false);
       setIsOpenRequestOffModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, currentStudySession]);
 

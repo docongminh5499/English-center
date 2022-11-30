@@ -73,10 +73,21 @@ const CourseExercise = (props: IProps) => {
         setIsDeleting(false);
         toast.error("Xóa bài tập thất bại. Vui lòng thử lại.")
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsOpenDeleteModal(false);
       setIsDeleting(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token, currentExercise, listExercises]);
 
@@ -218,10 +229,10 @@ const CourseExercise = (props: IProps) => {
                           display: "flex",
                           alignItems: "center",
                         }}>
-                        <Button 
-                          compact={isLargeTablet ? false : true} 
-                          fullWidth 
-                          variant="light" 
+                        <Button
+                          compact={isLargeTablet ? false : true}
+                          fullWidth
+                          variant="light"
                           onClick={() => {
                             setSelectedExercise(item);
                             setSeeExerciseDetail(true);
@@ -239,11 +250,11 @@ const CourseExercise = (props: IProps) => {
                           alignItems: "flex-start",
                           gap: "0.5rem"
                         }}>
-                        <Button 
-                          compact={isLargeTablet ? false : true} 
-                          fullWidth 
-                          size="xs" 
-                          variant="light" 
+                        <Button
+                          compact={isLargeTablet ? false : true}
+                          fullWidth
+                          size="xs"
+                          variant="light"
                           onClick={() => {
                             setSelectedExercise(item);
                             setSeeExerciseDetail(true);
@@ -296,7 +307,7 @@ const CourseExercise = (props: IProps) => {
 
       {seeExerciseDetail === true &&
         <>
-          <CourseExerciseDetail {...props} setSeeExerciseDetail={setSeeExerciseDetail} exerciseId={selectedExercise?.id}/>
+          <CourseExerciseDetail {...props} setSeeExerciseDetail={setSeeExerciseDetail} exerciseId={selectedExercise?.id} />
         </>
       }
     </>

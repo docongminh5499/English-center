@@ -182,10 +182,21 @@ const TutorModifyPersonalScreen = (props: IProps) => {
         setIsSaving(false);
         toast.error("Cập nhật thông tin thất bại");
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsSaveModalOpen(false);
       setIsSaving(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [currentUserTutor, authState.token, router, toast])
 

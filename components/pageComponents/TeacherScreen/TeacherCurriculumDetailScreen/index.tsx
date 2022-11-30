@@ -128,10 +128,21 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
       } else toast.error("Thêm giáo viên thất bại.")
       setIsOpenSearchTeacherModal(false);
       setIsSendingAddTeacherPreferedCurrRequest(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsOpenSearchTeacherModal(false);
       setIsSendingAddTeacherPreferedCurrRequest(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [props.curriculum?.id, authState.token, isPreferred]);
 
@@ -158,10 +169,21 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
       } else toast.error("Xóa giáo viên thất bại.")
       setIsSendingRemoveTeacherPreferedCurrRequest(false);
       setIsOpenRemoveTeacherPreferedCurrModal(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSendingRemoveTeacherPreferedCurrRequest(false);
       setIsOpenRemoveTeacherPreferedCurrModal(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [props.curriculum?.id, authState.token, isPreferred, currentTeacher?.worker.user.id]);
 
