@@ -20,6 +20,11 @@ const CourseRatingTab = (props: any) => {
   });
   const [starPoint, setStarPoint] = useState(4);
   const maxStar = 5;
+  console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+  console.log(props.expectedClosingDate)
+  const expectedClosingDate = new Date(props.expectedClosingDate);
+  const now = new Date();
+  let isAssessTime = Math.abs(expectedClosingDate.getTime() - now.getTime()) < 14 * 24 * 60 * 60 * 1000;
 
   const form = useForm({
     initialValues: {
@@ -65,7 +70,7 @@ const CourseRatingTab = (props: any) => {
           </Group>
         </>
       }
-      {!loading && !assessSuccess &&
+      {!loading && !assessSuccess && isAssessTime &&
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
 
         <Group position="center">
@@ -113,6 +118,11 @@ const CourseRatingTab = (props: any) => {
           </Group>
           
         </form>
+      }
+      {!loading && !assessSuccess && !isAssessTime &&
+        <Group position="center" mt={50}>
+          <Title order={3} color={"gray"}>Đánh giá sẽ mở trước và sau ngày kết thúc khóa học 2 tuần.</Title>
+        </Group>
       }
       {loading && !assessSuccess &&
         <Group position="center" mt={50}>
