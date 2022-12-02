@@ -127,7 +127,7 @@ const StudentHomeScreen = (props: any) => {
             <td>{data.targetStudySession.course.name}</td>
             <td><Text align="center">{`${startTime} - ${endTime}`}</Text></td>
             <td><Text align="center">{moment(data.targetStudySession.date).format("DD/MM/YYYY")}</Text></td>
-            <td><Text align="center">{data.targetStudySession.classroom.name === null ? "-" : data.targetStudySession.classroom.name}</Text></td>
+            <td><Text align="center">{data.targetStudySession.classroom === null ? "-" : data.targetStudySession.classroom.name}</Text></td>
             <td>
               <Group position="center">
                 <Button 
@@ -166,6 +166,8 @@ const StudentHomeScreen = (props: any) => {
       zIndex={10}
       centered 
       opened={selectMakeupLession}
+      // size={1000}
+      fullScreen
       onClose={() => {
         setSelectMakeupLession(false);
         setMakeupLessionRow(<></>);
@@ -295,28 +297,49 @@ const StudentHomeScreen = (props: any) => {
                               <th><Text align="center">Giờ</Text></th>
                               <th><Text align="center">Ngày</Text></th>
                               <th><Text align="center">Phòng</Text></th>
+                              <th><Text align="center">Sĩ số</Text></th>
                               <th></th>
                             </tr>
                           </thead>
-                          <tbody>{compatibleStudySession.map((studySession: any) => {
-                              const shifts = data.studySession.shifts;
+                          <tbody>{compatibleStudySession.map((makeupLession: any) => {
+                              const studySession = makeupLession.studySession;
+                              const shifts = studySession.shifts;
                               const startTime = moment(shifts[0].startTime).format('hh')
                               const endTime = moment(shifts[shifts.length - 1].endTime).format('hh')
                               return (
-                                
                                   <tr key={studySession.id}>
                                     <td>
                                       {studySession.course.name}
                                     </td>
                                     <td>
+                                      <Text 
+                                        align="center" 
+                                      >
                                       {`${startTime} - ${endTime}`}
-                                      </td>
+                                      </Text>
+                                    </td>
                                     <td>
-                                      {moment(studySession.date).format("DD/MM/YYYY")}
-                                      </td>
+                                      <Text 
+                                        align="center" 
+                                      >
+                                        {moment(studySession.date).format("DD/MM/YYYY")}
+                                      </Text>
+                                    </td>
                                     <td>
-                                      {studySession.classroom.name === null ? "-" : studySession.classroom.name}
-                                      </td>
+                                      <Text 
+                                        align="center" 
+                                      >
+                                        {studySession.classroom === null ? "-" : studySession.classroom.name}
+                                      </Text>
+                                    </td>
+                                    <td>
+                                      <Text 
+                                        align="center" 
+                                      >
+                                        {`${makeupLession.numStudentWillAttend}/${makeupLession.maxStudent}`}
+                                      </Text>
+                                    </td>
+                                    {makeupLession.numStudentWillAttend < makeupLession.maxStudent &&
                                     <td>
                                       <Text 
                                         align="center" 
@@ -329,6 +352,17 @@ const StudentHomeScreen = (props: any) => {
                                         Chọn
                                       </Text>
                                       </td>
+                                    }
+                                    {makeupLession.numStudentWillAttend >= makeupLession.maxStudent &&
+                                    <td>
+                                      <Text 
+                                        align="center" 
+                                        color={"black"} 
+                                      >
+                                        Buổi đã đầy.
+                                      </Text>
+                                      </td>
+                                    }
                                   </tr>
                                 
                               )
