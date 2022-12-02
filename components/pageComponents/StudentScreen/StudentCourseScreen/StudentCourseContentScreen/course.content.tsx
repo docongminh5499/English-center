@@ -33,7 +33,7 @@ const StudentCourseContentScreen = (props: any) => {
   return (
     <>
       <Head>
-          <title>{course.slug}</title>
+          <title>Chi tiết khóa học</title>
           <link rel="icon" href="/favicon.ico" />
       </Head>
       <div style={{width: "100%", margin: "0px 0px 0px 20px"}}>

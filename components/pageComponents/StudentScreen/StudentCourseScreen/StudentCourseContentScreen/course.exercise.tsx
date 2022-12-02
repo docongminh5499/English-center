@@ -66,7 +66,7 @@ const CourseExerciseTab = (props: any) => {
 				<td><Text align="center">{element.maxTime}</Text></td>
 				<td><Text align="center">{times}</Text></td>
 				<td><Text align="center">{times === 0 ? "-" : maxGrade}</Text></td>
-				{/* {now.getTime() >= openTime.getTime() && now.getTime() <= endTime.getTime() && */
+				{now.getTime() >= openTime.getTime() && now.getTime() <= endTime.getTime() && 
 					<td>
 						<Text 
 							align="center" 
@@ -83,6 +83,26 @@ const CourseExerciseTab = (props: any) => {
 							}}
 						>
 							Làm bài
+						</Text>
+					</td>
+				}
+				{now.getTime() > endTime.getTime() && 
+					<td>
+						<Text 
+							align="center" 
+							fw={500}
+						>
+							Hêt hạn làm bài
+						</Text>
+					</td>
+				}
+				{now.getTime() < openTime.getTime() && 
+					<td>
+						<Text 
+							align="center" 
+							fw={500}
+						>
+							Bài tập chưa mở
 						</Text>
 					</td>
 				}

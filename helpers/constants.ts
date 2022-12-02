@@ -216,6 +216,14 @@ export const Url = {
     registerMakeupLesion: "/api/students/timetable/register-makeup-lession",
     getMakeupLession: "/api/students/timetable/get-makeup-lession",
     deleteMakeupLession: "/api/students/timetable/delete-makeup-lession",
+
+    getPersonalInformation: "/api/students/personal/get-personal-information",
+    getParentList: "/api/students/personal/get-parent-list",
+    addParent: "/api/students/personal/add-parent",
+    deleteParent: "/api/students/personal/delete-parent",
+    modifyPersonalInformation: "/api/students/personal/modify-personal-information",
+
+    getPaymentHistory: "/api/students/personal/get-payment-history",
   },
   parents: {
     getPersonalInfo: "/api/parents/personal/get-personal-infomation",
@@ -225,6 +233,8 @@ export const Url = {
     getAttendance: "/api/parents/course/attendance-course/",
     getAllExercises: "/api/parents/exercise/get-all-exercises/",
     getStudentDoExercise: "/api/parents/exercise/get-student-do-exercise/",
+
+    modifyPersonalInformation: "/api/parents/personal/modify-personal-information",
   },
 
   employees: {

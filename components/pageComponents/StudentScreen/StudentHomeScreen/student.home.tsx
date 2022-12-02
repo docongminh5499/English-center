@@ -126,6 +126,7 @@ const StudentHomeScreen = (props: any) => {
           <tr key={data.studySession}>
             <td>{data.targetStudySession.course.name}</td>
             <td><Text align="center">{`${startTime} - ${endTime}`}</Text></td>
+            <td><Text align="center">{moment(data.targetStudySession.date).format("DD/MM/YYYY")}</Text></td>
             <td><Text align="center">{data.targetStudySession.classroom.name === null ? "-" : data.targetStudySession.classroom.name}</Text></td>
             <td>
               <Group position="center">
@@ -172,7 +173,18 @@ const StudentHomeScreen = (props: any) => {
     >
       <Group  position="center">
         <Title order={2}>Chọn buổi học bù mong muốn.</Title>
-        {makeupLessionRow}
+        <Table withBorder withColumnBorders mt={"md"}>
+            <thead>
+              <tr>
+                <th><Text align="center">Tên khóa học</Text></th>
+                <th><Text align="center">Giờ</Text></th>
+                <th><Text align="center">Ngày</Text></th>
+                <th><Text align="center">Phòng</Text></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>{makeupLessionRow}</tbody>
+          </Table>
       </Group>
     </Modal>
     
@@ -288,18 +300,21 @@ const StudentHomeScreen = (props: any) => {
                         const startTime = moment(shifts[0].startTime).format('hh')
                         const endTime = moment(shifts[shifts.length - 1].endTime).format('hh')
                         return (
-                          <Box key={studySession.id}>
-                            <Grid grow>
-                              <Grid.Col span={6} ml={"sm"}>
+                          
+                            <tr key={studySession.id}>
+                              <td>
                                 {studySession.course.name}
-                              </Grid.Col>
-                              <Grid.Col span={2} ml={"sm"}>
+                              </td>
+                              <td>
                                 {`${startTime} - ${endTime}`}
-                              </Grid.Col>
-                              <Grid.Col span={2} ml={"sm"}>
+                                </td>
+                              <td>
+                                {moment(studySession.date).format("DD/MM/YYYY")}
+                                </td>
+                              <td>
                                 {studySession.classroom.name === null ? "-" : studySession.classroom.name}
-                              </Grid.Col>
-                              <Grid.Col span={2} ml={"sm"}>
+                                </td>
+                              <td>
                                 <Text 
                                   align="center" 
                                   color={"blue"} 
@@ -310,9 +325,9 @@ const StudentHomeScreen = (props: any) => {
                                 >
                                   Chọn
                                 </Text>
-                              </Grid.Col>
-                            </Grid>
-                          </Box>
+                                </td>
+                            </tr>
+                          
                         )
                       }));
                     }
@@ -416,6 +431,7 @@ const StudentHomeScreen = (props: any) => {
               <tr>
                 <th><Text align="center">Tên khóa học</Text></th>
                 <th><Text align="center">Giờ</Text></th>
+                <th><Text align="center">Ngày</Text></th>
                 <th><Text align="center">Phòng</Text></th>
                 <th></th>
               </tr>

@@ -17,6 +17,10 @@ const ModifyPersonalScreen = (props: IProps) => {
       router.replace("/employee/modify-personal");
     else if (props.userRole === UserRole.TUTOR)
       router.replace("/tutor/modify-personal")
+    else if (props.userRole === UserRole.STUDENT)
+      router.replace("/student/modify-personal")
+    else if (props.userRole === UserRole.PARENT)
+      router.replace("/parent/modify-personal")
 
     // TODO: Another user role
 
