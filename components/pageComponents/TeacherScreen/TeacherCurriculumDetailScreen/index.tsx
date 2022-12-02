@@ -375,6 +375,9 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
                   listTeachers.length == 0 && (
                     <div className={styles.emptyResultContainer}>
                       <p>Không có kết quả</p>
+                      <Button color="green" mt={10} onClick={() => setIsOpenSearchTeacherModal(true)}>
+                        Thêm giáo viên
+                      </Button>
                     </div>
                   )}
                 {!loadingTeacher &&

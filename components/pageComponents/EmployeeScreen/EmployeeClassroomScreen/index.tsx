@@ -351,6 +351,9 @@ const EmployeeClassroomScreen = () => {
           listClassrooms.length == 0 && (
             <div className={styles.emptyResultContainer}>
               <p>Không có kết quả</p>
+              <Button color="green" mt={10} onClick={() => setIsOpenCreateClassroomModal(true)}>
+                Thêm phòng học
+              </Button>
             </div>
           )}
 

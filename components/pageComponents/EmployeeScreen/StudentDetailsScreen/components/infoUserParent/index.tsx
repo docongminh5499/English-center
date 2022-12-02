@@ -14,6 +14,7 @@ interface IProps {
   title: string,
   data?: User,
   onChooseParent: (parentId: number) => Promise<void>,
+  onRemoveParent: () => Promise<void>,
 }
 
 const InfoUserParent = (props: IProps) => {
@@ -24,7 +25,8 @@ const InfoUserParent = (props: IProps) => {
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
   const [currentParent, setCurrentParent] = useState<UserParent | null>(null);
 
-
+  const [isSendingRemoveParentRequest, setIsSendingRemoveParentRequest] = useState(false);
+  const [isOpenConfirmRemoveParentModal, setIsOpenConfirmRemoveParentModal] = useState(false);
 
   const onChooseParent = useCallback(async (parent: UserParent) => {
     setCurrentParent(parent);
@@ -43,6 +45,15 @@ const InfoUserParent = (props: IProps) => {
   }, [props.onChooseParent, currentParent]);
 
 
+  
+  const onConfirmRemoveParent = useCallback(async () => {
+    setIsOpenConfirmRemoveParentModal(true);
+    await props.onRemoveParent();
+    setIsOpenConfirmRemoveParentModal(false);
+    setIsOpenConfirmRemoveParentModal(false);
+  }, []);
+
+
   return (
     <Container style={{ width: "100%" }} mt={20} p={0} size="xl">
       <Container style={{
@@ -54,13 +65,22 @@ const InfoUserParent = (props: IProps) => {
         <Title transform="uppercase" color="#444444" size="2.6rem" align="left">
           {props.title}
         </Title>
-        <Button
-          variant='light'
-          ml={isMobile ? 0 : 20}
-          mt={isMobile ? 10 : 0}
-          size="xs" compact
-          onClick={() => setIsOpenModal(true)}>
-          Thay đổi phụ huynh</Button>
+        <Group ml={isMobile ? 0 : 20} mt={isMobile ? 10 : 0}>
+          <Button
+            variant='light'
+            size="xs" compact
+            onClick={() => setIsOpenModal(true)}>
+            Thay đổi phụ huynh</Button>
+          {props.data && (
+            <Button
+              color="red"
+              variant='light'
+              size="xs" compact
+              onClick={() => setIsOpenConfirmRemoveParentModal(true)}>
+              Xóa</Button>
+          )}
+        </Group>
+
       </Container>
       <Space h={30} />
       <Modal
@@ -89,6 +109,24 @@ const InfoUserParent = (props: IProps) => {
           colorButton='red'
           loading={false}
           callBack={onConfirmChooseParent}
+        />
+      </Modal>
+
+
+      <Modal
+        opened={isOpenConfirmRemoveParentModal}
+        onClose={() => setIsOpenConfirmRemoveParentModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}>
+        <ConfirmChooseModal
+          title='Xóa phụ huynh'
+          message={`Bạn có muốn xóa liên kết giữa phụ huynh và học viên chứ?`}
+          buttonLabel="Xác nhận"
+          colorButton='red'
+          loading={isSendingRemoveParentRequest}
+          callBack={onConfirmRemoveParent}
         />
       </Modal>
 

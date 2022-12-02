@@ -36,7 +36,7 @@ const StudentCourseContentScreen = (props: any) => {
           <title>Chi tiết khóa học</title>
           <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div style={{width: "100%", margin: "0px 0px 0px 20px"}}>
+      <div style={{width: "100%", padding: "0px 2rem 0px 2rem"}}>
         <Title
           order={3}
           align="left"
