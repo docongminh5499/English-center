@@ -315,7 +315,7 @@ const StudentHomeScreen = (props: any) => {
                                 {moment(studySession.date).format("DD/MM/YYYY")}
                                 </td>
                               <td>
-                                {studySession.classroom.name === null ? "-" : studySession.classroom.name}
+                                {studySession.classroom === null ? "-" : studySession.classroom.name}
                                 </td>
                               <td>
                                 <Text 
@@ -374,7 +374,7 @@ const StudentHomeScreen = (props: any) => {
                   <tr key={data.studySession.id}>
                     <td>{data.courseName}</td>
                     <td>{`${startTime} - ${endTime}`}</td>
-                    <td>{data.studySession.classroom.name === null ? "-" : data.studySession.classroom.name}</td>
+                    <td>{data.studySession.classroom === null ? "-" : data.studySession.classroom.name}</td>
                     {registerMakeupSession}
                   </tr>
                 );

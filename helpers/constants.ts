@@ -273,6 +273,7 @@ export const Url = {
     getStudentDetails: "/api/employees/student/get-student-detail",
     getAllParents: "/api/employees/student/get-parents",
     modifyParentForStudent: "/api/employees/student/modify-parent",
+    removeParentFromStudent: "/api/employees/student/remove-parent",
     getSalaries: "/api/employees/personal/get-salaries",
     getSalariesByBranch: "/api/employees/transaction/get-salaries",
     getFeesByBranch: "/api/employees/transaction/get-fees",

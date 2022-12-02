@@ -4,7 +4,8 @@ import moment from "moment";
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../../helpers/api";
-import { Url } from "../../../../../helpers/constants";
+import { CourseStatus, Url } from "../../../../../helpers/constants";
+import { getCourseStatus } from "../../../../../helpers/getCourseStatus";
 import { getImageUrl } from "../../../../../helpers/image.helper";
 import { useAuth } from "../../../../../stores/Auth";
 
@@ -66,7 +67,8 @@ const CourseExerciseTab = (props: any) => {
 				<td><Text align="center">{element.maxTime}</Text></td>
 				<td><Text align="center">{times}</Text></td>
 				<td><Text align="center">{times === 0 ? "-" : maxGrade}</Text></td>
-				{now.getTime() >= openTime.getTime() && now.getTime() <= endTime.getTime() && 
+				{getCourseStatus(course) === CourseStatus.Opened &&
+				now.getTime() >= openTime.getTime() && now.getTime() <= endTime.getTime() && 
 					<td>
 						<Text 
 							align="center" 
@@ -86,7 +88,8 @@ const CourseExerciseTab = (props: any) => {
 						</Text>
 					</td>
 				}
-				{now.getTime() > endTime.getTime() && 
+				{(getCourseStatus(course) === CourseStatus.Closed ||
+				 now.getTime() > endTime.getTime()) && 
 					<td>
 						<Text 
 							align="center" 
@@ -96,7 +99,8 @@ const CourseExerciseTab = (props: any) => {
 						</Text>
 					</td>
 				}
-				{now.getTime() < openTime.getTime() && 
+				{(getCourseStatus(course) === CourseStatus.NotOpen ||
+				 now.getTime() < openTime.getTime()) && 
 					<td>
 						<Text 
 							align="center" 
