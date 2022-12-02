@@ -315,7 +315,7 @@ const StudentHomeScreen = (props: any) => {
                                       {moment(studySession.date).format("DD/MM/YYYY")}
                                       </td>
                                     <td>
-                                      {studySession.classroom.name === null ? "-" : studySession.classroom.name}
+                                      {studySession.classroom === null ? "-" : studySession.classroom.name}
                                       </td>
                                     <td>
                                       <Text 

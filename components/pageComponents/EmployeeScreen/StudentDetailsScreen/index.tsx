@@ -87,6 +87,38 @@ const StudentDetailScreen = (props: IProps) => {
   }, [authState.token, props.student?.user.id, props.student?.version]);
 
 
+
+
+  const onRemoveParent = useCallback(async () => {
+    try {
+      const responses = await API.post(Url.employees.removeParentFromStudent, {
+        token: authState.token,
+        studentId: props.student?.user.id,
+      });
+      if (responses == false)
+        toast.error("Cập nhật thông tin thất bại. Vui lòng thử lại.")
+      else {
+        setUserParent(undefined);
+        toast.success("Cập nhật thông tin thành công.");
+      }
+    } catch (error: any) {
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+    }
+  }, [authState.token, props.student?.user.id]);
+
+
+
   useEffect(() => {
     if (props.student === null)
       router.replace('/not-found');
@@ -123,6 +155,7 @@ const StudentDetailScreen = (props: IProps) => {
             title={'Phụ huynh'}
             data={userParent?.user}
             onChooseParent={onChooseParent}
+            onRemoveParent={onRemoveParent}
           />
           <Space h={30} />
           <UnpaidFeeInfos

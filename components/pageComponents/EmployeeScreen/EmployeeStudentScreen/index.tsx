@@ -167,6 +167,9 @@ const EmployeeStudentScreen = (props: IProps) => {
           listStudents.length == 0 && (
             <div className={styles.emptyResultContainer}>
               <p>Không có kết quả</p>
+              <Button color="green" mt={10} onClick={() => router.push(router.asPath + "/register")}>
+                Đăng ký mới
+              </Button>
             </div>
           )}
 

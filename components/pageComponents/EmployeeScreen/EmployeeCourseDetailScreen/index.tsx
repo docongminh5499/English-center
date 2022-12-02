@@ -1151,7 +1151,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
             {!loadingStudent &&
               !errorStudent &&
               listStudents.length == 0 && (
-                <div className={styles.emptyResultContainer}>
+                <Container className={styles.emptyResultContainer} p={0}>
                   <p>Không có kết quả</p>
                   {getCourseStatus(course) != CourseStatus.Closed &&
                     course?.lockTime === null && (
@@ -1159,7 +1159,7 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
                         Thêm học viên
                       </Button>
                     )}
-                </div>
+                </Container>
               )}
             {!loadingStudent &&
               !errorStudent &&

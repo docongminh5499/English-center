@@ -1,4 +1,4 @@
-import { Loader, Tabs, Text, Title } from "@mantine/core";
+import { Loader, Tabs, Text, Title, Container } from "@mantine/core";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -88,12 +88,21 @@ const ParentCourseContentScreen = (props: any) => {
       </Head>
       {loading && (
         <>
-          <Loader size={"xl"} />
+          <Container style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "calc(100vh - 9.1rem)",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <Loader size={"xl"} />
+          </Container>
+
         </>
       )}
 
       {course !== null && (
-        <div style={{ width: "100%", margin: "0px 0px 0px 20px" }}>
+        <div style={{ width: "100%", padding: "0px 2rem 0px 2rem" }}>
           <Title
             order={3}
             align="left"
