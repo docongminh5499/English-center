@@ -117,7 +117,8 @@ export const EmployeeConstants = {
 }
 
 export const StudentConstants = {
-  limitCourse: 12
+  limitCourse: 12,
+  limitFee: 12,
 }
 
 export const TutorConstants = {
@@ -319,6 +320,7 @@ export const Url = {
   payments: {
     getStudentOrderDetail: "/api/payments/get-student-order-detail",
     onSuccessParticipateCourse: "/api/payments/on-success-student-participate-course",
+    studentPayment: "/api/payments/student-payment",
   }
 };
 

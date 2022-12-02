@@ -20,8 +20,8 @@ const CourseModifyExercise = (props: any) => {
   const now = new Date();
   const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
   const [endTimePopoverOpened, setEndTimePopoverOpened] = useState(false);
-  const [openTime, setOpenTime] = useState(now);
-  const [endTime, setEndTime] = useState(now);
+  const [openTime, setOpenTime] = useState(new Date(exercise.openTime));
+  const [endTime, setEndTime] = useState(new Date(exercise.endTime));
 
 	//Tags
   const [tags, setTags] = useState(props.tags);
@@ -40,10 +40,10 @@ const CourseModifyExercise = (props: any) => {
     initialValues: {
       nameExercise: exercise.name,
       maxTime: exercise.maxTime,
-      startDate: now,
-      startTime: now,
-      endDate: now,
-      endTime: now,
+      startDate: new Date(exercise.openTime),
+      startTime: new Date(exercise.openTime),
+      endDate: new Date(exercise.endTime),
+      endTime: new Date(exercise.endTime),
     },
 
     validate: {
@@ -383,6 +383,7 @@ const CourseModifyExercise = (props: any) => {
                     defaultValue={new Date()}
                     label="Chọn giờ"
                     withSeconds 
+                    // clearable
                     {...basicInfo.getInputProps("startTime")}
                   />
                   <DatePicker
@@ -390,6 +391,7 @@ const CourseModifyExercise = (props: any) => {
                     locale="vi"
                     label="Chọn ngày"
                     defaultValue={new Date()}
+                    clearable={false}
                     {...basicInfo.getInputProps("startDate")}
                   />
 
@@ -399,6 +401,8 @@ const CourseModifyExercise = (props: any) => {
                     setOpenTimePopoverOpened(false);
                     const startDate = basicInfo.values.startDate;
                     const startTime = basicInfo.values.startTime;
+                    if (startDate === null || startTime === null)
+                      return;
                     setOpenTime(new Date(
                       startDate.getFullYear(), 
                       startDate.getMonth(), 
@@ -409,6 +413,15 @@ const CourseModifyExercise = (props: any) => {
                     ));
                   }}>
                   Chọn
+                </Button>
+                <Button 
+                  color={"red"}
+                  mt="sm" 
+                  ml={"sm"}
+                  onClick={() => {
+                    setOpenTimePopoverOpened(false);
+                }}>
+                  Hủy
                 </Button>
                 </Popover.Dropdown>
               </Popover>
@@ -434,6 +447,7 @@ const CourseModifyExercise = (props: any) => {
                     defaultValue={new Date()}
                     label="Chọn giờ"
                     withSeconds 
+                    // clearable
                     {...basicInfo.getInputProps("endTime")}
                   />
                   <DatePicker
@@ -441,6 +455,7 @@ const CourseModifyExercise = (props: any) => {
                     locale="vi"
                     label="Chọn ngày"
                     defaultValue={new Date()}
+                    clearable={false}
                     {...basicInfo.getInputProps("endDate")}
                   />
 
@@ -450,6 +465,8 @@ const CourseModifyExercise = (props: any) => {
                     setEndTimePopoverOpened(false);
                     const endDate = basicInfo.values.endDate;
                     const endTime = basicInfo.values.endTime;
+                    if (endDate === null || endTime === null)
+                      return;
                     setEndTime(new Date(
                       endDate.getFullYear(), 
                       endDate.getMonth(), 
@@ -460,6 +477,15 @@ const CourseModifyExercise = (props: any) => {
                     ));
                   }}>
                   Chọn
+                </Button>
+                <Button 
+                  color={"red"}
+                  mt="sm" 
+                  ml={"sm"}
+                  onClick={() => {
+                    setEndTimePopoverOpened(false);
+                  }}>
+                  Hủy
                 </Button>
                 </Popover.Dropdown>
               </Popover>

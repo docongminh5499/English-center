@@ -173,18 +173,7 @@ const StudentHomeScreen = (props: any) => {
     >
       <Group  position="center">
         <Title order={2}>Chọn buổi học bù mong muốn.</Title>
-        <Table withBorder withColumnBorders mt={"md"}>
-            <thead>
-              <tr>
-                <th><Text align="center">Tên khóa học</Text></th>
-                <th><Text align="center">Giờ</Text></th>
-                <th><Text align="center">Ngày</Text></th>
-                <th><Text align="center">Phòng</Text></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>{makeupLessionRow}</tbody>
-          </Table>
+          {makeupLessionRow}
       </Group>
     </Modal>
     
@@ -292,44 +281,57 @@ const StudentHomeScreen = (props: any) => {
                       order: data.order,
                     });
                     console.log(compatibleStudySession)
-                    if (compatibleStudySession === null) {
+                    if (compatibleStudySession === null || compatibleStudySession.length === 0) {
                       setMakeupLessionRow(<Text size="md" weight={500} color={"gray"}>Không có buổi học bù tương ứng</Text>);
                     }else {
-                      setMakeupLessionRow(compatibleStudySession.map((studySession: any) => {
-                        const shifts = data.studySession.shifts;
-                        const startTime = moment(shifts[0].startTime).format('hh')
-                        const endTime = moment(shifts[shifts.length - 1].endTime).format('hh')
-                        return (
-                          
-                            <tr key={studySession.id}>
-                              <td>
-                                {studySession.course.name}
-                              </td>
-                              <td>
-                                {`${startTime} - ${endTime}`}
-                                </td>
-                              <td>
-                                {moment(studySession.date).format("DD/MM/YYYY")}
-                                </td>
-                              <td>
-                                {studySession.classroom.name === null ? "-" : studySession.classroom.name}
-                                </td>
-                              <td>
-                                <Text 
-                                  align="center" 
-                                  color={"blue"} 
-                                  underline
-                                  onClick={() => {
-                                    handleSelectMakeupLession(studySession.id);
-                                  }}
-                                >
-                                  Chọn
-                                </Text>
-                                </td>
+                      setMakeupLessionRow(
+                        <Table withBorder withColumnBorders mt={"md"}>
+                          <thead>
+                            <tr>
+                              <th><Text align="center">Tên khóa học</Text></th>
+                              <th><Text align="center">Giờ</Text></th>
+                              <th><Text align="center">Ngày</Text></th>
+                              <th><Text align="center">Phòng</Text></th>
+                              <th></th>
                             </tr>
-                          
-                        )
-                      }));
+                          </thead>
+                          <tbody>{compatibleStudySession.map((studySession: any) => {
+                              const shifts = data.studySession.shifts;
+                              const startTime = moment(shifts[0].startTime).format('hh')
+                              const endTime = moment(shifts[shifts.length - 1].endTime).format('hh')
+                              return (
+                                
+                                  <tr key={studySession.id}>
+                                    <td>
+                                      {studySession.course.name}
+                                    </td>
+                                    <td>
+                                      {`${startTime} - ${endTime}`}
+                                      </td>
+                                    <td>
+                                      {moment(studySession.date).format("DD/MM/YYYY")}
+                                      </td>
+                                    <td>
+                                      {studySession.classroom.name === null ? "-" : studySession.classroom.name}
+                                      </td>
+                                    <td>
+                                      <Text 
+                                        align="center" 
+                                        color={"blue"} 
+                                        underline
+                                        onClick={() => {
+                                          handleSelectMakeupLession(studySession.id);
+                                        }}
+                                      >
+                                        Chọn
+                                      </Text>
+                                      </td>
+                                  </tr>
+                                
+                              )
+                            })}</tbody>
+                        </Table>
+                        );
                     }
                   }catch (error){
                     console.log(error);
@@ -371,7 +373,7 @@ const StudentHomeScreen = (props: any) => {
                   <tr key={data.studySession.id}>
                     <td>{data.courseName}</td>
                     <td>{`${startTime} - ${endTime}`}</td>
-                    <td>{data.studySession.classroom.name === null ? "-" : data.studySession.classroom.name}</td>
+                    <td>{data.studySession.classroom === null ? "-" : data.studySession.classroom.name}</td>
                     {registerMakeupSession}
                   </tr>
                 );

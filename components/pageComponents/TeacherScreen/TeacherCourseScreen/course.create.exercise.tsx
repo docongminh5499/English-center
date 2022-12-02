@@ -382,6 +382,7 @@ const CourseCreateExercise = (props: any) => {
                     locale="vi"
                     label="Chọn ngày"
                     defaultValue={new Date()}
+                    clearable={false}
                     {...basicInfo.getInputProps("startDate")}
                   />
 
@@ -391,6 +392,8 @@ const CourseCreateExercise = (props: any) => {
                     setOpenTimePopoverOpened(false);
                     const startDate = basicInfo.values.startDate;
                     const startTime = basicInfo.values.startTime;
+                    if (startDate === null || startTime === null)
+                      return;
                     setOpenTime(new Date(
                       startDate.getFullYear(), 
                       startDate.getMonth(), 
@@ -401,6 +404,15 @@ const CourseCreateExercise = (props: any) => {
                     ));
                   }}>
                   Chọn
+                </Button>
+                <Button 
+                  color={"red"}
+                  mt="sm" 
+                  ml={"sm"}
+                  onClick={() => {
+                    setOpenTimePopoverOpened(false);
+                  }}>
+                  Hủy
                 </Button>
                 </Popover.Dropdown>
               </Popover>
@@ -433,6 +445,7 @@ const CourseCreateExercise = (props: any) => {
                     locale="vi"
                     label="Chọn ngày"
                     defaultValue={new Date()}
+                    clearable={false}
                     {...basicInfo.getInputProps("endDate")}
                   />
 
@@ -442,6 +455,8 @@ const CourseCreateExercise = (props: any) => {
                     setEndTimePopoverOpened(false);
                     const endDate = basicInfo.values.endDate;
                     const endTime = basicInfo.values.endTime;
+                    if (endDate === null || endTime === null)
+                      return;
                     setEndTime(new Date(
                       endDate.getFullYear(), 
                       endDate.getMonth(), 
@@ -452,6 +467,15 @@ const CourseCreateExercise = (props: any) => {
                     ));
                   }}>
                   Chọn
+                </Button>
+                <Button 
+                  color={"red"}
+                  mt="sm" 
+                  ml={"sm"}
+                  onClick={() => {
+                    setEndTimePopoverOpened(false);
+                  }}>
+                  Hủy
                 </Button>
                 </Popover.Dropdown>
               </Popover>

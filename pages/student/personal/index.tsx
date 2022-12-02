@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { CookieKey, Url, UserRole } from "../../../helpers/constants";
+import { CookieKey, StudentConstants, Url, UserRole } from "../../../helpers/constants";
 import { CookieParser } from "../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../interfaces/page.interface";
 import { gsspWithNonce } from "@next-safe/middleware/dist/document";
@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
   try {
     const userStudent = await API.get(Url.students.getPersonalInformation,  { token: user.token });
-    const paymentHistory = await API.get(Url.students.getPaymentHistory,  { token: user.token });
+    const paymentHistory = await API.get(Url.students.getPaymentHistory,  { token: user.token, limit: StudentConstants.limitFee, skip: 0 });
     return {
       props: {
         userRole: user.role,
