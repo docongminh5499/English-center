@@ -67,10 +67,12 @@ const RegisterScreen = (props: IProps) => {
           });
           setActive((current) => (current < 2 ? current + 1 : current));
           setCompleted(true);
-          await router.push({
-            pathname: "/login",
-            query: { returnUrl: router.query.returnUrl || "/" },
-          });
+          setTimeout(() => {
+            router.push({
+              pathname: "/login",
+              query: { returnUrl: router.query.returnUrl || "/" },
+            });
+          }, 2000);
         } catch (error: any) {
           if (error.status && error.status == 409) {
             form2.setErrors({ username: "Username đã tồn tại!" });
@@ -269,7 +271,7 @@ const RegisterScreen = (props: IProps) => {
 
           <Stepper.Completed>
             <Text size="xl" align="center" weight={700}>
-              Tạo tài khoản thành công, hệ thống sẽ tự động đăng nhập!
+              Tạo tài khoản thành công, hãy đăng nhập bằng tài khoản vừa tạo!
             </Text>
           </Stepper.Completed>
         </Stepper>

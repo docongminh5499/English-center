@@ -110,7 +110,7 @@ const ParentHomeScreen = (props: any) => {
       }
       {!selectStudentModal && !loading && courses.length !== 0 &&
         <> 
-          <Box style={{width: "100%", margin: "0px 20px"}}>
+          <Box style={{width: "100%"}}>
             <Box>
             <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
               <Title
