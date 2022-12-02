@@ -155,7 +155,7 @@ const StudentHomeScreen = (props: any) => {
     })
   }
   return (
-    <Box>
+    <Box style={{ width: "100%" }}>
     <Head>
       <title>Thời khóa biểu</title>
       <link rel="icon" href="/favicon.ico" />
@@ -178,16 +178,19 @@ const StudentHomeScreen = (props: any) => {
     </Modal>
     
     {courses.length === 0 &&
-      <Box style={{width: "100%", margin: "0px 20px"}}>
-        <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
+      <Box style={{
+          width: "100%", 
+          display: "flex", 
+          justifyContent: "center",
+          alignItems: "center",
+          height: "calc(100vh - 9.1rem)"
+        }}>
+        <MediaQuery smallerThan={768} styles={{ fontSize: "2rem" }}>
           <Title
-            order={1}
-            align="justify"
-            style={{
-              width: "100%",
-              textAlign: "center",
-            }}
-          >
+            order={3}
+            color="#CED4DA"
+            align="center"
+            style={{width: "100%"}}>
             Bạn hiện không tham gia khóa học nào.
           </Title>
         </MediaQuery>
@@ -195,7 +198,7 @@ const StudentHomeScreen = (props: any) => {
     }
 
     {courses.length !== 0 &&
-      <Box style={{width: "100%", margin: "0px 20px"}}>
+      <Box style={{width: "100%"}}>
         <Box>
         <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
           <Title
