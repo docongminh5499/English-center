@@ -148,7 +148,7 @@ export const GuestConstants = {
 }
 
 export const Url = {
-  baseUrl: "http://localhost:5000",
+  baseUrl: "https://root-smile-370415.as.r.appspot.com",
   users: {
     signIn: "/api/users/sign-in",
     verify: "/api/users/verify",
@@ -325,4 +325,4 @@ export const Url = {
   }
 };
 
-export const SocketBaseUrl = "ws://localhost:5000";
+export const SocketBaseUrl = "ws://root-smile-370415.as.r.appspot.com";
