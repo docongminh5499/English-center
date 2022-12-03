@@ -19,7 +19,7 @@ ListCourse.allowUsers = [
 ListCourse.displaySidebar = false;
 export default ListCourse;
 
-export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = CookieParser.parse(context.req.headers.cookie);
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
   try {
@@ -35,4 +35,4 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
   } catch (error: any) {
     return { props: { userRole: user.role || null, course: null, isAttended: false } }
   };
-})
+}

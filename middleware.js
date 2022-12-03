@@ -21,7 +21,6 @@ const securityMiddleware = [
       "style-src": ["self", "unsafe-inline"],
     },
   }),
-  strictDynamic(),
 ];
 
 export default chainMatch(isPageRequest)(...securityMiddleware);

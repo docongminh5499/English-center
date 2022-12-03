@@ -325,4 +325,4 @@ export const Url = {
   }
 };
 
-export const SocketBaseUrl = "ws://root-smile-370415.as.r.appspot.com";
+export const SocketBaseUrl = "http://root-smile-370415.as.r.appspot.com/socket.io/";
