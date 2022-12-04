@@ -5,7 +5,7 @@ const httpsAgent = new https.Agent({ keepAlive: true });
 
 const axiosApi = axios.create({
     baseURL: Url.baseUrl,
-    timeout: 5000,
+    timeout: 15000,
 });
 
 axiosApi.interceptors.response.use(
