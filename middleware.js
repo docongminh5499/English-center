@@ -19,6 +19,7 @@ const securityMiddleware = [
       "object-src": ["none"],
       "base-uri": ["none"],
       "style-src": ["self", "unsafe-inline"],
+      "script-src": ["self", "https://www.paypal.com/", Url.baseUrl]
     },
   }),
 ];

@@ -1,5 +1,7 @@
 export const TimeZoneOffset = new Date().getTimezoneOffset() * (-1);
 
+export const production = true;
+
 export enum UserRole {
   GUEST = "guest",
   ADMIN = "admin",
@@ -148,7 +150,7 @@ export const GuestConstants = {
 }
 
 export const Url = {
-  baseUrl: "https://root-smile-370415.as.r.appspot.com",
+  baseUrl: production ? "https://root-smile-370415.as.r.appspot.com" : "http://localhost:5000",
   users: {
     signIn: "/api/users/sign-in",
     verify: "/api/users/verify",
@@ -325,4 +327,4 @@ export const Url = {
   }
 };
 
-export const SocketBaseUrl = "http://root-smile-370415.as.r.appspot.com/socket.io/";
+export const SocketBaseUrl = production ? "https://root-smile-370415.as.r.appspot.com/socket.io/" : "ws://localhost:5000";
