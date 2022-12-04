@@ -327,4 +327,4 @@ export const Url = {
   }
 };
 
-export const SocketBaseUrl = production ? "https://root-smile-370415.as.r.appspot.com/socket.io/" : "ws://localhost:5000";
+export const SocketBaseUrl = production ? "wss://root-smile-370415.as.r.appspot.com" : "ws://localhost:5000";

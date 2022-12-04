@@ -10,7 +10,10 @@ export const socketInitialization =
     async ({ getState, setState }) => {
       const socket = getState().socket;
       if (socket === undefined) {
-        const createdSocket = io(SocketBaseUrl, { secure: production });
+        const createdSocket = io(SocketBaseUrl, {
+          secure: production,
+          rejectUnauthorized: false
+        });
         configureSocket(createdSocket);
         setState({ socket: createdSocket });
       }
