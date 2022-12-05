@@ -1,15 +1,14 @@
-import { Space, Text, Title, Container, ScrollArea, Table, Button, Modal } from '@mantine/core'
-import { useMediaQuery } from '@mantine/hooks';
-import React, { useCallback, useState } from 'react'
+import { Button, Container, Modal, ScrollArea, Space, Table, Text, Title } from '@mantine/core';
 import moment from "moment";
-import UnpaidDto from '../../../../../../models/unpaidFee.model';
-import { formatCurrency } from '../../../../../../helpers/formatCurrency';
-import AmountModal from "../../../Modal/amount.modal";
-import { useAuth } from '../../../../../../stores/Auth';
+import { useCallback, useState } from 'react';
+import { toast } from 'react-toastify';
 import API from '../../../../../../helpers/api';
 import { Url } from '../../../../../../helpers/constants';
-import { toast } from 'react-toastify';
+import { formatCurrency } from '../../../../../../helpers/formatCurrency';
+import UnpaidDto from '../../../../../../models/unpaidFee.model';
+import { useAuth } from '../../../../../../stores/Auth';
 import Loading from '../../../../../commons/Loading';
+import AmountModal from "../../../Modal/amount.modal";
 
 interface IProps {
   title: string;

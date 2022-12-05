@@ -1,9 +1,9 @@
-import { CookieKey, Url, UserRole } from "../../helpers/constants";
-import { CustomNextPage } from "../../interfaces/page.interface";
 import { GetServerSideProps } from "next";
-import { CookieParser } from "../../helpers/cookieParser";
-import API from "../../helpers/api";
 import ParentModifyPersonalScreen from "../../components/pageComponents/ParentScreen/ParentModifyPersonalScreen";
+import API from "../../helpers/api";
+import { CookieKey, Url, UserRole } from "../../helpers/constants";
+import { CookieParser } from "../../helpers/cookieParser";
+import { CustomNextPage } from "../../interfaces/page.interface";
 
 const ParentPersonalInformationModifyPage: CustomNextPage = (props) => {
     return <ParentModifyPersonalScreen userParent={null} {...props} />;

@@ -1,25 +1,25 @@
+import { Checkbox, Container, Divider, Grid, Group, Modal, Space, Text, Textarea, Title } from "@mantine/core";
+import { useForm, yupResolver } from '@mantine/form';
+import { useMediaQuery } from "@mantine/hooks";
+import moment from "moment";
 import Head from "next/head";
-import * as yup from "yup";
-import { Container, Title, Text, Space, Textarea, Checkbox, Grid, Group, Divider, Modal } from "@mantine/core";
-import { UserRole, TimeZoneOffset, StudySessionState, Url } from "../../../../helpers/constants";
-import styles from "./modifyStudySession.module.css";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import * as yup from "yup";
+import { StudySessionState, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Table from "../../../commons/Table";
-import { useMediaQuery } from "@mantine/hooks";
-import { useForm, yupResolver } from '@mantine/form';
-import { toast } from "react-toastify";
-import moment from "moment";
+import styles from "./modifyStudySession.module.css";
 
+import API from "../../../../helpers/api";
+import { getStudySessionState } from "../../../../helpers/getStudySessionState";
+import MakeUpLession from "../../../../models/makeUpLesson.model";
 import StudySession from "../../../../models/studySession.model";
 import UserAttendStudySession from "../../../../models/userAttendStudySession.model";
-import MakeUpLession from "../../../../models/makeUpLesson.model";
 import Loading from "../../../commons/Loading";
-import { getStudySessionState } from "../../../../helpers/getStudySessionState";
 import SaveModal from "../Modal/save.modal";
-import API from "../../../../helpers/api";
 
 
 interface IProps {

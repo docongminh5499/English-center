@@ -1,19 +1,19 @@
+import { ActionIcon, createStyles, Drawer, Group, Indicator, MediaQuery } from "@mantine/core";
+import { IconBellRinging, IconMenu2, IconMessage } from "@tabler/icons";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import Sidebar from "../Sidebar";
-import Button from '../Button';
-import { useAuth } from "../../../stores/Auth";
-import { UserRole } from "../../../helpers/constants";
 import { useRouter } from "next/router";
-import { GuestMenu } from './guest.menu';
-import styles from "./layout.module.css";
-import LoadingScreen from "../../pageComponents/LoadingScreen";
-import { createStyles, ActionIcon, Drawer, Group, MediaQuery, Indicator } from "@mantine/core";
-import { IconMenu2, IconBellRinging, IconMessage } from "@tabler/icons";
-import { UserMenu } from "./user.menu";
-import { employeeSidebar, parentSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "../Sidebar/links";
+import React, { useEffect, useState } from "react";
+import { UserRole } from "../../../helpers/constants";
+import { useAuth } from "../../../stores/Auth";
 import { useChat } from "../../../stores/Chat";
 import { useNotification } from "../../../stores/Notification";
+import LoadingScreen from "../../pageComponents/LoadingScreen";
+import Button from '../Button';
+import Sidebar from "../Sidebar";
+import { employeeSidebar, parentSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "../Sidebar/links";
+import { GuestMenu } from './guest.menu';
+import styles from "./layout.module.css";
+import { UserMenu } from "./user.menu";
 
 
 interface IProps {

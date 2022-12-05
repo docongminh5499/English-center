@@ -1,9 +1,9 @@
-import { Container, Group, Input, Title, Text, ScrollArea, SimpleGrid, Avatar, Loader } from "@mantine/core";
+import { Avatar, Container, Group, Input, Loader, ScrollArea, SimpleGrid, Text, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { FormEvent, useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { EmployeeConstants, TeacherConstants, Url } from "../../../../helpers/constants";
+import { TeacherConstants, Url } from "../../../../helpers/constants";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import UserTeacher from "../../../../models/userTeacher.model";
 import { useAuth } from "../../../../stores/Auth";

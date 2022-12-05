@@ -1,10 +1,9 @@
 import { GetServerSideProps } from "next";
+import EmployeePersonalScreen from "../../../components/pageComponents/EmployeeScreen/EmployeePersonalScreen";
+import API from "../../../helpers/api";
 import { CookieKey, EmployeeConstants, Url, UserRole } from "../../../helpers/constants";
 import { CookieParser } from "../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
-import API from "../../../helpers/api";
-import EmployeePersonalScreen from "../../../components/pageComponents/EmployeeScreen/EmployeePersonalScreen";
 
 
 const EmployeePersonalInformationPage: CustomNextPage = (props) => {

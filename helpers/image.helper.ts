@@ -1,4 +1,4 @@
-import { Url } from "./constants"
+import { Url } from "./constants";
 
 export const getAvatarImageUrl = (url?: string | null): string => {
     if (url === undefined || url === null || url.trim() === "")

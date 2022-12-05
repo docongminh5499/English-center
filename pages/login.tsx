@@ -3,7 +3,6 @@ import LoginScreen from "../components/pageComponents/LoginScreen";
 import { CookieKey, UserRole } from "../helpers/constants";
 import { CookieParser } from "../helpers/cookieParser";
 import { CustomNextPage } from "../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 
 const Login: CustomNextPage = (props) => {
   return <LoginScreen {...props} />;

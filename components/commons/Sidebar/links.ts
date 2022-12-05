@@ -1,15 +1,8 @@
-import { SidebarItem } from "../../../interfaces/sidebarItem.interface";
 import {
-  IconCertificate,
-  IconNotebook,
-  IconSchool,
-  IconCalendar,
-  IconLamp2,
-  IconUsers,
-  IconBrandCashapp,
-  IconCoin,
+    IconBrandCashapp, IconCalendar, IconCertificate, IconCoin, IconLamp2, IconNotebook,
+    IconSchool, IconUsers
 } from '@tabler/icons';
-import { UserRole } from "../../../helpers/constants";
+import { SidebarItem } from "../../../interfaces/sidebarItem.interface";
 
 export const teacherSidebar: Array<SidebarItem> = [
   {

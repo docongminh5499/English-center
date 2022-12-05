@@ -1,6 +1,6 @@
+import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { createHook, createStore } from "react-sweet-state";
 import { Socket } from "socket.io-client";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { emit, socketInitialization } from "./socket.action";
 
 export type State = {

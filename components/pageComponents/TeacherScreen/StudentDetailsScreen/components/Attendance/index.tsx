@@ -1,7 +1,6 @@
-import { Grid, Text } from '@mantine/core'
+import { Grid, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import moment from 'moment';
-import React from 'react'
 import { TimeZoneOffset } from '../../../../../../helpers/constants';
 import MakeUpLession from '../../../../../../models/makeUpLesson.model';
 import UserAttendStudySession from '../../../../../../models/userAttendStudySession.model';

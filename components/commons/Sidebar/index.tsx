@@ -1,19 +1,15 @@
+import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { UserRole } from "../../../helpers/constants";
 import { employeeSidebar, parentSidebar, studentSidebar, teacherSidebar, tutorSidebar } from "./links";
-import { useRouter } from "next/router";
-import { useState } from 'react';
 
 import {
-  createStyles,
-  Navbar,
-  MediaQuery,
-  Group,
-  Indicator,
+    createStyles, Group,
+    Indicator, MediaQuery, Navbar
 } from '@mantine/core';
 import {
-  IconBellRinging,
-  IconMessage,
+    IconBellRinging,
+    IconMessage
 } from '@tabler/icons';
 import Link from "next/link";
 

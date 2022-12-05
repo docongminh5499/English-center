@@ -1,9 +1,8 @@
 import { GetServerSideProps } from "next";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import EmployeeRegisterScreen from "../../../components/pageComponents/EmployeeScreen/EmployeeRegisterScreen";
-import { CustomNextPage } from "../../../interfaces/page.interface";
 import { CookieKey, UserRole } from "../../../helpers/constants";
 import { CookieParser } from "../../../helpers/cookieParser";
+import { CustomNextPage } from "../../../interfaces/page.interface";
 
 const Register: CustomNextPage = (props) => {
   return <EmployeeRegisterScreen {...props} />;

@@ -1,6 +1,6 @@
-import { Container, FileInput, Group, Input, Radio, Space, Text, TextInput } from "@mantine/core";
-import * as yup from "yup";
+import { Container, FileInput, Group, Radio, Space, Text, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from '@mantine/form';
+import * as yup from "yup";
 import Button from "../../../commons/Button";
 
 interface IProps {

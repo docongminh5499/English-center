@@ -1,11 +1,11 @@
-import { Action, defaultRegistry } from "react-sweet-state";
+import { Action } from "react-sweet-state";
 import { State } from ".";
 import API from "../../helpers/api";
 import { ChatConstants, Url } from "../../helpers/constants";
 import ChatBox from "../../models/chatbox.model";
+import ChatMessage from "../../models/chatMessage.model";
 import ChatUser from "../../models/chatUser.model";
 import Contact from "../../models/contact.model";
-import ChatMessage from "../../models/chatMessage.model";
 
 
 export const getContacts =

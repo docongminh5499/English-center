@@ -1,8 +1,6 @@
-import { Button, Menu, Text, useMantineTheme } from '@mantine/core';
+import { Button, Menu, useMantineTheme } from '@mantine/core';
 import {
-  IconSquareCheck,
-  IconCommand,
-  IconUsers,
+    IconCommand, IconSquareCheck, IconUsers
 } from '@tabler/icons';
 import { useRouter } from 'next/router';
 

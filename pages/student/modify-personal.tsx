@@ -1,9 +1,9 @@
-import { CookieKey, Url, UserRole } from "../../helpers/constants";
-import { CustomNextPage } from "../../interfaces/page.interface";
 import { GetServerSideProps } from "next";
-import { CookieParser } from "../../helpers/cookieParser";
-import API from "../../helpers/api";
 import StudentModifyPersonalScreen from "../../components/pageComponents/StudentScreen/StudentModifyPersonalScreen";
+import API from "../../helpers/api";
+import { CookieKey, Url, UserRole } from "../../helpers/constants";
+import { CookieParser } from "../../helpers/cookieParser";
+import { CustomNextPage } from "../../interfaces/page.interface";
 
 const StudentPersonalInformationModifyPage: CustomNextPage = (props) => {
     return <StudentModifyPersonalScreen userStudent={null} {...props} />;

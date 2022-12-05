@@ -1,5 +1,5 @@
 import moment from "moment";
-import { ExerciseStatus, TimeZoneOffset } from "./constants"
+import { ExerciseStatus } from "./constants";
 
 export const getExerciseStatus = (openTime?: Date | null, endTime?: Date | null) => {
     if (openTime === undefined || openTime === null)

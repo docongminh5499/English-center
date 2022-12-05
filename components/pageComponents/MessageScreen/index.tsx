@@ -1,20 +1,20 @@
 import { ActionIcon, Avatar, Card, Container, Divider, Group, Indicator, Input, Loader, Modal, ScrollArea, Space, Text, useMantineTheme } from '@mantine/core';
-import { IconBrandMessenger, IconChecks, IconSearch, IconSend } from '@tabler/icons';
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import Head from 'next/head';
-import styles from './message.module.css';
 import { useInputState, useMediaQuery } from '@mantine/hooks';
-import Button from '../../commons/Button';
-import { useChat } from '../../../stores/Chat';
-import Loading from '../../commons/Loading';
-import { useAuth } from '../../../stores/Auth';
-import { toast } from 'react-toastify';
-import { TimeZoneOffset, Url } from '../../../helpers/constants';
-import ChatUser from '../../../models/chatUser.model';
-import { getRoleName } from '../../../helpers/getRoleName';
+import { IconBrandMessenger, IconChecks, IconSearch, IconSend } from '@tabler/icons';
 import moment from 'moment';
-import { useSocket } from '../../../stores/Socket';
+import Head from 'next/head';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { TimeZoneOffset } from '../../../helpers/constants';
+import { getRoleName } from '../../../helpers/getRoleName';
 import { getAvatarImageUrl } from '../../../helpers/image.helper';
+import ChatUser from '../../../models/chatUser.model';
+import { useAuth } from '../../../stores/Auth';
+import { useChat } from '../../../stores/Chat';
+import { useSocket } from '../../../stores/Socket';
+import Button from '../../commons/Button';
+import Loading from '../../commons/Loading';
+import styles from './message.module.css';
 
 
 const MessageScreen = () => {

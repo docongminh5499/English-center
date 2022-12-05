@@ -1,11 +1,10 @@
-import { Grid, Space, Text, Title, Image, Container, Loader } from '@mantine/core'
+import { Container, Grid, Image, Loader, Space, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import React from 'react'
-import { getAvatarImageUrl } from "../../../../../../helpers/image.helper";
-import { TimeZoneOffset } from "../../../../../../helpers/constants";
 import moment from "moment";
-import User from '../../../../../../models/user.model';
+import { TimeZoneOffset } from "../../../../../../helpers/constants";
 import { getGenderName } from '../../../../../../helpers/getGenderName';
+import { getAvatarImageUrl } from "../../../../../../helpers/image.helper";
+import User from '../../../../../../models/user.model';
 
 interface IProps {
   title: string,

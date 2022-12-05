@@ -1,8 +1,8 @@
 import { Container, Select, Space, Text, TextInput } from "@mantine/core";
-import Classroom from "../../../../models/classroom.model";
+import { useForm, yupResolver } from "@mantine/form";
 import * as yup from "yup";
 import { ClassroomFunction } from "../../../../helpers/constants";
-import { useForm, yupResolver } from "@mantine/form";
+import Classroom from "../../../../models/classroom.model";
 import Button from "../../../commons/Button";
 
 interface IProps {

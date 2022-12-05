@@ -1,31 +1,30 @@
-import { Container, Group, Title, Text, Image, Loader, Avatar, SimpleGrid, Space, Button, Table, ScrollArea, Badge, Modal, ThemeIcon, Pagination, Grid, Input, ActionIcon, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Container, Grid, Group, Image, Input, Loader, Modal, Pagination, ScrollArea, SimpleGrid, Space, Table, Text, ThemeIcon, Title, Tooltip } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { IconHighlight, IconLock, IconLockOpen, IconPencil, IconSquarePlus, IconTrash } from "@tabler/icons";
 import moment from "moment";
-import Head from "next/head"
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { CourseStatus, EmployeeConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { formatCurrency } from "../../../../helpers/formatCurrency";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
+import { getGenderName } from "../../../../helpers/getGenderName";
 import { getAvatarImageUrl, getImageUrl } from "../../../../helpers/image.helper";
 import { Course } from "../../../../models/course.model";
 import StudySession from "../../../../models/studySession.model";
+import UserStudent from "../../../../models/userStudent.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
-import OpenCourseModal from "../Modal/openCourse.modal";
-import ModifyStudySessionModal from "../Modal/modifyStudySession.modal";
+import AmountModal from "../Modal/amount.modal";
 import CloseCourseModal from "../Modal/closeCourse.modal";
 import CreateStudySessionModal from "../Modal/createStudySession.modal";
-import RemoveStudySessionModal from "../Modal/modal";
-import styles from "./course.module.css";
-import UserStudent from "../../../../models/userStudent.model";
-import { getGenderName } from "../../../../helpers/getGenderName";
-import { formatCurrency } from "../../../../helpers/formatCurrency";
 import FindStudentModal from "../Modal/findStudent.modal";
-import AmountModal from "../Modal/amount.modal";
-import RemoveCourseModal from "../Modal/modal";
+import { default as RemoveCourseModal, default as RemoveStudySessionModal } from "../Modal/modal";
+import ModifyStudySessionModal from "../Modal/modifyStudySession.modal";
+import OpenCourseModal from "../Modal/openCourse.modal";
+import styles from "./course.module.css";
 
 interface IProps {
   userRole?: UserRole | null;

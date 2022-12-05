@@ -1,19 +1,19 @@
+import { Badge, Card, Checkbox, Container, Grid, Image, Input, Pagination, SimpleGrid, Space, Text } from '@mantine/core';
+import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import API from "../../../../helpers/api";
 import { CourseStatus, TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { getCourseStatus } from "../../../../helpers/getCourseStatus";
+import { getImageUrl } from "../../../../helpers/image.helper";
 import { Course } from "../../../../models/course.model";
 import Pageable from "../../../../models/pageable.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
-import { Card, Pagination, Image, Text, Badge, Input, Checkbox, Space, Group, Container, Grid, SimpleGrid } from '@mantine/core';
 import styles from "./teacher.module.css";
-import { useInputState, useMediaQuery } from "@mantine/hooks";
-import { getImageUrl } from "../../../../helpers/image.helper";
-import { Router, useRouter } from "next/router";
-import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 
 interface IProps {
   courses?: Partial<Course>[],

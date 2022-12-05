@@ -1,30 +1,20 @@
 import {
-  TextInput,
-  Select,
-  Button,
-  Group,
-  Box,
-  Stepper,
-  Text,
-  PasswordInput,
-  Loader,
-  Table,
-  Title,
-  Container,
+    Box, Button, Container, Group, PasswordInput, Select, Stepper,
+    Text, TextInput, Title
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { IconInfoCircle, IconUserCircle, IconCircleCheck } from "@tabler/icons";
+import { useMediaQuery } from "@mantine/hooks";
+import { IconCircleCheck, IconInfoCircle, IconUserCircle } from "@tabler/icons";
+import 'dayjs/locale/vi';
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import 'dayjs/locale/vi';
-import styles from "./register.module.css";
-import { useMediaQuery } from "@mantine/hooks";
-import { Gender, Url, UserRole } from "../../../../helpers/constants";
 import API from "../../../../helpers/api";
+import { Gender, Url, UserRole } from "../../../../helpers/constants";
 import { getRoleName } from "../../../../helpers/getRoleName";
+import styles from "./register.module.css";
 
 interface IProps { }
 

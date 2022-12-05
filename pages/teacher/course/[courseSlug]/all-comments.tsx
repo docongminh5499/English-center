@@ -1,10 +1,9 @@
-import TeacherCourseCommentScreen from "../../../../components/pageComponents/TeacherScreen/TeacherCourseCommentScreen";
-import { CookieKey, Url, UserRole } from "../../../../helpers/constants";
-import { CustomNextPage } from "../../../../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
-import { CookieParser } from "../../../../helpers/cookieParser";
+import TeacherCourseCommentScreen from "../../../../components/pageComponents/TeacherScreen/TeacherCourseCommentScreen";
 import API from "../../../../helpers/api";
+import { CookieKey, Url, UserRole } from "../../../../helpers/constants";
+import { CookieParser } from "../../../../helpers/cookieParser";
+import { CustomNextPage } from "../../../../interfaces/page.interface";
 
 const AllCommentsPage: CustomNextPage = (props) => {
     return <TeacherCourseCommentScreen userRole={null} course={null} {...props} />

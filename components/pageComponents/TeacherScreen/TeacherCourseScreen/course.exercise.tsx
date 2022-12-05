@@ -1,7 +1,6 @@
-import { Box, Checkbox, Divider, Loader, Container, FileButton, Grid, Group, Modal, MultiSelect, Space, Text, Textarea, TextInput, Title } from "@mantine/core";
-import { DateRangePicker, DateRangePickerValue, TimeRangeInput } from "@mantine/dates";
-import { useForm } from "@mantine/form";
+import { Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import 'dayjs/locale/vi';
 import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -15,8 +14,6 @@ import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
 import DeleteExerciseModal from "../Modal/delete.modal";
-import 'dayjs/locale/vi';
-import { IconPlus } from "@tabler/icons";
 import CourseCreateExercise from "./course.create.exercise";
 import CourseExerciseDetail from "./course.exercise.detail";
 

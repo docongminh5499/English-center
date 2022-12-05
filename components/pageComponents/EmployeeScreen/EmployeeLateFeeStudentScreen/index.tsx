@@ -1,4 +1,4 @@
-import { Button, Container, Grid, Input, Pagination, ScrollArea, Space, Table, Title, Text, Modal } from "@mantine/core";
+import { Button, Container, Grid, Input, Modal, Pagination, ScrollArea, Space, Table, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";
@@ -11,8 +11,8 @@ import { getGenderName } from "../../../../helpers/getGenderName";
 import UserStudent from "../../../../models/userStudent.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
-import styles from "./student.module.css";
 import CustomModal from "../Modal/modal";
+import styles from "./student.module.css";
 
 
 interface IProps {

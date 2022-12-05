@@ -1,4 +1,4 @@
-import { Container, Group, Select, TextInput, Title, Text, ScrollArea, SimpleGrid, Avatar } from "@mantine/core";
+import { Avatar, Container, Group, ScrollArea, Select, SimpleGrid, Text, TextInput, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import API from "../../../../helpers/api";

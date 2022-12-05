@@ -1,14 +1,13 @@
-import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, PasswordInput, Popover, Progress, Text, Textarea, TextInput, Title } from "@mantine/core";
-import { DatePicker, DateRangePicker, DateRangePickerValue, TimeInput, TimeRangeInput } from "@mantine/dates";
+import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { DatePicker, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
-import { IconChevronDown, IconPlus, IconTrash } from "@tabler/icons";
+import { IconPlus, IconTrash } from "@tabler/icons";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
-import { getAudioUrl, getAvatarImageUrl } from "../../../../helpers/image.helper";
 import { useAuth } from "../../../../stores/Auth";
 
 const CourseCreateExercise = (props: any) => {

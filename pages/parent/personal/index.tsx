@@ -1,9 +1,9 @@
 import { GetServerSideProps } from "next";
+import ParentPersonalScreen from "../../../components/pageComponents/ParentScreen/ParentPersonalScreen";
+import API from "../../../helpers/api";
 import { CookieKey, Url, UserRole } from "../../../helpers/constants";
 import { CookieParser } from "../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../interfaces/page.interface";
-import API from "../../../helpers/api";
-import ParentPersonalScreen from "../../../components/pageComponents/ParentScreen/ParentPersonalScreen";
 
 const ParentPersonalInformationPage: CustomNextPage = (props) => {
   return <ParentPersonalScreen userParent={null} {...props} />;

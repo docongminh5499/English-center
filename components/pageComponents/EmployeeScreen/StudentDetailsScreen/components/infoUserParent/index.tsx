@@ -1,14 +1,14 @@
-import { Grid, Space, Text, Title, Image, Container, Loader, Button, Modal, Group } from '@mantine/core'
+import { Button, Container, Grid, Group, Image, Loader, Modal, Space, Text, Title } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import React, { useCallback, useState } from 'react'
-import { getAvatarImageUrl } from "../../../../../../helpers/image.helper";
-import { TimeZoneOffset } from "../../../../../../helpers/constants";
 import moment from "moment";
-import User from '../../../../../../models/user.model';
+import { useCallback, useState } from 'react';
+import { TimeZoneOffset } from "../../../../../../helpers/constants";
 import { getGenderName } from '../../../../../../helpers/getGenderName';
+import { getAvatarImageUrl } from "../../../../../../helpers/image.helper";
+import User from '../../../../../../models/user.model';
+import UserParent from '../../../../../../models/userParent.model';
 import FindParentModal from '../../../Modal/findParent.modal';
 import ConfirmChooseModal from '../../../Modal/modal';
-import UserParent from '../../../../../../models/userParent.model';
 
 interface IProps {
   title: string,

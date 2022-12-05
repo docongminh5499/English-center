@@ -1,10 +1,9 @@
-import HomeScreen from "../components/pageComponents/HomeScreen";
 import { GetServerSideProps } from "next";
-import { CookieKey, GuestConstants, Url, UserRole } from "../helpers/constants";
-import { CustomNextPage } from "../interfaces/page.interface";
-import { CookieParser } from "../helpers/cookieParser";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
+import HomeScreen from "../components/pageComponents/HomeScreen";
 import API from "../helpers/api";
+import { CookieKey, GuestConstants, Url, UserRole } from "../helpers/constants";
+import { CookieParser } from "../helpers/cookieParser";
+import { CustomNextPage } from "../interfaces/page.interface";
 
 const Home: CustomNextPage = (props) => {
   return <HomeScreen studentCounts={0} courseCounts={0} curriculumTags={[]} branches={[]} comments={[]} courses={[]} {...props} />;

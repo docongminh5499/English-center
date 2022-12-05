@@ -1,12 +1,12 @@
-import Head from "next/head";
-import { Container, Title, Space } from "@mantine/core";
-import { UserRole } from "../../../../helpers/constants";
-import { useEffect, useState } from "react";
+import { Container, Space } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import InfoUser from './components/InfoUser'
-import UserStudent from "../../../../models/userStudent.model";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { UserRole } from "../../../../helpers/constants";
+import UserStudent from "../../../../models/userStudent.model";
 import Loading from "../../../commons/Loading";
+import InfoUser from './components/InfoUser';
 
 
 interface IProps {

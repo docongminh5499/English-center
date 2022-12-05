@@ -1,10 +1,9 @@
-import { CookieKey, Url, UserRole } from "../../helpers/constants";
-import { CustomNextPage } from "../../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
-import { CookieParser } from "../../helpers/cookieParser";
-import API from "../../helpers/api";
 import TutorModifyPersonalScreen from "../../components/pageComponents/TutorScreen/ModifyPersonalScreen";
+import API from "../../helpers/api";
+import { CookieKey, Url, UserRole } from "../../helpers/constants";
+import { CookieParser } from "../../helpers/cookieParser";
+import { CustomNextPage } from "../../interfaces/page.interface";
 
 const TutorPersonalInformationModifyPage: CustomNextPage = (props) => {
     return <TutorModifyPersonalScreen userTutor={null} {...props} />;

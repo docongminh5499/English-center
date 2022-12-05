@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
-import styles from "./ListCourse.module.css";
-import Head from "next/head";
-import { Button, Container, Group, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useAuth } from "../../../stores/Auth";
-import { IconCertificate, IconSend, IconBrandTelegram, IconPlayerPlay, IconScreenShare, IconMessageChatbot, IconSchool, IconRecharging, IconUsers, IconBrandZoom, IconQuote, IconMapPin } from "@tabler/icons";
-import CourseSaleComponent from './components/CourseSale'
 import { Carousel } from '@mantine/carousel';
-import Sliders from '../../commons/Sliders'
-import ModalWrapper from "./components/WrapModalVideo";
-import { Course } from "../../../models/course.model";
-import Tag from "../../../models/tag.model";
-import Branch from "../../../models/branch.model";
-import MaskedComment from "../../../models/maskedComment.model";
-import { getAvatarImageUrl } from "../../../helpers/image.helper";
+import { Container, Text } from "@mantine/core";
+import { IconBrandTelegram, IconBrandZoom, IconCertificate, IconMapPin, IconMessageChatbot, IconPlayerPlay, IconQuote, IconRecharging, IconSchool, IconScreenShare, IconSend, IconUsers } from "@tabler/icons";
+import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { getAvatarImageUrl } from "../../../helpers/image.helper";
+import Branch from "../../../models/branch.model";
+import { Course } from "../../../models/course.model";
+import MaskedComment from "../../../models/maskedComment.model";
+import Tag from "../../../models/tag.model";
+import { useAuth } from "../../../stores/Auth";
+import CourseSaleComponent from './components/CourseSale';
+import ModalWrapper from "./components/WrapModalVideo";
+import styles from "./ListCourse.module.css";
 
 
 interface IProps {

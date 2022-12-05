@@ -1,23 +1,22 @@
-import { Container, Divider, FileInput, Grid, Image, Loader, Modal, PasswordInput, Select, Space, Text, TextInput, Title } from "@mantine/core";
+import { Container, FileInput, Grid, Image, Loader, Modal, PasswordInput, Select, Space, TextInput, Title } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { useForm, yupResolver } from "@mantine/form";
 import { useMediaQuery } from "@mantine/hooks";
-import { useRouter } from "next/router";
-import Head from "next/head";
-import Button from "../../../commons/Button";
-import * as yup from "yup";
-import { Gender, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
-import { DatePicker } from "@mantine/dates";
 import 'dayjs/locale/vi';
-import RichTextEditor from "../../../commons/RichText";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import moment from "moment";
-import API from "../../../../helpers/api";
-import { useAuth } from "../../../../stores/Auth";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import SaveNotificationModal from "../Modal/modal";
-import Loading from "../../../commons/Loading";
+import * as yup from "yup";
+import API from "../../../../helpers/api";
+import { Gender, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";
+import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import UserTutor from "../../../../models/userTutor.model";
+import { useAuth } from "../../../../stores/Auth";
+import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
+import SaveNotificationModal from "../Modal/modal";
 
 
 interface IProps {

@@ -3,7 +3,6 @@ import RegisterScreen from "../components/pageComponents/RegisterScreen";
 import { CookieKey, UserRole } from "../helpers/constants";
 import { CookieParser } from "../helpers/cookieParser";
 import { CustomNextPage } from "../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 
 const Register: CustomNextPage = (props) => {
   return <RegisterScreen {...props} />;

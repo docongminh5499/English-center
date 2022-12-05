@@ -1,9 +1,9 @@
-import {CookieKey, Url, UserRole } from "../../../helpers/constants";
-import { CustomNextPage } from "../../../interfaces/page.interface";
-import StudentHomeScreen from "../../../components/pageComponents/StudentScreen/StudentHomeScreen/student.home";
 import { GetServerSideProps } from "next";
-import { CookieParser } from "../../../helpers/cookieParser";
+import StudentHomeScreen from "../../../components/pageComponents/StudentScreen/StudentHomeScreen/student.home";
 import API from "../../../helpers/api";
+import { CookieKey, Url, UserRole } from "../../../helpers/constants";
+import { CookieParser } from "../../../helpers/cookieParser";
+import { CustomNextPage } from "../../../interfaces/page.interface";
 
 const StudentHomePage: CustomNextPage = (props) => {
     return <StudentHomeScreen {...props} />;

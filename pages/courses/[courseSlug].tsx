@@ -1,11 +1,9 @@
-import React from 'react'
-import DetailsCourseScreen from "../../components/pageComponents/DetailsCourse";
 import { GetServerSideProps } from "next";
-import { CookieKey, Url, UserRole } from "../../helpers/constants";
-import { CustomNextPage } from "../../interfaces/page.interface";
-import { CookieParser } from "../../helpers/cookieParser";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
+import DetailsCourseScreen from "../../components/pageComponents/DetailsCourse";
 import API from '../../helpers/api';
+import { CookieKey, Url, UserRole } from "../../helpers/constants";
+import { CookieParser } from "../../helpers/cookieParser";
+import { CustomNextPage } from "../../interfaces/page.interface";
 
 const ListCourse: CustomNextPage = (props) => {
   return <DetailsCourseScreen isAttended={false} course={null} {...props} />;

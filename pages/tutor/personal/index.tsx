@@ -1,11 +1,9 @@
 import { GetServerSideProps } from "next";
-import TeacherPersonalScreen from "../../../components/pageComponents/TeacherScreen/TeacherPersonalScreen";
+import TutorPersonalScreen from "../../../components/pageComponents/TutorScreen/TutorPersonalScreen";
+import API from "../../../helpers/api";
 import { CookieKey, TutorConstants, Url, UserRole } from "../../../helpers/constants";
 import { CookieParser } from "../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
-import API from "../../../helpers/api";
-import TutorPersonalScreen from "../../../components/pageComponents/TutorScreen/TutorPersonalScreen";
 
 const TutorPersonalInformationPage: CustomNextPage = (props) => {
     return <TutorPersonalScreen salaries={{

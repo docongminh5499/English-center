@@ -1,26 +1,25 @@
-import { Container, FileInput, Image, Loader, Space, Textarea, TextInput, Text, Select, Title, Modal, MultiSelect } from "@mantine/core";
-import Head from "next/head";
-import Button from "../../../commons/Button";
-import * as yup from "yup";
-import { useListState, useMediaQuery } from "@mantine/hooks";
+import { Container, FileInput, Image, Loader, Modal, MultiSelect, Select, Space, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { getImageUrl } from "../../../../helpers/image.helper";
-import { CourseType, CurriculumLevel, TagsType, Url } from "../../../../helpers/constants";
-import { LectureList } from "./LectureList";
-import SaveCurriculumModal from "../Modal/save.modal";
-import { toast } from "react-toastify";
-import LectureForm from "./LectureForm";
-import Curriculum from "../../../../models/cirriculum.model";
+import { useListState, useMediaQuery } from "@mantine/hooks";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
-import Lecture from "../../../../models/lecture.model";
-import DeleteModal from "../Modal/delete.modal";
-import ChangeModifiedLectureModal from "../Modal/changeModifiedLecture.modal";
+import * as yup from "yup";
 import API from "../../../../helpers/api";
-import { useAuth } from "../../../../stores/Auth";
+import { CourseType, CurriculumLevel, TagsType, Url } from "../../../../helpers/constants";
+import { getImageUrl } from "../../../../helpers/image.helper";
+import Lecture from "../../../../models/lecture.model";
 import Tag from "../../../../models/tag.model";
+import { useAuth } from "../../../../stores/Auth";
+import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
+import ChangeModifiedLectureModal from "../Modal/changeModifiedLecture.modal";
+import DeleteModal from "../Modal/delete.modal";
+import SaveCurriculumModal from "../Modal/save.modal";
+import LectureForm from "./LectureForm";
+import { LectureList } from "./LectureList";
 
 const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tiêu đề").max(255, "Tiêu đề có độ dài quá lớn, tối đa 255 ký tự"),

@@ -1,10 +1,10 @@
-import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { Store as ChatStore } from "../Chat";
-import { Store as NotificationStore } from "../Notification";
-import { Store as AuthStore } from "../Auth";
 import { defaultRegistry } from "react-sweet-state";
 import { toast } from "react-toastify";
+import { Socket } from "socket.io-client";
+import { Store as AuthStore } from "../Auth";
+import { Store as ChatStore } from "../Chat";
+import { Store as NotificationStore } from "../Notification";
 
 
 const ChatStoreInstance = defaultRegistry.getStore(ChatStore);

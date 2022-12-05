@@ -1,5 +1,5 @@
-import { UseFormRegisterReturn } from "react-hook-form";
 import { Input as MantineInput, InputProps } from '@mantine/core';
+import { UseFormRegisterReturn } from "react-hook-form";
 import ErrorText from "../ErrorText";
 
 interface IProps {

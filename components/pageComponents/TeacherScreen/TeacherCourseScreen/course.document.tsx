@@ -1,20 +1,18 @@
-import { Anchor, Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
+import { Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Button from "../../../commons/Button";
-import CreateDocumentModal from "../Modal/createDocument.modal";
-import DeleteExerciseModal from "../Modal/delete.modal";
-import Document from "../../../../models/document.models";
-import { getDocumentUrl } from "../../../../helpers/image.helper";
+import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { CourseStatus, TeacherConstants, Url } from "../../../../helpers/constants";
-import { useAuth } from "../../../../stores/Auth";
-import { toast } from "react-toastify";
-import axios from "axios";
-import Loading from "../../../commons/Loading";
-import { Course } from "../../../../models/course.model";
 import { getCourseStatus } from "../../../../helpers/getCourseStatus";
+import { getDocumentUrl } from "../../../../helpers/image.helper";
+import { Course } from "../../../../models/course.model";
+import Document from "../../../../models/document.models";
+import { useAuth } from "../../../../stores/Auth";
+import Button from "../../../commons/Button";
+import Loading from "../../../commons/Loading";
+import CreateDocumentModal from "../Modal/createDocument.modal";
+import DeleteExerciseModal from "../Modal/delete.modal";
 
 interface IProps {
   courseSlug?: string;
