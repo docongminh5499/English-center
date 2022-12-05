@@ -175,6 +175,8 @@ const StudentHomeScreen = (props: any) => {
     >
       <Group  position="center">
         <Title order={2}>Chọn buổi học bù mong muốn.</Title>
+      </Group>
+      <Group  position="center">
           {makeupLessionRow}
       </Group>
     </Modal>
@@ -287,7 +289,7 @@ const StudentHomeScreen = (props: any) => {
                     });
                     console.log(compatibleStudySession)
                     if (compatibleStudySession === null || compatibleStudySession.length === 0) {
-                      setMakeupLessionRow(<Text size="md" weight={500} color={"gray"}>Không có buổi học bù tương ứng</Text>);
+                      setMakeupLessionRow(<Box><Text size="md" weight={500} color={"gray"}>Không có buổi học bù tương ứng</Text></Box>);
                     }else {
                       setMakeupLessionRow(
                         <Table withBorder withColumnBorders mt={"md"}>

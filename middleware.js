@@ -12,7 +12,8 @@ const securityMiddleware = [
     directives: {
       "default-src": ["none"],
       "connect-src": ["self", Url.baseUrl, SocketBaseUrl, "https://www.paypal.com/sdk/js", "https://www.sandbox.paypal.com"],
-      "img-src": ["self", "data:", Url.baseUrl],
+      "media-src": ["self", "data:", Url.baseUrl, "blob:"],
+      "img-src": ["self", "data:", Url.baseUrl, "blob:"],
       "font-src": ["self", "https://fonts.google.com", Url.baseUrl],
       "frame-src": ["https://www.sandbox.paypal.com/"],
       "form-action": ["self", Url.baseUrl],

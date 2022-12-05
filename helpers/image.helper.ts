@@ -12,6 +12,12 @@ export const getImageUrl = (url?: string | null): string => {
     return Url.baseUrl + url;
 }
 
+export const getAudioUrl = (url?: string | null): string => {
+    if (url === undefined || url === null || url.trim() === "")
+        return "";
+    return Url.baseUrl + url;
+}
+
 
 export const getDocumentUrl = (url?: string): string => {
     if (url === undefined || url === null || url.trim() === "")

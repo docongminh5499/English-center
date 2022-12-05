@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, FileButton, Grid, Group, Input, Loader, Modal, MultiSelect, PasswordInput, Popover, Progress, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, PasswordInput, Popover, Progress, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { DatePicker, DateRangePicker, DateRangePickerValue, TimeInput, TimeRangeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
@@ -8,13 +8,19 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
+import { getAudioUrl, getAvatarImageUrl } from "../../../../helpers/image.helper";
 import { useAuth } from "../../../../stores/Auth";
 
 const CourseCreateExercise = (props: any) => {
   console.log(props);
   const now = new Date();
   const [addQuestion, setAddQuestion] = useState(false);
+  const [rerender, setRerender] = useState(false);
   const [authState,] = useAuth();
+  const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
+  const [endTimePopoverOpened, setEndTimePopoverOpened] = useState(false);
+  const [openTime, setOpenTime] = useState(now);
+  const [endTime, setEndTime] = useState(moment(now).add(7, "days").toDate());
   //Tags
   const [tags, setTags] = useState([]);
   const [addTagLoading, setAddTagLoading] = useState(false);
@@ -45,13 +51,13 @@ const CourseCreateExercise = (props: any) => {
       maxTime: 1,
       startDate: now,
       startTime: now,
-      endDate: now,
+      endDate: moment(now).add(7, "days").toDate(),
       endTime: now,
     },
 
     validate: {
       nameExercise: value => value.trim().length === 0 ? "Vui lòng nhập tên bài tập." : null,
-      maxTime: value => (value > 0 && value <= 5) ? null : "Vui lòng nhập số lần thực hiện tối đa trong khoảng 1-5.",
+      maxTime: value => (value > 0 && value <= 10) ? null : "Vui lòng nhập số lần thực hiện tối đa trong khoảng 1-5.",
     },
   });
 
@@ -88,9 +94,12 @@ const CourseCreateExercise = (props: any) => {
       },
     },
   });
-  console.log(questionForm);
+  console.log("*************************************************");
+  console.log(questionForm.values);
 
-  const fields = questionForm.values.questions.map((item, index) => (
+  const fields = questionForm.values.questions.map((item, index) => {
+    
+    return (
     <div key={item.key}>
       <Divider my="xl" size={"xl"} color={"violet"} />
         <Grid>
@@ -116,10 +125,31 @@ const CourseCreateExercise = (props: any) => {
         <Grid>
           <Grid.Col span={6}>
             <Title order={5} mt="md">Hình ảnh:</Title>
-            {item.imgSrc && (
-              <Text size="sm" mt="sm">
-                Tệp đã chọn: {item.imgSrc.name}
-              </Text>
+            {item.imgSrc !== null && (
+              <Box>
+                <Image
+                  mt={"sm"}
+                  mb="sm"
+                  withPlaceholder
+                  placeholder={
+                    <Container
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        maxWidth: "300px",
+                      }}
+                    >
+                      <Loader variant="dots" />
+                    </Container>
+                  }
+                  style={{ maxWidth: "300px" }}
+                  radius="md"
+                  src={URL.createObjectURL(item.imgSrc)}
+                  alt="Hình đại diện"
+                />
+              </Box>
             )}
             <FileButton 
               resetRef={resetRef}
@@ -132,7 +162,11 @@ const CourseCreateExercise = (props: any) => {
               ml={"sm"} 
               disabled={!item.imgSrc} 
               color="red" 
-              onClick={() => {questionForm.values.questions[index].imgSrc = null; resetRef.current?.();}}
+              onClick={() => {
+                questionForm.values.questions[index].imgSrc = null;
+                resetRef.current?.();
+                setRerender(!rerender); 
+              }}
             >
               Bỏ chọn
             </Button>
@@ -141,9 +175,15 @@ const CourseCreateExercise = (props: any) => {
           <Grid.Col span={6}>
             <Title order={5} mt="md">Âm thanh:</Title>
             {item.audioSrc && (
-              <Text size="sm" mt="md">
-                Tệp đã chọn: {item.audioSrc.name}
-              </Text>
+              <Group 
+                position="center" 
+                mt={"sm"}
+                mb="sm"
+              >
+                <audio controls>
+                  <source src={URL.createObjectURL(item.audioSrc)}/>
+                </audio>
+              </Group>
             )}
             <FileButton
               accept="audio/*"
@@ -156,7 +196,11 @@ const CourseCreateExercise = (props: any) => {
               ml={"sm"} 
               disabled={!item.audioSrc} 
               color="red" 
-              onClick={() => {questionForm.values.questions[index].audioSrc = null; resetRef.current?.();}}
+              onClick={() => {
+                questionForm.values.questions[index].audioSrc = null;
+                resetRef.current?.();
+                setRerender(!rerender); 
+              }}
             >
               Bỏ chọn
             </Button>
@@ -207,7 +251,7 @@ const CourseCreateExercise = (props: any) => {
 
         </Grid>
     </div>
-  ));
+  )});
 
   //Handle Form Submit
 
@@ -217,11 +261,24 @@ const CourseCreateExercise = (props: any) => {
       console.log(questionForm.values);
       setConfirmCreateExercise(false);
       //Validate Input
+      if(endTime.getTime() <= openTime.getTime()){
+        toast.error("Thời gian đóng bài tập phải sau thời gian mở bài tập.");
+        return;
+      }
       basicInfo.validate();
       questionForm.validate();
 
       if (!basicInfo.isValid() || !questionForm.isValid())
         return;
+      const arrImage = [];
+      for(const question of questionForm.values.questions){
+        arrImage.push(question.imgSrc);
+      }
+      // const formData = new FormData();
+      // formData.append("image", arrImage);
+      // formData.append("courseId", props.courseId);
+      // formData.append("basicInfo", JSON.stringify(basicInfo.values));
+      // formData.append("questions", JSON.stringify(questionForm.values));
       const response = await API.post(Url.teachers.createExercise, {
         token: authState.token, 
         courseId: props.courseId, 
@@ -229,6 +286,49 @@ const CourseCreateExercise = (props: any) => {
         ...questionForm.values,
       });
       console.log(response);
+
+      //Send Image
+      for(const question of questionForm.values.questions){
+        if(question.imgSrc === null){
+          continue;
+        }
+        const formData = new FormData();
+        formData.append("temporaryKey", question.key);
+        formData.append("image", question.imgSrc!);
+        const result = await API.post(Url.teachers.sendQuesitonImage, formData, {
+          headers: {
+            'x-access-token': authState.token || "",
+            'content-type': 'multipart/form-data'
+          },
+        });
+        if(result === false){
+          toast.error("Gặp sự cố trong quá trình tải ảnh, vui lòng chỉnh sửa trong chi tiết bài tập.")
+        }
+      }
+
+      //Send Audio
+      for(const question of questionForm.values.questions){
+        if(question.audioSrc === null){
+          continue;
+        }
+        const formData = new FormData();
+        formData.append("temporaryKey", question.key);
+        formData.append("audio", question.audioSrc!);
+        const result = await API.post(Url.teachers.sendQuesitonAudio, formData, {
+          headers: {
+            'x-access-token': authState.token || "",
+            'content-type': 'multipart/form-data'
+          },
+        });
+        if(result === false){
+          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+        }
+      }
+
+      await API.post(Url.teachers.deleteQuestionTemporaryKey, {
+        token: authState.token, 
+        exerciseId: response.id,
+      });
 
       props.setListExercises((current: any) => [...current, {
         id: response.id,
@@ -282,10 +382,7 @@ const CourseCreateExercise = (props: any) => {
       setAddTagLoading(false);
     }
   };
-  const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
-  const [endTimePopoverOpened, setEndTimePopoverOpened] = useState(false);
-  const [openTime, setOpenTime] = useState(now);
-  const [endTime, setEndTime] = useState(now);
+  
   console.log("==================================================")
   console.log(basicInfo.values)
   return (
@@ -514,8 +611,9 @@ const CourseCreateExercise = (props: any) => {
       >
         Thêm câu hỏi
       </Button>
-
-      {fields}
+      <form encType='multipart/form-data'>
+        {fields}
+      </form>
 
       <Container style={{ display: "flex", justifyContent: "center" }}>
         <Button mt="xl" onClick={() => setConfirmCreateExercise(true)}>Tạo bài tập</Button>

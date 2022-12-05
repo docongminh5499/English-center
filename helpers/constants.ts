@@ -201,6 +201,11 @@ export const Url = {
     getExerciseById: "/api/teachers/exercise/get-exercise-by-id/",
     getStdExeResult: "/api/teachers/exercise/get-student-exercise-result/",
     modifyExercise: "/api/teachers/exercise/modify-exercise",
+    sendQuesitonImage: "/api/teachers/exercise/send-question-image",
+    sendModifiedQuesitonImage: "/api/teachers/exercise/send-modified-question-image",
+    sendQuesitonAudio: "/api/teachers/exercise/send-question-audio",
+    sendModifiedQuesitonAudio: "/api/teachers/exercise/send-modified-question-audio",
+    deleteQuestionTemporaryKey: "/api/teachers/exercise/delete-question-temporary-key",
   },
   students: {
     getTimetable: "/api/students/timetable",

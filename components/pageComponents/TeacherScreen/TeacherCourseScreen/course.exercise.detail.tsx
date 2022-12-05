@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
-import { getImageUrl } from "../../../../helpers/image.helper";
+import { getAudioUrl, getImageUrl } from "../../../../helpers/image.helper";
 import { useAuth } from "../../../../stores/Auth";
 import { CChart } from "@coreui/react-chartjs";
 import CourseModifyExercise from "./course.exercise.modify";
@@ -18,6 +18,8 @@ const CourseExerciseDetail = (props: any) => {
 	const [studentDoExercise, setStudentDoExercise] = useState([]);
 	const [modifyExercise, setModifyExercise] = useState(false);
 	const [tags, setTags] = useState([]);
+
+	console.log(exercise)
 
 	useEffect(() => {
     // 👇️ scroll to top on page load
@@ -165,7 +167,7 @@ const CourseExerciseDetail = (props: any) => {
 													})
 												}
 											</Group>
-											{question.imgSrc === null &&
+											{question.imgSrc !== null &&
 												<Box style={{ width: 240, marginLeft: 'auto', marginRight: 'auto' }} mt={"md"}>
 													<Image
 														withPlaceholder
@@ -180,6 +182,14 @@ const CourseExerciseDetail = (props: any) => {
 														alt="Hình minh họa cho câu hỏi"
 													/>
 												</Box>
+											}
+
+											{question.audioSrc !== null &&
+												<Group position="center" mt={"md"}>
+													<audio controls>
+														<source src={getAudioUrl(question.audioSrc)}/>
+													</audio>
+												</Group>
 											}
 
 											<Grid mt={"md"}>

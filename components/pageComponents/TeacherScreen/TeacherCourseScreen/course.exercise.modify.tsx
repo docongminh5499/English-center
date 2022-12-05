@@ -1,4 +1,4 @@
-import { Button, Container, Divider, FileButton, Grid, Group, Input, Loader, Modal, MultiSelect, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { DatePicker, DateRangePicker, DateRangePickerValue, TimeInput, TimeRangeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId, useWindowScroll } from "@mantine/hooks";
@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
+import { getAudioUrl, getImageUrl } from "../../../../helpers/image.helper";
 import { useAuth } from "../../../../stores/Auth";
 
 const CourseModifyExercise = (props: any) => {
@@ -16,6 +17,7 @@ const CourseModifyExercise = (props: any) => {
 	const [loading, setLoading] = useState(true);
 	const [addQuestion, setAddQuestion] = useState(false);
 	const [deleteQuestions, setDeleteQuestions] = useState([]);
+  const [rerender, setRerender] = useState(false);
 
   const now = new Date();
   const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
@@ -48,7 +50,7 @@ const CourseModifyExercise = (props: any) => {
 
     validate: {
       nameExercise: value => value.trim().length === 0 ? "Vui lòng nhập tên bài tập." : null,
-      maxTime: value => (value > 0 && value <= 5) ? null : "Vui lòng nhập số lần thực hiện tối đa trong khoảng 1-5.",
+      maxTime: value => (value > 0 && value <= 10) ? null : "Vui lòng nhập số lần thực hiện tối đa trong khoảng 1-5.",
     },
   });
 
@@ -83,6 +85,8 @@ const CourseModifyExercise = (props: any) => {
 					wrongAnswer2: wrongAnswers[1],
 					wrongAnswer3: wrongAnswers[2],
 					id: element.id,
+          isImgSrcChange: false,
+          isAudioSrcChange: false,
 				}
 			})
     },
@@ -133,49 +137,100 @@ const CourseModifyExercise = (props: any) => {
 						<Grid.Col span={6}>
 							<Title order={5} mt="md">Hình ảnh:</Title>
 							{item.imgSrc && (
-								<Text size="sm" mt="sm">
-									Tệp đã chọn: {item.imgSrc.name}
-								</Text>
+								<Box>
+                  <Image
+                    mt={"sm"}
+                    mb="sm"
+                    withPlaceholder
+                    placeholder={
+                      <Container
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          maxWidth: "300px",
+                        }}
+                      >
+                        <Loader variant="dots" />
+                      </Container>
+                    }
+                    style={{ maxWidth: "300px" }}
+                    radius="md"
+                    src={!(item.imgSrc instanceof Blob) ? getImageUrl(item.imgSrc) : URL.createObjectURL(item.imgSrc)}
+                    alt="Hình đại diện"
+                  />
+                </Box>
 							)}
 							<FileButton 
 								resetRef={resetRef}
 								accept="image/*" 
+                onChange={()=>{item.isImgSrcChange = true;}}
 								{...questionForm.getInputProps(`questions.${index}.imgSrc`)}
 							>
-								{(props: any) => <Button {...props}>Thêm ảnh</Button>}
+								{(props: any) => 
+                  <Box onClick={()=> {item.isImgSrcChange = true;}}> 
+                    <Button disabled={item.imgSrc !== null} {...props}>
+                      Thêm ảnh
+                    </Button>
+
+                    <Button 
+                      ml={"sm"} 
+                      disabled={!item.imgSrc} 
+                      color="red" 
+                      onClick={() => {
+                        questionForm.values.questions[index].imgSrc = null;
+                        item.isImgSrcChange = true;
+                        resetRef.current?.();
+                        setRerender(!rerender); 
+                      }}
+                    >
+                      Bỏ chọn
+                    </Button>
+                  </Box>}
 							</FileButton>
-							<Button 
-								ml={"sm"} 
-								disabled={!item.imgSrc} 
-								color="red" 
-								onClick={() => {questionForm.values.questions[index].imgSrc = null; resetRef.current?.();}}
-							>
-								Bỏ chọn
-							</Button>
+							
 						</Grid.Col>
 
 						<Grid.Col span={6}>
 							<Title order={5} mt="md">Âm thanh:</Title>
 							{item.audioSrc && (
-								<Text size="sm" mt="md">
-									Tệp đã chọn: {item.audioSrc.name}
-								</Text>
+								<Group 
+                position="center" 
+                mt={"sm"}
+                mb="sm"
+                >
+                  <audio controls>
+                    <source src={!(item.audioSrc instanceof Blob) ? getAudioUrl(item.audioSrc) : URL.createObjectURL(item.audioSrc)}/>
+                  </audio>
+                </Group>
 							)}
 							<FileButton
 								accept="audio/*"
+                onChange={()=>{item.isAudioSrcChange = true;}}
 								{...questionForm.getInputProps(`questions.${index}.audioSrc`)}
 							>
-								{(props: any) => <Button {...props}>Thêm tệp</Button>}
+								{(props: any) => 
+                  <Box onClick={()=> {item.isAudioSrcChange = true;}}>
+                    <Button onClick={()=> {item.isAudioSrcChange = true;}} disabled={item.audioSrc !== null} {...props}>
+                      Thêm tệp
+                    </Button>
+                    <Button 
+                      ml={"sm"} 
+                      disabled={!item.audioSrc} 
+                      color="red" 
+                      onClick={() => {
+                        questionForm.values.questions[index].audioSrc = null;
+                        item.isAudioSrcChange = true;
+                        resetRef.current?.();
+                        setRerender(!rerender); 
+                      }}
+                    >
+                      Bỏ chọn
+                    </Button>
+                  </Box>
+                }
 							</FileButton>
-
-							<Button 
-								ml={"sm"} 
-								disabled={!item.audioSrc} 
-								color="red" 
-								onClick={() => {questionForm.values.questions[index].audioSrc = null; resetRef.current?.();}}
-							>
-								Bỏ chọn
-							</Button>
 						</Grid.Col>
 
 						<Grid.Col span={12}>
@@ -233,6 +288,10 @@ const CourseModifyExercise = (props: any) => {
       console.log(questionForm.values);
       setConfirmModifyExercise(false);
       //Validate Input
+      if(endTime.getTime() <= openTime.getTime()){
+        toast.error("Thời gian đóng bài tập phải sau thời gian mở bài tập.");
+        return;
+      }
       basicInfo.validate();
       questionForm.validate();
 
@@ -248,7 +307,100 @@ const CourseModifyExercise = (props: any) => {
       console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       console.log(response);
 
-      props.setExercise(response);
+      //Send Image
+      for(const question of questionForm.values.questions){
+        if (question.key === undefined){
+          continue;
+        }
+        if(question.imgSrc === null){
+          continue;
+        }
+        const formData = new FormData();
+        formData.append("temporaryKey", question.key);
+        formData.append("image", question.imgSrc!);
+        const result = await API.post(Url.teachers.sendQuesitonImage, formData, {
+          headers: {
+            'x-access-token': authState.token || "",
+            'content-type': 'multipart/form-data'
+          },
+        });
+        if(result === false){
+          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+        }
+      }
+
+      //Send Audio
+      for(const question of questionForm.values.questions){
+        if (question.key === undefined){
+          continue;
+        }
+        if(question.audioSrc === null){
+          continue;
+        }
+        const formData = new FormData();
+        formData.append("temporaryKey", question.key);
+        formData.append("audio", question.audioSrc!);
+        const result = await API.post(Url.teachers.sendQuesitonAudio, formData, {
+          headers: {
+            'x-access-token': authState.token || "",
+            'content-type': 'multipart/form-data'
+          },
+        });
+        if(result === false){
+          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+        }
+      }
+
+      //Send modified Image
+      for(const question of questionForm.values.questions){
+        if (question.id === undefined){
+          continue;
+        }
+        if(!question.isImgSrcChange){
+          continue;
+        }
+        const formData = new FormData();
+        formData.append("questionId", question.id);
+        formData.append("image", question.imgSrc);
+        const result = await API.post(Url.teachers.sendModifiedQuesitonImage, formData, {
+          headers: {
+            'x-access-token': authState.token || "",
+            'content-type': 'multipart/form-data'
+          },
+        });
+        if(result === false){
+          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+        }
+      }
+
+      //Send modified Audio
+      for(const question of questionForm.values.questions){
+        if (question.id === undefined){
+          continue;
+        }
+        if(!question.isAudioSrcChange){
+          continue;
+        }
+        const formData = new FormData();
+        formData.append("questionId", question.id);
+        formData.append("audio", question.audioSrc);
+        const result = await API.post(Url.teachers.sendModifiedQuesitonAudio, formData, {
+          headers: {
+            'x-access-token': authState.token || "",
+            'content-type': 'multipart/form-data'
+          },
+        });
+        if(result === false){
+          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+        }
+      }
+
+      const exerciseResponse =  await API.post(Url.teachers.deleteQuestionTemporaryKey, {
+        token: authState.token, 
+        exerciseId: response.id,
+      });
+
+      props.setExercise(exerciseResponse);
       toast.success("Chỉnh sửa bài tập thành công!");
       props.setModifyExercise(false);
     }catch(error){
@@ -295,7 +447,7 @@ const CourseModifyExercise = (props: any) => {
       setAddTagLoading(false);
     }
   };
-
+  console.log(questionForm.values)
 	return (
 		<>
 			<Title order={1} align="center">
