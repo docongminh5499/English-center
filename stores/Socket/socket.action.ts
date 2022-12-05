@@ -1,7 +1,7 @@
 import { Action } from "react-sweet-state";
 import { io } from "socket.io-client";
 import { State } from ".";
-import { SocketBaseUrl } from "../../helpers/constants";
+import { production, SocketBaseUrl } from "../../helpers/constants";
 import configureSocket from "./configSocket";
 
 
@@ -10,7 +10,10 @@ export const socketInitialization =
     async ({ getState, setState }) => {
       const socket = getState().socket;
       if (socket === undefined) {
-        const createdSocket = io(SocketBaseUrl);
+        const createdSocket = io(SocketBaseUrl, {
+          secure: production,
+          rejectUnauthorized: false
+        });
         configureSocket(createdSocket);
         setState({ socket: createdSocket });
       }

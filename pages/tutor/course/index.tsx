@@ -19,7 +19,7 @@ export default TutorCoursePage;
 
 
 
-export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context): Promise<any> => {
+export const getServerSideProps: GetServerSideProps = async (context): Promise<any> => {
   const cookies = CookieParser.parse(context.req.headers.cookie);
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
   try {
@@ -38,4 +38,4 @@ export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (conte
   } catch (error: any) {
     return { props: { userRole: user.role, courses: [], pageable: null, error: true } };
   }
-});
+}

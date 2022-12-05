@@ -10,7 +10,7 @@ import { Url, SocketBaseUrl } from "./helpers/constants";
 const securityMiddleware = [
   csp({
     directives: {
-      "default-src": ["none"],
+      "default-src": ["self"],
       "connect-src": ["self", Url.baseUrl, SocketBaseUrl, "https://www.paypal.com/sdk/js", "https://www.sandbox.paypal.com"],
       "media-src": ["self", "data:", Url.baseUrl, "blob:"],
       "img-src": ["self", "data:", Url.baseUrl, "blob:"],
@@ -19,9 +19,10 @@ const securityMiddleware = [
       "form-action": ["self", Url.baseUrl],
       "object-src": ["none"],
       "base-uri": ["none"],
+      "style-src": ["self", "unsafe-inline"],
+      "script-src": ["self", "https://www.paypal.com/", Url.baseUrl]
     },
   }),
-  strictDynamic(),
 ];
 
 export default chainMatch(isPageRequest)(...securityMiddleware);
