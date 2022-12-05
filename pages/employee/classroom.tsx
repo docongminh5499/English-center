@@ -15,8 +15,8 @@ EmployeeClassroomPage.allowUsers = [
 export default EmployeeClassroomPage;
 
 
-export const getServerSideProps: GetServerSideProps = gsspWithNonce(async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const cookies = CookieParser.parse(context.req.headers.cookie);
     const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
     return { props: { userRole: user.role || null } };
-})
+}
