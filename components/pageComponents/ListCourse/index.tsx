@@ -14,6 +14,7 @@ import Tag from "../../../models/tag.model";
 import Branch from "../../../models/branch.model";
 import MaskedComment from "../../../models/maskedComment.model";
 import { getAvatarImageUrl } from "../../../helpers/image.helper";
+import Image from "next/image";
 
 
 interface IProps {
@@ -37,6 +38,10 @@ const index = (props: IProps) => {
     <>
       <Head>
         <title>English Center - Trung tâm Tiếng anh uy tín hàng đầu Việt Nam</title>
+        <meta name="description" content="English Center webpages for looking center's information,
+         registering new account and enrolling suitable courses. More than that,
+         it helps students and parents tracking their own learning process,
+         helps employees and teachers managing work as well."></meta>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.wrapPage}>
@@ -62,7 +67,7 @@ const index = (props: IProps) => {
                     </h2>
                   </div>
                   <div className={styles.overlay}></div>
-                  <img className={styles.pictureBanner} src="/assets/images/listcourse_banner.jpg" alt="banner" />
+                  <Image layout="fill" priority={true} className={styles.pictureBanner} src="/assets/images/listcourse_banner.jpg" alt="banner" />
                 </div>
               </div>
             </Carousel.Slide>
@@ -80,7 +85,7 @@ const index = (props: IProps) => {
                     </h2>
                   </div>
                   <div className={styles.overlay}></div>
-                  <img className={styles.pictureBanner} src="/assets/images/listcourse_banner_1.jpg" alt="banner" />
+                  <Image layout="fill" className={styles.pictureBanner} src="/assets/images/listcourse_banner_1.jpg" alt="banner" />
                 </div>
               </div>
             </Carousel.Slide>
@@ -98,7 +103,7 @@ const index = (props: IProps) => {
                     </h2>
                   </div>
                   <div className={styles.overlay}></div>
-                  <img className={styles.pictureBanner} src="/assets/images/listcourse_banner_2.jpg" alt="banner" />
+                  <Image layout="fill" className={styles.pictureBanner} src="/assets/images/listcourse_banner_2.jpg" alt="banner" />
                 </div>
               </div>
             </Carousel.Slide>
@@ -176,7 +181,7 @@ const index = (props: IProps) => {
               justifyContent: "center",
               alignItems: "center"
             }}>
-              <button className={styles.buttonCTA} onClick={() => router.push("/courses")}>
+              <button className={styles.buttonCTA} onClick={() => router.push("/courses")} aria-label="see all courses">
                 Xem tất cả
               </button>
             </Container>
@@ -197,7 +202,7 @@ const index = (props: IProps) => {
             <form className={styles.wrapFormSubscribe}>
               <div className={styles.formSubscribe}>
                 <input className={styles.txtInput} placeholder="Nhập địa chỉ email của bạn" type="email" required />
-                <button type="submit" className={styles.buttonSubmit}>
+                <button type="submit" className={styles.buttonSubmit} aria-label="register">
                   <IconBrandTelegram size={'2rem'} />
                   Đăng ký
                 </button>
@@ -211,8 +216,8 @@ const index = (props: IProps) => {
           <Container size="xl" style={{ width: "100%" }}>
             <div className={styles.videoDemo}>
               <div className={styles.ovlerlay}></div>
-              <img src="/assets/images/listcourse_bannerVideo.jpg" className={styles.thumbnail} />
-              <button type="button" className={styles.buttonPlay} onClick={() => setOpenVideoModal(true)}>
+              <Image layout="fill" src="/assets/images/listcourse_bannerVideo.jpg" className={styles.thumbnail} alt="banner-video" />
+              <button type="button" className={styles.buttonPlay} onClick={() => setOpenVideoModal(true)} aria-label="play video">
                 <IconPlayerPlay size={'2.5rem'} />
               </button>
             </div>
