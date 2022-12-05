@@ -1,19 +1,19 @@
-import { Container, Loader, ScrollArea, Space, Table, Title, Text, Pagination, Modal, Grid, Input } from "@mantine/core";
+import { Container, Grid, Pagination, ScrollArea, Space, Table, Title } from "@mantine/core";
 import { DateRangePicker, DateRangePickerValue } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
+import 'dayjs/locale/vi';
 import moment from "moment";
 import Head from "next/head";
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { TutorConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";
+import { TimeZoneOffset, TutorConstants, Url } from "../../../../helpers/constants";
 import { formatCurrency } from "../../../../helpers/formatCurrency";
 import Salary from "../../../../models/salary.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
 import styles from "./salary.module.css";
-import 'dayjs/locale/vi';
 
 
 interface IProps {

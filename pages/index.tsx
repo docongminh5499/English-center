@@ -25,23 +25,11 @@ export const getServerSideProps: GetServerSideProps = async (context): Promise<a
   const cookies = CookieParser.parse(context.req.headers.cookie);
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
   try {
-    const [courses, studentCounts, courseCounts, curriculumTags, branches, comments] = await Promise.all([
-      API.post(Url.guests.getCourses, { skip: 0, limit: GuestConstants.topLatestCourse }),
-      API.get(Url.guests.getStudentCount),
-      API.get(Url.guests.getCompletedCourseCount),
-      API.get(Url.guests.getCurriculumTags),
-      API.get(Url.guests.getBranches),
-      API.get(Url.guests.getTopComments),
-    ]);
+    const courses = await API.post(Url.guests.getCourses, { skip: 0, limit: GuestConstants.topLatestCourse });
     return {
       props: {
         userRole: user.role || null,
         courses: courses.courses,
-        studentCounts: studentCounts,
-        courseCounts: courseCounts,
-        curriculumTags: curriculumTags,
-        branches: branches,
-        comments: comments,
       }
     };
   } catch (error: any) {

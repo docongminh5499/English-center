@@ -1,19 +1,17 @@
-import Head from "next/head";
-import { Container, Title, Text, Space, Grid, Group, Checkbox, Divider } from "@mantine/core";
-import { CourseStatus, StudySessionState, TimeZoneOffset, UserRole } from "../../../../helpers/constants";
-import { useEffect, useState } from "react";
-import Button from "../../../commons/Button";
-import Table from "../../../commons/Table";
+import { Checkbox, Container, Divider, Grid, Group, Space, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { StudySessionState, TimeZoneOffset, UserRole } from "../../../../helpers/constants";
+import { getStudySessionState } from "../../../../helpers/getStudySessionState";
+import MakeUpLession from "../../../../models/makeUpLesson.model";
 import StudySession from "../../../../models/studySession.model";
 import UserAttendStudySession from "../../../../models/userAttendStudySession.model";
-import MakeUpLession from "../../../../models/makeUpLesson.model";
-import { useRouter } from "next/router";
-import Loading from "../../../commons/Loading";
-import { getStudySessionState } from "../../../../helpers/getStudySessionState";
-import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import { useAuth } from "../../../../stores/Auth";
+import Loading from "../../../commons/Loading";
+import Table from "../../../commons/Table";
 
 const COLUMN_ATTENDANCE = {
   HO_TEN: 'col_1',

@@ -11,7 +11,7 @@ const CourseSale = (props: Course) => {
       <div className={styles.courseSale}>
         <Link href={"/courses/" + props.slug}>
           <div className={styles.wrapThumbnail}>
-            <img src={getImageUrl(props.image)} className={styles.thumbnail} />
+            <img src={getImageUrl(props.image)} className={styles.thumbnail} alt={props.slug} />
           </div>
         </Link>
         <div className={styles.infoCourse}>

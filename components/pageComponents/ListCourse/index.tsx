@@ -4,7 +4,9 @@ import { IconBrandTelegram, IconBrandZoom, IconCertificate, IconMapPin, IconMess
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import API from '../../../helpers/api';
+import { Url } from '../../../helpers/constants';
 import { getAvatarImageUrl } from "../../../helpers/image.helper";
 import Branch from "../../../models/branch.model";
 import { Course } from "../../../models/course.model";
@@ -27,9 +29,36 @@ interface IProps {
 
 
 const index = (props: IProps) => {
-  const [authState] = useAuth();
   const router = useRouter();
+
   const [isOpenVideoModal, setOpenVideoModal] = useState(false);
+  const [studentCounts, setStudentCounts] = useState(props.studentCounts);
+  const [courseCounts, setCourseCounts] = useState(props.courseCounts);
+  const [curriculumTags, setCurriculumTags] = useState(props.curriculumTags);
+  const [branches, setBranches] = useState(props.branches);
+  const [comments, setComments] = useState(props.comments);
+
+  useEffect(() => {
+    async function didMount() {
+      try {
+        const [studentCounts, courseCounts, curriculumTags, branches, comments] = await Promise.all([
+          API.get(Url.guests.getStudentCount),
+          API.get(Url.guests.getCompletedCourseCount),
+          API.get(Url.guests.getCurriculumTags),
+          API.get(Url.guests.getBranches),
+          API.get(Url.guests.getTopComments),
+        ]);
+        setStudentCounts(studentCounts);
+        setCourseCounts(courseCounts);
+        setCurriculumTags(curriculumTags);
+        setBranches(branches);
+        setComments(comments);
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+    didMount();
+  }, []);
 
 
 
@@ -270,7 +299,7 @@ const index = (props: IProps) => {
                     </div>
                   </div>
                   <p className={styles.number}>
-                    {props.studentCounts}
+                    {studentCounts}
                   </p>
                 </div>
                 <div className={styles.contentAnalysisItem}>
@@ -288,7 +317,7 @@ const index = (props: IProps) => {
                     </div>
                   </div>
                   <p className={styles.number}>
-                    {props.courseCounts}
+                    {courseCounts}
                   </p>
                 </div>
                 <div className={styles.contentAnalysisItem}>
@@ -306,7 +335,7 @@ const index = (props: IProps) => {
                     </div>
                   </div>
                   <p className={styles.number}>
-                    {props.curriculumTags.length}
+                    {curriculumTags.length}
                   </p>
                 </div>
               </div>
@@ -325,7 +354,7 @@ const index = (props: IProps) => {
               Học viên nói gì về chúng tôi
             </p>
             <div className={styles.sliderPeople}>
-              {props.comments.map((comment, index) => (
+              {comments.map((comment, index) => (
                 <div className={styles.sliderPeopleItem} key={index}>
                   <span className={styles.iconQuote}>
                     <IconQuote />
@@ -362,7 +391,7 @@ const index = (props: IProps) => {
               Chúng tôi có mặt khắp cả nước
             </p>
             <div className={styles.listArticle}>
-              {props.branches.map((branch, index) => (
+              {branches.map((branch, index) => (
                 <Container key={index} p={0} style={{
                   width: "100%",
                   display: "flex",

@@ -49,6 +49,7 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     domains: ['root-smile-370415.as.r.appspot.com', 'localhost:5000']
   },
+  productionBrowserSourceMaps: true,
 }
 
 module.exports = nextConfig

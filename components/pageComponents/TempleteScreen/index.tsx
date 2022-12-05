@@ -1,14 +1,12 @@
+import { Checkbox, Container, Grid, Group, Space, Text, Title } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import Head from "next/head";
-import { Container, Title, Text, Image, Loader, Space, Grid, NavLink, Divider, Group, Textarea, ScrollArea, Checkbox } from "@mantine/core";
-import { UserRole } from "../../../helpers/constants";
-import styles from "./historyDetailsLesson.module.module.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import LoadingScreen from "../LoadingScreen";
+import { UserRole } from "../../../helpers/constants";
 import { useAuth } from "../../../stores/Auth";
 import Button from "../../commons/Button";
 import Table from "../../commons/Table";
-import { useMediaQuery } from "@mantine/hooks";
 
 interface IProps {
   userRole?: UserRole | null;
