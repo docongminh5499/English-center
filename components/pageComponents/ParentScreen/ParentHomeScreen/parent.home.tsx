@@ -1,4 +1,17 @@
-import { Box, Button, Container, Group, Loader, MediaQuery, Modal, Popover, Table, Title } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Group,
+  Loader,
+  MediaQuery,
+  Modal,
+  Popover,
+  Select,
+  Table,
+  Title,
+} from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -8,20 +21,21 @@ import { Url } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import SelectStudentModal from "../Modal/selectStudent.modal";
 import Head from "next/head";
+import { useParent } from "../../../../stores/Parent";
 
-function getKeyFromDate(date: Date){
+function getKeyFromDate(date: Date) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
-function format2dayInTimetable(courses: any){
+function format2dayInTimetable(courses: any) {
   const formatDayInTimetable = new Map();
 
-  for(const course of courses){
-    for(const studySession of course.studySessions){
+  for (const course of courses) {
+    for (const studySession of course.studySessions) {
       const studySessionDate = new Date(studySession.date);
       const key = getKeyFromDate(studySessionDate);
 
-      if(!formatDayInTimetable.has(key)){
+      if (!formatDayInTimetable.has(key)) {
         formatDayInTimetable.set(key, []);
       }
       formatDayInTimetable.get(key).push({
@@ -35,65 +49,86 @@ function format2dayInTimetable(courses: any){
 }
 
 const ParentHomeScreen = (props: any) => {
-  const [authState, ] = useAuth();
-  const [selectStudentModal, setSelectStudentModal] = useState(true);
+  const [authState] = useAuth();
+  const [parentState, setParentState] = useParent();
+  const [selectStudentModal, setSelectStudentModal] = useState(
+    parentState.selectedStudentId == undefined ? true : false
+  );
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  console.log(
+    "============================================================================="
+  );
+  console.log(parentState);
   const parent = props.parent;
 
   useEffect(() => {
     const didMountFunc = async () => {
       try {
         setLoading(true);
-        if(selectedStudent === null)
-          return;
-        const exerciseResponse = await API.get(Url.parents.getAllStudentCourses, {
-          token: authState.token,
-					studentId: selectedStudent?.user.id
-        });
+        if (parentState.selectedStudentId == undefined) return;
+        const exerciseResponse = await API.get(
+          Url.parents.getAllStudentCourses,
+          {
+            token: authState.token,
+            studentId: parentState.selectedStudentId,
+          }
+        );
 
-				//Set state
+        //Set state
+        console.log(
+          "-------------------------------------------------------------------"
+        );
+        console.log(parent);
+        const userStudent = parent.userStudents.filter(
+          (value: any) => value.user.id === parentState.selectedStudentId
+        );
+        console.log(
+          "-------------------------------------------------------------------"
+        );
+        console.log(userStudent);
+        if (userStudent.length !== 0) setSelectedStudent(userStudent[0]);
         setCourses(exerciseResponse);
       } catch (error) {
         toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
-      }finally {
-				setLoading(false);
-			}
+      } finally {
+        setLoading(false);
+      }
     };
     didMountFunc();
-  }, [selectedStudent]);
+  }, [parentState.selectedStudentId]);
 
   const dayInTimetable = format2dayInTimetable(courses);
-  // console.log(new Date(courses[0].openingDate).setDate(1));
   let minDate = new Date();
 
-  if(!courses){
+  if (!courses) {
     minDate = new Date(courses[0].openingDate);
     minDate = new Date(minDate.setDate(1));
   }
-  
+
   console.log(props.parent);
   console.log(`Selected Student: ${selectedStudent?.user.fullName}`);
 
-  console.log("=================================================")
+  console.log("=================================================");
   console.log(courses);
 
-  return ( 
-    <Box m={"md"} style={{width: "100%"}}>
+  return (
+    <Box m={"md"} style={{ width: "100%" }}>
       <Head>
         <title>Thời khóa biểu</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {selectStudentModal &&
-        <SelectStudentModal 
-          students={parent.userStudents} 
-          setSelectedStudent={setSelectedStudent} 
+      {selectStudentModal && (
+        <SelectStudentModal
+          students={parent.userStudents}
+          setSelectedStudent={setSelectedStudent}
           openedModal={setSelectStudentModal}
         />
-      }
-      {!selectStudentModal && !loading && courses.length === 0 &&
-        <Box style={{width: "100%", margin: "0px 20px"}}>
+      )}
+      {!selectStudentModal && !loading && courses.length === 0 && (
+        <Box style={{ width: "100%", margin: "0px 20px" }}>
           <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
             <Title
               order={1}
@@ -107,93 +142,137 @@ const ParentHomeScreen = (props: any) => {
             </Title>
           </MediaQuery>
         </Box>
-      }
-      {!selectStudentModal && !loading && courses.length !== 0 &&
-        <> 
-          <Box style={{width: "100%"}}>
+      )}
+      {!selectStudentModal && !loading && courses.length !== 0 && (
+        <>
+          <Box style={{ width: "100%" }}>
             <Box>
-            <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
-              <Title
-                order={1}
-                align="justify"
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                Thời Khóa Biểu
-              </Title>
-            </MediaQuery>
+              <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
+                <Title
+                  order={1}
+                  align="justify"
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  Thời Khóa Biểu
+                </Title>
+              </MediaQuery>
 
-            <MediaQuery smallerThan={768} styles={{ fontSize: "0.6rem" }}>
-              <Title
-                order={3}
-                align="center"
-                style={{ width: "100%"}}
-                mt={"md"}
-              >
-                Học viên: {selectedStudent?.user.fullName}
-              </Title>
-            </MediaQuery>
-
-            <MediaQuery smallerThan={768} styles={{ fontSize: "0.6rem" }}>
-              <Title
-                order={5}
-                align="center"
-                style={{ width: "100%" }}
-                mt={"md"}
-              >
-                {new Date().toLocaleDateString("pt-PT")}
-              </Title>
-            </MediaQuery>
+              <MediaQuery smallerThan={768} styles={{ fontSize: "0.6rem" }}>
+                <Title
+                  order={5}
+                  align="center"
+                  style={{ width: "100%" }}
+                  mt={"sm"}
+                >
+                  {new Date().toLocaleDateString("pt-PT")}
+                </Title>
+              </MediaQuery>
+              <Grid>
+                <Grid.Col span={6}>
+                  <Title
+                    align="right"
+                    order={3}
+                    style={{ width: "100%" }}
+                    mt={"sm"}
+                  >
+                    Học viên:
+                  </Title>
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Group position="left" align={"center"} mt="sm">
+                    <Select
+                      radius={"md"}
+                      size={"md"}
+                      placeholder="Chọn học viên muốn bạn theo dõi"
+                      defaultValue={parentState.selectedStudentId?.toString()}
+                      onChange={(value: string) => {
+                        setParentState.setSelectedStudent(parseInt(value));
+                      }}
+                      data={parent.userStudents.map((userStudent: any) => {
+                        return {
+                          value: userStudent.user.id.toString(),
+                          label: userStudent.user.fullName,
+                        };
+                      })}
+                    />
+                  </Group>
+                </Grid.Col>
+              </Grid>
             </Box>
 
             <Calendar
-              style={{marginTop: "20px"}}
+              style={{ marginTop: "20px" }}
               fullWidth
               onChange={() => console.log("CHANGED")}
               locale="vi"
               labelFormat="MM/YYYY"
-              initialMonth={(new Date()).getTime() > (new Date(courses[0].openingDate)).getTime() ? new Date() : new Date(courses[0].openingDate)}
+              initialMonth={
+                new Date().getTime() >
+                new Date(courses[0].openingDate).getTime()
+                  ? new Date()
+                  : new Date(courses[0].openingDate)
+              }
               minDate={minDate}
               renderDay={(date) => {
-                let day = date.getDate() + '';
-                if (day.length < 2)
-                  day = '0' + day
+                let day = date.getDate() + "";
+                if (day.length < 2) day = "0" + day;
                 const key = getKeyFromDate(date);
                 let dateBackgroundColor = "white";
                 let textColor = null;
                 let dropdownInfo = <></>;
                 // TODO: handle studysession is cancelled
-                if(dayInTimetable.has(key)){
-                  for(const data of dayInTimetable.get(key)){
-                    console.log("***********************")
+                if (dayInTimetable.has(key)) {
+                  for (const data of dayInTimetable.get(key)) {
+                    console.log("***********************");
                     dateBackgroundColor = "green";
                     textColor = "white";
                   }
                   dropdownInfo = dayInTimetable.get(key).map((data: any) => {
                     const shifts = data.studySession.shifts;
-                    const startTime = moment(shifts[0].startTime).format('hh')
-                    const endTime = moment(shifts[shifts.length - 1].endTime).format('hh')
+                    const startTime = moment(shifts[0].startTime).format("hh");
+                    const endTime = moment(
+                      shifts[shifts.length - 1].endTime
+                    ).format("hh");
                     return (
                       <tr key={data.studySession.id}>
                         <td>{data.courseName}</td>
                         <td>{`${startTime} - ${endTime}`}</td>
-                        <td>{data.studySession.classroom === null ? "-" : data.studySession.classroom.name}</td>
+                        <td>
+                          {data.studySession.classroom === null
+                            ? "-"
+                            : data.studySession.classroom.name}
+                        </td>
                       </tr>
                     );
                   });
-                }else {
-                  return (
-                    <div>{day}</div>
-                  );
+                } else {
+                  return <div>{day}</div>;
                 }
                 return (
                   <Box>
-                    <Popover width={"300"} position="bottom" withArrow shadow="md">
+                    <Popover
+                      width={"300"}
+                      position="bottom"
+                      withArrow
+                      shadow="md"
+                    >
                       <Popover.Target>
                         <div>
-                          <span style={{backgroundColor: dateBackgroundColor, padding: "10px", width: "70px", height: "70px", color: textColor ,borderRadius: "50%"}}>{day}</span>  
+                          <span
+                            style={{
+                              backgroundColor: dateBackgroundColor,
+                              padding: "10px",
+                              width: "70px",
+                              height: "70px",
+                              color: textColor,
+                              borderRadius: "50%",
+                            }}
+                          >
+                            {day}
+                          </span>
                         </div>
                       </Popover.Target>
                       <Popover.Dropdown>
@@ -213,16 +292,15 @@ const ParentHomeScreen = (props: any) => {
                 );
               }}
             />
-            </Box>
+          </Box>
         </>
-      }
+      )}
 
-      {loading &&
+      {loading && (
         <Group position="center">
-          <Loader size={"lg"}/>
+          <Loader size={"lg"} />
         </Group>
-      }
-
+      )}
     </Box>
   );
 };

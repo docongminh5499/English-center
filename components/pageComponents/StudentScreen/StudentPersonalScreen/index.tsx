@@ -57,16 +57,21 @@ const StudentPersonalScreen = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [listFee, setListFee] = useState(props.payments.fee);
-  const [total, setTotal] = useState(props.payments.total);
+  const [listFee, setListFee] = useState(props.payments === null ? [] : props.payments.fee);
+  const [total, setTotal] = useState(props.payments === null ? 0 : props.payments.total);
   const [maxPage, setMaxPage] = useState(
-    Math.ceil(props.payments.total / StudentConstants.limitFee)
+    Math.ceil(total / StudentConstants.limitFee)
   );
   const [confirmPayment, setConfirmPayment] = useState(false);
   const [paymentFee, setPaymentFee] = useState(null);
   const [orderDetail, setOrderDetail] = useState<object | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
 	const [selectedCourseForPayment, setSelectedCourseForPayment] = useState(null);
+
+  useEffect(() => {
+    if (props.userStudent === null) router.replace("/not-found");
+    else setDidMount(true);
+  }, []);
 
   const getFee = useCallback(
     async (limit: number, skip: number) => {
@@ -136,11 +141,6 @@ const StudentPersonalScreen = (props: any) => {
     [authState.token, paymentFee]
   );
   //================================================================================================
-
-  useEffect(() => {
-    if (props.userTeacher === null) router.replace("/not-found");
-    else setDidMount(true);
-  }, []);
 
   const findParent = async () => {
     try {
@@ -478,7 +478,7 @@ const StudentPersonalScreen = (props: any) => {
           </Text>
           <Divider />
 
-          {props.userStudent.userParent !== null && (
+          {props.userStudent?.userParent !== null && (
             <Box mt={"sm"}>
               <Grid>
                 <Grid.Col span={2}>

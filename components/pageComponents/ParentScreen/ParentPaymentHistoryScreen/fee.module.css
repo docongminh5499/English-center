@@ -1,0 +1,36 @@
+.pagination {
+    margin: auto;
+  }
+  
+  .pagination * {
+    color: #444;
+  }
+  
+  .errorContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .errorContainer > p {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #4f4f4f;
+  }
+  
+  .emptyResultContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
+  
+  .emptyResultContainer > p {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #4f4f4f;
+  }

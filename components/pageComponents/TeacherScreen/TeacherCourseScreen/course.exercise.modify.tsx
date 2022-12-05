@@ -325,7 +325,7 @@ const CourseModifyExercise = (props: any) => {
           },
         });
         if(result === false){
-          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+          toast.error("Gặp sự cố trong quá trình tải ảnh, vui lòng chỉnh sửa trong chi tiết bài tập.")
         }
       }
 
@@ -369,7 +369,7 @@ const CourseModifyExercise = (props: any) => {
           },
         });
         if(result === false){
-          toast.error("Gặp sự cố trong quá trình tải tệp, vui lòng chỉnh sửa trong chi tiết bài tập.")
+          toast.error("Gặp sự cố trong quá trình tải ảnh, vui lòng chỉnh sửa trong chi tiết bài tập.")
         }
       }
 

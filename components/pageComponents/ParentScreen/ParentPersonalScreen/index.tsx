@@ -36,7 +36,7 @@ const ParentPersonalScreen = (props: any) => {
   const [authState] = useAuth();
 
   useEffect(() => {
-    if (props.userTeacher === null) router.replace("/not-found");
+    if (props.userParent === null) router.replace("/not-found");
     else setDidMount(true);
   }, []);
 

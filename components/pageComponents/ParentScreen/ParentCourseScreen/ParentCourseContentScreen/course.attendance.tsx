@@ -1,4 +1,4 @@
-import { createStyles, Grid, Indicator, MediaQuery, Popover, Text, Title } from "@mantine/core";
+import { createStyles, Divider, Grid, Group, Indicator, List, MediaQuery, Popover, Text, Title } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import "dayjs/locale/vi";
 
@@ -38,8 +38,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     backgroundColor: "green",
   },
 
-  orangeDot: {
-    backgroundColor: "orange",
+  blackDot: {
+    backgroundColor: "black",
   },
 
   annotationContent: {
@@ -54,6 +54,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 const CourseAttendanceTab = (props: any) => {
   const course = props.course;
+  const totalCourseStudySession = props.totalCourseStudySession;
   // console.log(props.attendance);
 
   const openingDate = new Date(course.openingDate);
@@ -134,22 +135,49 @@ const CourseAttendanceTab = (props: any) => {
         
         <Grid.Col span={4}>
           <Title order={3}>Chú thích</Title>
-          <div className={classes.annotationContent}>
-            <div>
-              <span className={cx(classes.dot, classes.greenDot)}></span>
-              <p className={classes.annotationItem}>Có mặt</p>
-            </div>
+          <List withPadding>
+            <List.Item icon={<span className={cx(classes.dot, classes.greenDot)}></span>}>
+              <Group position="center" align={"center"}>
+                <Text size={20} fw={500}>Có mặt</Text>
+              </Group>
+            </List.Item>
+            <List.Item icon={<span className={cx(classes.dot, classes.redDot)}></span>}>
+              <Group position="center" align={"center"}>
+                <Text size={20} fw={500}>Vắng mặt</Text>
+              </Group>
+            </List.Item>
+          </List>
 
-            {/* <div>
-              <span className={cx(classes.dot, classes.orangeDot)}></span>
-              <p className={classes.annotationItem}>Nghỉ có phép</p>
-            </div> */}
+          <Divider mt="sm" />
 
-            <div>
-              <span className={cx(classes.dot, classes.redDot)}></span>
-              <p className={classes.annotationItem}>Nghỉ không phép</p>
-            </div>
-          </div>
+          <Title order={3} mt="sm">Thống kê chi tiết:</Title>
+
+          <List withPadding>
+            <List.Item>
+              <Group position="center" align={"center"}>
+                <Text size={20} fw={500}>Tổng số buổi học: {totalCourseStudySession}</Text>
+              </Group>
+            </List.Item>
+
+            <List.Item>
+              <Group position="center" align={"center"}>
+                <Text size={20} fw={500}>Đã diễn ra: {props.attendance.length}</Text>
+              </Group>
+            </List.Item>
+
+            <List.Item>
+              <Group position="center" align={"center"}>
+                <Text size={20} fw={500}>Tham dự: {props.attendance.filter((value: any) => value.isAttend).length}</Text>
+              </Group>
+            </List.Item>
+
+            <List.Item>
+              <Group position="center" align={"center"}>
+                <Text size={20} fw={500}>Vắng mặt: {props.attendance.filter((value: any) => !value.isAttend).length}</Text>
+              </Group>
+            </List.Item>
+          </List>
+
         </Grid.Col>
       </Grid>
     </>

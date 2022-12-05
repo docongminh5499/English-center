@@ -23,6 +23,7 @@ const ParentCourseContentScreen = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState(null);
   const [attendance, setAttendance] = useState(null);
+  const [totalCourseStudySession, setTotalCourseStudySession] = useState(0);
 
   let courseSlug = "";
   const studentId = router.query.studentId;
@@ -50,10 +51,15 @@ const ParentCourseContentScreen = (props: any) => {
             studentId: studentId,
           }
         );
+
+        const totalCourseStudySession = await API.get(Url.parents.getTotalCourseStudySession + courseSlug, {
+          token: authState.token,
+        });
         //Set state
         console.log(courseResponse);
         setCourse(courseResponse);
         setAttendance(attendanceResponse);
+        setTotalCourseStudySession(totalCourseStudySession);
       } catch (error) {
         console.log(error);
         toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
@@ -147,7 +153,7 @@ const ParentCourseContentScreen = (props: any) => {
             </Tabs.List>
 
             <Tabs.Panel value="attendance">
-              <CourseAttendanceTab course={course} attendance={attendance} />
+              <CourseAttendanceTab course={course} attendance={attendance} totalCourseStudySession={totalCourseStudySession} />
             </Tabs.Panel>
             <Tabs.Panel value="exercise">
               <CourseExerciseTab course={course} studentId={studentId} />

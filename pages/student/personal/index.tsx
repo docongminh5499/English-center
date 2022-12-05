@@ -20,8 +20,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = CookieParser.parse(context.req.headers.cookie);
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
   try {
+    console.log(user)
     const userStudent = await API.get(Url.students.getPersonalInformation,  { token: user.token });
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     const paymentHistory = await API.get(Url.students.getPaymentHistory,  { token: user.token, limit: StudentConstants.limitFee, skip: 0 });
+    console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
     return {
       props: {
         userRole: user.role,
@@ -30,6 +33,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     };
   } catch (error: any) {
+    console.log(error)
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     return {
       props: {
         userRole: user.role || null,

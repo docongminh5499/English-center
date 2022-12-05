@@ -121,6 +121,11 @@ export const StudentConstants = {
   limitFee: 12,
 }
 
+export const ParentConstants = {
+  limitCourse: 12,
+  limitFee: 12,
+}
+
 export const TutorConstants = {
   limitCourse: 12,
   limitSchedule: 12,
@@ -213,6 +218,7 @@ export const Url = {
     getCourseDetail: "/api/students/courses/get-course/",
     sendAssessCourse: "/api/students/courses/assess-course",
     getAttendance: "/api/students/courses/attendance-course/",
+    getTotalCourseStudySession: "/api/students/courses/get-total-course-study-session/",
     getAllExercises: "/api/students/exercise/get-all-exercises/",
     submitExercise: "/api/students/exercise/submit-exercise/",
     getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
@@ -236,11 +242,13 @@ export const Url = {
     getAllStudentCourses: "/api/parents/timetable/get-all-student-courses",
     getPageableStudentCourses: "/api/parents/course/get-pageable-student-courses",
     getCourseDetail: "/api/parents/course/get-course/",
+    getTotalCourseStudySession: "/api/parents/course/get-total-course-study-session/",
     getAttendance: "/api/parents/course/attendance-course/",
     getAllExercises: "/api/parents/exercise/get-all-exercises/",
     getStudentDoExercise: "/api/parents/exercise/get-student-do-exercise/",
 
     modifyPersonalInformation: "/api/parents/personal/modify-personal-information",
+    getStudentPaymentHistory: "/api/parents/personal/get-student-payment-history",
   },
 
   employees: {
