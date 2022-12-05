@@ -80,6 +80,8 @@ const index = (props: IProps) => {
             slidesToScroll={1}
             className={styles.fullHeightSlider}
             loop={true}
+            nextControlLabel="next banner button"
+            previousControlLabel="prev banner button"
           >
             <Carousel.Slide>
               <div className={styles.slider}>

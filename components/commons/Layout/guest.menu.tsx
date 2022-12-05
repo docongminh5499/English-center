@@ -11,7 +11,7 @@ export function GuestMenu() {
   return (
     <Menu transition="pop-top-right" position="top-end" width="auto">
       <Menu.Target>
-        <Button variant="outline" compact={true}>
+        <Button variant="outline" compact={true} aria-label="personal menu dropdown">
           <IconCommand size={"1.6rem"} color={theme.colors.blue[6]} stroke={1.5} />
         </Button>
       </Menu.Target>

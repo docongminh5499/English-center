@@ -200,10 +200,10 @@ const Layout = ({ children, displaySidebar, loading = false }: IProps) => {
           {(authState.role === UserRole.GUEST || authState.role === undefined) && !loading && (
             <>
               <div className={styles.guestNavContainer}>
-                <Button color="blue" onClick={() => router.push("/login")}>
+                <Button color="blue" onClick={() => router.push("/login")} aria-label="login">
                   Đăng nhập
                 </Button>
-                <Button color="gray" variant="outline" onClick={() => router.push("/register")}>
+                <Button color="gray" variant="outline" onClick={() => router.push("/register")} aria-label="register">
                   Đăng ký
                 </Button>
               </div>
