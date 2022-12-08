@@ -23,12 +23,9 @@ const StudentCourseContentScreen = (props: any) => {
   const [loading, setLoading] = useState(false);
 
   const course = props.course;
-  if(course === null){
-    setLoading(true);
-  }
 
-  const openingDate = new Date(course.openingDate);
-  const closingDate = course.closingDate === null ? new Date(course.expectedClosingDate) : new Date(course.closingDate);
+  const openingDate = new Date(course?.openingDate);
+  const closingDate = course?.closingDate === null ? new Date(course?.expectedClosingDate) : new Date(course?.closingDate);
 
   return (
     <>
@@ -46,7 +43,7 @@ const StudentCourseContentScreen = (props: any) => {
             textAlign: "left",
           }}
         >
-          Khóa học: {course.name}
+          Khóa học: {course?.name}
         </Title>
         <Text
           size="md"

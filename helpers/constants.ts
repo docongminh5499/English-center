@@ -1,6 +1,6 @@
 export const TimeZoneOffset = new Date().getTimezoneOffset() * (-1);
 
-export const production = true;
+export const production = false;
 
 export enum UserRole {
   GUEST = "guest",
