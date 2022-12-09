@@ -1,4 +1,4 @@
-import { Container, Title, Text, Image, Loader, Space, Grid, NavLink, Divider, Badge, Input, ScrollArea, Table, ThemeIcon, Pagination, Modal } from "@mantine/core";
+import { Badge, Container, Divider, Grid, Image, Input, Loader, Modal, NavLink, Pagination, ScrollArea, Space, Table, Text, ThemeIcon, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { IconSquarePlus, IconTrash } from "@tabler/icons";
 import moment from "moment";

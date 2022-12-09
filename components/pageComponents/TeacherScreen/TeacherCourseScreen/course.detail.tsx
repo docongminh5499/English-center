@@ -1,4 +1,4 @@
-import { Container, Title, Text, Space, Grid, Tabs, Button, Modal } from "@mantine/core";
+import { Button, Container, Grid, Modal, Space, Tabs, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconBallpen, IconBook, IconMicroscope, IconSchool, IconStar, IconUsers } from "@tabler/icons";
 import moment from "moment";

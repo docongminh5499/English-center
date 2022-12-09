@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
-import styles from "./ListCourse.module.css";
-import Head from "next/head";
-import { Button, Container, Group, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useAuth } from "../../../stores/Auth";
-import { IconCertificate, IconSend, IconBrandTelegram, IconPlayerPlay, IconScreenShare, IconMessageChatbot, IconSchool, IconRecharging, IconUsers, IconBrandZoom, IconQuote, IconMapPin } from "@tabler/icons";
-import CourseSaleComponent from './components/CourseSale'
 import { Carousel } from '@mantine/carousel';
-import Sliders from '../../commons/Sliders'
-import ModalWrapper from "./components/WrapModalVideo";
-import { Course } from "../../../models/course.model";
-import Tag from "../../../models/tag.model";
-import Branch from "../../../models/branch.model";
-import MaskedComment from "../../../models/maskedComment.model";
+import { Container, Text } from "@mantine/core";
+import { IconBrandTelegram, IconBrandZoom, IconCertificate, IconMapPin, IconMessageChatbot, IconPlayerPlay, IconQuote, IconRecharging, IconSchool, IconScreenShare, IconSend, IconUsers } from "@tabler/icons";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import API from '../../../helpers/api';
+import { Url } from '../../../helpers/constants';
 import { getAvatarImageUrl } from "../../../helpers/image.helper";
+import Branch from "../../../models/branch.model";
+import { Course } from "../../../models/course.model";
+import MaskedComment from "../../../models/maskedComment.model";
+import Tag from "../../../models/tag.model";
+import { useAuth } from "../../../stores/Auth";
+import CourseSaleComponent from './components/CourseSale';
+import ModalWrapper from "./components/WrapModalVideo";
+import styles from "./ListCourse.module.css";
 
 
 interface IProps {
@@ -27,9 +29,36 @@ interface IProps {
 
 
 const index = (props: IProps) => {
-  const [authState] = useAuth();
   const router = useRouter();
+
   const [isOpenVideoModal, setOpenVideoModal] = useState(false);
+  const [studentCounts, setStudentCounts] = useState(props.studentCounts);
+  const [courseCounts, setCourseCounts] = useState(props.courseCounts);
+  const [curriculumTags, setCurriculumTags] = useState(props.curriculumTags);
+  const [branches, setBranches] = useState(props.branches);
+  const [comments, setComments] = useState(props.comments);
+
+  useEffect(() => {
+    async function didMount() {
+      try {
+        const [studentCounts, courseCounts, curriculumTags, branches, comments] = await Promise.all([
+          API.get(Url.guests.getStudentCount),
+          API.get(Url.guests.getCompletedCourseCount),
+          API.get(Url.guests.getCurriculumTags),
+          API.get(Url.guests.getBranches),
+          API.get(Url.guests.getTopComments),
+        ]);
+        setStudentCounts(studentCounts);
+        setCourseCounts(courseCounts);
+        setCurriculumTags(curriculumTags);
+        setBranches(branches);
+        setComments(comments);
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+    didMount();
+  }, []);
 
 
 
@@ -37,6 +66,10 @@ const index = (props: IProps) => {
     <>
       <Head>
         <title>English Center - Trung tâm Tiếng anh uy tín hàng đầu Việt Nam</title>
+        <meta name="description" content="English Center webpages for looking center's information,
+         registering new account and enrolling suitable courses. More than that,
+         it helps students and parents tracking their own learning process,
+         helps employees and teachers managing work as well."></meta>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.wrapPage}>
@@ -47,6 +80,8 @@ const index = (props: IProps) => {
             slidesToScroll={1}
             className={styles.fullHeightSlider}
             loop={true}
+            nextControlLabel="next banner button"
+            previousControlLabel="prev banner button"
           >
             <Carousel.Slide>
               <div className={styles.slider}>
@@ -62,7 +97,7 @@ const index = (props: IProps) => {
                     </h2>
                   </div>
                   <div className={styles.overlay}></div>
-                  <img className={styles.pictureBanner} src="/assets/images/listcourse_banner.jpg" alt="banner" />
+                  <Image layout="fill" priority={true} className={styles.pictureBanner} src="/assets/images/listcourse_banner.jpg" alt="banner" />
                 </div>
               </div>
             </Carousel.Slide>
@@ -80,7 +115,7 @@ const index = (props: IProps) => {
                     </h2>
                   </div>
                   <div className={styles.overlay}></div>
-                  <img className={styles.pictureBanner} src="/assets/images/listcourse_banner_1.jpg" alt="banner" />
+                  <Image layout="fill" className={styles.pictureBanner} src="/assets/images/listcourse_banner_1.jpg" alt="banner" />
                 </div>
               </div>
             </Carousel.Slide>
@@ -98,7 +133,7 @@ const index = (props: IProps) => {
                     </h2>
                   </div>
                   <div className={styles.overlay}></div>
-                  <img className={styles.pictureBanner} src="/assets/images/listcourse_banner_2.jpg" alt="banner" />
+                  <Image layout="fill" className={styles.pictureBanner} src="/assets/images/listcourse_banner_2.jpg" alt="banner" />
                 </div>
               </div>
             </Carousel.Slide>
@@ -176,7 +211,7 @@ const index = (props: IProps) => {
               justifyContent: "center",
               alignItems: "center"
             }}>
-              <button className={styles.buttonCTA} onClick={() => router.push("/courses")}>
+              <button className={styles.buttonCTA} onClick={() => router.push("/courses")} aria-label="see all courses">
                 Xem tất cả
               </button>
             </Container>
@@ -197,7 +232,7 @@ const index = (props: IProps) => {
             <form className={styles.wrapFormSubscribe}>
               <div className={styles.formSubscribe}>
                 <input className={styles.txtInput} placeholder="Nhập địa chỉ email của bạn" type="email" required />
-                <button type="submit" className={styles.buttonSubmit}>
+                <button type="submit" className={styles.buttonSubmit} aria-label="register">
                   <IconBrandTelegram size={'2rem'} />
                   Đăng ký
                 </button>
@@ -211,8 +246,8 @@ const index = (props: IProps) => {
           <Container size="xl" style={{ width: "100%" }}>
             <div className={styles.videoDemo}>
               <div className={styles.ovlerlay}></div>
-              <img src="/assets/images/listcourse_bannerVideo.jpg" className={styles.thumbnail} />
-              <button type="button" className={styles.buttonPlay} onClick={() => setOpenVideoModal(true)}>
+              <Image layout="fill" src="/assets/images/listcourse_bannerVideo.jpg" className={styles.thumbnail} alt="banner-video" />
+              <button type="button" className={styles.buttonPlay} onClick={() => setOpenVideoModal(true)} aria-label="play video">
                 <IconPlayerPlay size={'2.5rem'} />
               </button>
             </div>
@@ -266,7 +301,7 @@ const index = (props: IProps) => {
                     </div>
                   </div>
                   <p className={styles.number}>
-                    {props.studentCounts}
+                    {studentCounts}
                   </p>
                 </div>
                 <div className={styles.contentAnalysisItem}>
@@ -284,7 +319,7 @@ const index = (props: IProps) => {
                     </div>
                   </div>
                   <p className={styles.number}>
-                    {props.courseCounts}
+                    {courseCounts}
                   </p>
                 </div>
                 <div className={styles.contentAnalysisItem}>
@@ -302,7 +337,7 @@ const index = (props: IProps) => {
                     </div>
                   </div>
                   <p className={styles.number}>
-                    {props.curriculumTags.length}
+                    {curriculumTags.length}
                   </p>
                 </div>
               </div>
@@ -321,7 +356,7 @@ const index = (props: IProps) => {
               Học viên nói gì về chúng tôi
             </p>
             <div className={styles.sliderPeople}>
-              {props.comments.map((comment, index) => (
+              {comments.map((comment, index) => (
                 <div className={styles.sliderPeopleItem} key={index}>
                   <span className={styles.iconQuote}>
                     <IconQuote />
@@ -358,7 +393,7 @@ const index = (props: IProps) => {
               Chúng tôi có mặt khắp cả nước
             </p>
             <div className={styles.listArticle}>
-              {props.branches.map((branch, index) => (
+              {branches.map((branch, index) => (
                 <Container key={index} p={0} style={{
                   width: "100%",
                   display: "flex",

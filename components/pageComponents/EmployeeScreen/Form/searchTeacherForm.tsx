@@ -1,7 +1,6 @@
-import { Avatar, Container, Group, ScrollArea, Select, Title, Text, SimpleGrid, TextInput } from "@mantine/core"
+import { Avatar, Container, Group, ScrollArea, Select, SimpleGrid, Text, TextInput, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useMemo } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";

@@ -1,7 +1,7 @@
 import { createHook, createStore } from "react-sweet-state";
-import { clearSearchResults, findContacts, getContacts, getMoreMessages, getUnreadMessageCount, receiveMessage, receiveOwnMessage, recevingOwnSeenSignal, recevingSeenSignal, resetData, setUnreadMessageCount, startChatBox, userStatusChange } from "./chat.action";
-import Contact from "../../models/contact.model";
 import ChatBox from "../../models/chatbox.model";
+import Contact from "../../models/contact.model";
+import { clearSearchResults, findContacts, getContacts, getMoreMessages, getUnreadMessageCount, receiveMessage, receiveOwnMessage, recevingOwnSeenSignal, recevingSeenSignal, resetData, setUnreadMessageCount, startChatBox, userStatusChange } from "./chat.action";
 
 export type State = {
     unreadMessageCount: number;

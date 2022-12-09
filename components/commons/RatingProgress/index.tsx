@@ -1,4 +1,4 @@
-import { Container, Group, Progress, Text } from "@mantine/core";
+import { Group, Progress, Text } from "@mantine/core";
 import { IconStar } from "@tabler/icons";
 
 interface IProps {

@@ -1,9 +1,8 @@
-import { Grid, Text } from '@mantine/core'
-import React from 'react'
+import { Grid, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import StudentDoExercise from '../../../../../../models/studentDoExercise.model';
 import moment from 'moment';
 import { TimeZoneOffset } from '../../../../../../helpers/constants';
+import StudentDoExercise from '../../../../../../models/studentDoExercise.model';
 
 interface IProps {
     data: StudentDoExercise,

@@ -1,16 +1,16 @@
-import { Title, Text, Divider, Container, Space, Modal, ScrollArea, Loader } from "@mantine/core";
+import { Container, Divider, Loader, Modal, ScrollArea, Space, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconMail } from "@tabler/icons";
+import moment from "moment";
 import Head from "next/head";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNotification } from "../../../stores/Notification";
-import Loading from "../../commons/Loading";
+import { toast } from "react-toastify";
+import { TimeZoneOffset } from "../../../helpers/constants";
 import Notification from "../../../models/notification.model";
 import { useAuth } from "../../../stores/Auth";
-import { toast } from "react-toastify";
-import moment from "moment";
-import { TimeZoneOffset } from "../../../helpers/constants";
+import { useNotification } from "../../../stores/Notification";
 import { useSocket } from "../../../stores/Socket";
+import Loading from "../../commons/Loading";
 
 const NotificationScreen = () => {
   const [notificationState, notificationAction] = useNotification();

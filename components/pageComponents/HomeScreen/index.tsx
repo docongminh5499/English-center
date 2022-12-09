@@ -1,15 +1,14 @@
 import Head from "next/head";
-import { UserRole } from "../../../helpers/constants";
-import styles from "./home.module.css";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import LoadingScreen from "../LoadingScreen";
+import { UserRole } from "../../../helpers/constants";
+import Branch from "../../../models/branch.model";
+import { Course } from "../../../models/course.model";
+import MaskedComment from "../../../models/maskedComment.model";
+import Tag from "../../../models/tag.model";
 import { useAuth } from "../../../stores/Auth";
 import ListCourseScreen from "../ListCourse";
-import { Course } from "../../../models/course.model";
-import Tag from "../../../models/tag.model";
-import Branch from "../../../models/branch.model";
-import MaskedComment from "../../../models/maskedComment.model";
+import LoadingScreen from "../LoadingScreen";
 
 
 interface IProps {

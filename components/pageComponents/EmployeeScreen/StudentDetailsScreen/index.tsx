@@ -1,16 +1,16 @@
-import Head from "next/head";
 import { Container, Space } from "@mantine/core";
-import { Url, UserRole } from "../../../../helpers/constants";
-import { useCallback, useEffect, useState } from "react";
-import InfoUser from './components/InfoUser'
-import UserStudent from "../../../../models/userStudent.model";
+import Head from "next/head";
 import { useRouter } from "next/router";
-import Loading from "../../../commons/Loading";
-import InfoUserParent from "./components/infoUserParent";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
-import { useAuth } from "../../../../stores/Auth";
+import { Url, UserRole } from "../../../../helpers/constants";
 import UnpaidDto from "../../../../models/unpaidFee.model";
+import UserStudent from "../../../../models/userStudent.model";
+import { useAuth } from "../../../../stores/Auth";
+import Loading from "../../../commons/Loading";
+import InfoUser from './components/InfoUser';
+import InfoUserParent from "./components/infoUserParent";
 import UnpaidFeeInfos from "./components/UnpaidFeeInfo";
 
 interface IProps {

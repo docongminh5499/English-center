@@ -1,29 +1,25 @@
-import React, { useCallback, useEffect, useState } from "react";
-import styles from "./DetailsCourse.module.css";
-import Head from "next/head";
-import { Tabs, Accordion, Modal, Loader, ScrollArea, SimpleGrid, Group, Avatar, Title, Badge } from "@mantine/core";
-import { Container, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useAuth } from "../../../stores/Auth";
-import {
-  IconFileDescription, IconClockHour4, IconChartBar, IconBooks, IconZoomQuestion, IconUsers, IconBook, IconCurrentLocation, IconCheck
-} from "@tabler/icons";
-import { Course } from "../../../models/course.model";
-import { getAvatarImageUrl, getImageUrl } from "../../../helpers/image.helper";
-import { getLevelName } from "../../../helpers/getLevelName";
+import { Accordion, Avatar, Container, Group, Loader, Modal, ScrollArea, SimpleGrid, Tabs, Text, Title } from "@mantine/core";
+import { PayPalButtons } from "@paypal/react-paypal-js";
+import { IconBook, IconBooks, IconChartBar, IconCheck, IconClockHour4, IconCurrentLocation, IconUsers } from "@tabler/icons";
 import moment from "moment";
-import { formatCurrency } from "../../../helpers/formatCurrency";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import API from "../../../helpers/api";
 import { CourseType, GuestConstants, Url, UserRole } from "../../../helpers/constants";
-import { getWeekdayName } from "../../../helpers/getWeekdayName";
+import { formatCurrency } from "../../../helpers/formatCurrency";
+import { getLevelName } from "../../../helpers/getLevelName";
 import { getWeekdayFromDate } from "../../../helpers/getWeekdayFromDate";
+import { getWeekdayName } from "../../../helpers/getWeekdayName";
+import { getAvatarImageUrl, getImageUrl } from "../../../helpers/image.helper";
+import { Course } from "../../../models/course.model";
+import UserParent from "../../../models/userParent.model";
+import UserStudent from "../../../models/userStudent.model";
+import { useAuth } from "../../../stores/Auth";
 import Button from "../../commons/Button";
 import Loading from "../../commons/Loading";
-import { PayPalButtons } from "@paypal/react-paypal-js";
-import API from "../../../helpers/api";
-import { toast } from "react-toastify";
-import { boolean } from "yup";
-import UserStudent from "../../../models/userStudent.model";
-import UserParent from "../../../models/userParent.model";
+import styles from "./DetailsCourse.module.css";
 
 
 

@@ -1,4 +1,4 @@
-import { Card, Checkbox, Container, Grid, Input, SimpleGrid, Space, Image, Text, Badge, Pagination } from "@mantine/core";
+import { Badge, Card, Checkbox, Container, Grid, Image, Input, Pagination, SimpleGrid, Space, Text } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";

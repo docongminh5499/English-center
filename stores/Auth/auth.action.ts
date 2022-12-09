@@ -1,8 +1,8 @@
+import Cookies from 'js-cookie';
 import { Action, defaultRegistry } from "react-sweet-state";
 import { State } from ".";
 import API from "../../helpers/api";
-import Cookies from 'js-cookie';
-import { LocalStorageKey, CookieKey, Url, UserRole } from "../../helpers/constants";
+import { CookieKey, LocalStorageKey, Url, UserRole } from "../../helpers/constants";
 import { Store as SocketStore } from "../Socket";
 
 const SocketStoreInstance = defaultRegistry.getStore(SocketStore);

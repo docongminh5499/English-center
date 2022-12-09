@@ -2,7 +2,7 @@ import { Button, Container, Grid, Loader, Space, Stack, Text } from "@mantine/co
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";

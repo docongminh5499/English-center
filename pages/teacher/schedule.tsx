@@ -1,4 +1,3 @@
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
 import TeacherScheduleScreen from "../../components/pageComponents/TeacherScreen/TeacherScheduleScreen";
 import { CookieKey, UserRole } from "../../helpers/constants";

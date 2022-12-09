@@ -1,9 +1,8 @@
-import { Badge, Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
+import { Container, Divider, Grid, Loader, Modal, Space, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect } from "react";
-import { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { StudySessionState, TeacherConstants, TimeZoneOffset, Url } from "../../../../helpers/constants";

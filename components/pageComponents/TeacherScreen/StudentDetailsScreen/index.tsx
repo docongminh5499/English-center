@@ -1,17 +1,17 @@
-import Head from "next/head";
-import { Container, Title, Text, Space, Grid } from "@mantine/core";
-import { UserRole } from "../../../../helpers/constants";
-import { useEffect, useState } from "react";
+import { Container, Grid, Space, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import InfoUser from './components/InfoUser'
-import Attendance from './components/Attendance'
-import Exercise from './components/Exercise'
-import UserStudent from "../../../../models/userStudent.model";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { UserRole } from "../../../../helpers/constants";
+import MakeUpLession from "../../../../models/makeUpLesson.model";
 import StudentDoExercise from "../../../../models/studentDoExercise.model";
 import UserAttendStudySession from "../../../../models/userAttendStudySession.model";
-import { useRouter } from "next/router";
+import UserStudent from "../../../../models/userStudent.model";
 import Loading from "../../../commons/Loading";
-import MakeUpLession from "../../../../models/makeUpLesson.model";
+import Attendance from './components/Attendance';
+import Exercise from './components/Exercise';
+import InfoUser from './components/InfoUser';
 
 interface IProps {
   userRole?: UserRole | null;

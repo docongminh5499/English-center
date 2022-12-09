@@ -1,4 +1,6 @@
+import { CChart } from "@coreui/react-chartjs";
 import { Badge, Box, Button, Container, Divider, Grid, Group, Image, Loader, ScrollArea, Text, Title } from "@mantine/core";
+import { IconArrowBackUp, IconEdit } from "@tabler/icons";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -6,10 +8,7 @@ import API from "../../../../helpers/api";
 import { Url } from "../../../../helpers/constants";
 import { getAudioUrl, getImageUrl } from "../../../../helpers/image.helper";
 import { useAuth } from "../../../../stores/Auth";
-import { CChart } from "@coreui/react-chartjs";
 import CourseModifyExercise from "./course.exercise.modify";
-import { useWindowScroll } from "@mantine/hooks";
-import { IconArrowBackUp, IconEdit } from "@tabler/icons";
 
 const CourseExerciseDetail = (props: any) => {
 	const [authState] = useAuth();

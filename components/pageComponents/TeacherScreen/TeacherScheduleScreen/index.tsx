@@ -1,17 +1,16 @@
-import { Container, Loader, ScrollArea, Table, Title, Text, Space, Badge, Button } from "@mantine/core";
+import { Badge, Button, Container, Loader, ScrollArea, Space, Table, Text, Title } from "@mantine/core";
 import { RangeCalendar } from "@mantine/dates";
-import Head from "next/head";
-import { useCallback, useEffect, useState } from "react";
 import 'dayjs/locale/vi';
-import { useAuth } from "../../../../stores/Auth";
+import moment from "moment";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { StudySessionState, TeacherConstants, Url } from "../../../../helpers/constants";
-import StudySession from "../../../../models/studySession.model";
-import { toast } from "react-toastify";
-import Loading from "../../../commons/Loading";
-import moment from "moment";
-import { useRouter } from "next/router";
 import { getStudySessionState } from "../../../../helpers/getStudySessionState";
+import StudySession from "../../../../models/studySession.model";
+import { useAuth } from "../../../../stores/Auth";
 
 
 const TeacherScheduleScreen = () => {

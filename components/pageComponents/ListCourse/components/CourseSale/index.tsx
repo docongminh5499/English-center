@@ -1,11 +1,9 @@
-import React from 'react'
-import styles from './CourseSale.module.css'
-import Link from "next/link";
-import { IconNotebook, IconUser } from '@tabler/icons'
-import { Course } from '../../../../../models/course.model';
-import { getImageUrl } from '../../../../../helpers/image.helper';
-import { formatCurrency } from '../../../../../helpers/formatCurrency';
+import { IconNotebook, IconUser } from '@tabler/icons';
 import moment from 'moment';
+import Link from "next/link";
+import { getImageUrl } from '../../../../../helpers/image.helper';
+import { Course } from '../../../../../models/course.model';
+import styles from './CourseSale.module.css';
 
 const CourseSale = (props: Course) => {
   return (
@@ -13,7 +11,7 @@ const CourseSale = (props: Course) => {
       <div className={styles.courseSale}>
         <Link href={"/courses/" + props.slug}>
           <div className={styles.wrapThumbnail}>
-            <img src={getImageUrl(props.image)} className={styles.thumbnail} />
+            <img src={getImageUrl(props.image)} className={styles.thumbnail} alt={props.slug} />
           </div>
         </Link>
         <div className={styles.infoCourse}>

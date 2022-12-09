@@ -1,4 +1,4 @@
-import { Card, Container, SimpleGrid, Text, Image, Title, Group, Space, Modal, Badge } from "@mantine/core"
+import { Badge, Card, Container, Image, Modal, SimpleGrid, Space, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSchool } from "@tabler/icons";
 import Head from "next/head";

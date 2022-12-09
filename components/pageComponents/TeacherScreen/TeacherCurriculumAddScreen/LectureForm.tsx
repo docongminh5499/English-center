@@ -1,4 +1,4 @@
-import { Container, Space, Textarea, TextInput, Title, Text } from "@mantine/core";
+import { Container, Space, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { MutableRefObject, useEffect } from "react";
 import * as yup from "yup";

@@ -1,10 +1,9 @@
-import StudySessionDetailScreen from "../../../../../../components/pageComponents/TeacherScreen/StudySessionDetailScreen";
 import { GetServerSideProps } from "next";
-import { CookieKey, Url, UserRole } from "../../../../../../helpers/constants";
-import { CustomNextPage } from "../../../../../../interfaces/page.interface";
-import { CookieParser } from "../../../../../../helpers/cookieParser";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
+import StudySessionDetailScreen from "../../../../../../components/pageComponents/TeacherScreen/StudySessionDetailScreen";
 import API from "../../../../../../helpers/api";
+import { CookieKey, Url, UserRole } from "../../../../../../helpers/constants";
+import { CookieParser } from "../../../../../../helpers/cookieParser";
+import { CustomNextPage } from "../../../../../../interfaces/page.interface";
 
 const StudySessionDetailPage: CustomNextPage = (props) => {
   return <StudySessionDetailScreen ownMakeups={[]} userRole={null} studySession={null} attendences={[]} makeups={[]} {...props} />;

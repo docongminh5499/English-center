@@ -1,14 +1,13 @@
 import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Group,
-  Modal,
-  Text,
-  Title,
+    Avatar,
+    Box,
+    Button,
+    Container,
+    Group,
+    Modal,
+    Text,
+    Title
 } from "@mantine/core";
-import Head from "next/head";
 import { useState } from "react";
 import { getAvatarImageUrl } from "../../../../helpers/image.helper";
 import { useParent } from "../../../../stores/Parent";

@@ -1,9 +1,9 @@
-import { Container, Grid, Space, Title, Text, Stack, Loader, Button } from "@mantine/core"
+import { Button, Container, Grid, Loader, Space, Stack, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import moment from "moment";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { CourseStatus, TeacherConstants, TimeZoneOffset, Url, UserRole } from "../../../../helpers/constants";

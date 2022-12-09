@@ -1,6 +1,6 @@
 import { createHook, createStore } from "react-sweet-state";
 import { UserRole } from "../../helpers/constants";
-import { reload, endLoggingOut, loadUserFromLocalStorage, logIn, logOut, startLoggingOut, turnOnGuestUI, turnOffGuestUI } from "./auth.action";
+import { endLoggingOut, loadUserFromLocalStorage, logIn, logOut, reload, startLoggingOut, turnOffGuestUI, turnOnGuestUI } from "./auth.action";
 
 export type State = {
   userId?: string;

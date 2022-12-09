@@ -3,7 +3,6 @@ import PersonalScreen from "../components/pageComponents/PersonalScreen";
 import { CookieKey, UserRole } from "../helpers/constants";
 import { CookieParser } from "../helpers/cookieParser";
 import { CustomNextPage } from "../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 
 const PersonalInformationPage: CustomNextPage = (props) => {
     return <PersonalScreen {...props} />;

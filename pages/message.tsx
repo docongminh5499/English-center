@@ -1,9 +1,8 @@
+import { GetServerSideProps } from "next";
 import MessageScreen from "../components/pageComponents/MessageScreen";
 import { CookieKey, UserRole } from "../helpers/constants";
-import { CustomNextPage } from "../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
-import { GetServerSideProps } from "next";
 import { CookieParser } from "../helpers/cookieParser";
+import { CustomNextPage } from "../interfaces/page.interface";
 
 const Message: CustomNextPage = (props) => {
     return <MessageScreen {...props} />

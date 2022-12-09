@@ -1,4 +1,4 @@
-import { Container, Group, Modal, ScrollArea, Stack, Text } from "@mantine/core"
+import { Container, Group, Modal, ScrollArea, Stack, Text } from "@mantine/core";
 import moment from "moment";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";

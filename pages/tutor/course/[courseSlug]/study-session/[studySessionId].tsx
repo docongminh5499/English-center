@@ -1,4 +1,3 @@
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
 import StudySessionDetailScreen from "../../../../../components/pageComponents/TutorScreen/StudySessionDetailScreen";
 import API from "../../../../../helpers/api";

@@ -1,10 +1,9 @@
-import EmployeeHomeScreen from "../../../components/pageComponents/EmployeeScreen/EmployeeHomeScreen/employee.home";
-import { CookieKey, EmployeeConstants, Url, UserRole } from "../../../helpers/constants";
-import { CustomNextPage } from "../../../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
-import { CookieParser } from "../../../helpers/cookieParser";
+import EmployeeHomeScreen from "../../../components/pageComponents/EmployeeScreen/EmployeeHomeScreen/employee.home";
 import API from "../../../helpers/api";
+import { CookieKey, EmployeeConstants, Url, UserRole } from "../../../helpers/constants";
+import { CookieParser } from "../../../helpers/cookieParser";
+import { CustomNextPage } from "../../../interfaces/page.interface";
 import Pageable from "../../../models/pageable.model";
 
 

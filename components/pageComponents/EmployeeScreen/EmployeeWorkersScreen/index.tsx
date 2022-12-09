@@ -1,22 +1,22 @@
-import { Container, Loader, ScrollArea, Space, Table, Title, Text, Pagination, Modal, Grid, Input, Select, Divider } from "@mantine/core";
+import { Container, Divider, Grid, Input, Modal, Pagination, ScrollArea, Select, Space, Table, Text, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
+import 'dayjs/locale/vi';
 import moment from "moment";
 import Head from "next/head";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API from "../../../../helpers/api";
 import { EmployeeConstants, Url } from "../../../../helpers/constants";
+import { getGenderName } from "../../../../helpers/getGenderName";
+import Branch from "../../../../models/branch.model";
+import UserEmployee from "../../../../models/userEmployee.model";
+import UserTeacher from "../../../../models/userTeacher.model";
+import UserTutor from "../../../../models/userTutor.model";
 import { useAuth } from "../../../../stores/Auth";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
-import styles from "./workers.module.css";
-import UserTeacher from "../../../../models/userTeacher.model";
-import UserTutor from "../../../../models/userTutor.model";
-import 'dayjs/locale/vi';
-import UserEmployee from "../../../../models/userEmployee.model";
-import { getGenderName } from "../../../../helpers/getGenderName";
-import Branch from "../../../../models/branch.model";
 import CreateSalaryModal from "../Modal/modal";
+import styles from "./workers.module.css";
 
 interface IProps {
   teachers: {

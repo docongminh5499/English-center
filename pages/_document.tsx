@@ -16,7 +16,7 @@ export default class _Document extends Document {
   render() {
     const { Head, NextScript } = provideComponents(this.props);
     return (
-      <Html>
+      <Html lang='vi'>
         <Head />
         <body>
           <Main />

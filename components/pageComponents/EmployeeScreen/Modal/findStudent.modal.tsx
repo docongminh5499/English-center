@@ -1,4 +1,4 @@
-import { Container, Group, Input, Title, Text, ScrollArea, SimpleGrid, Avatar, Loader } from "@mantine/core";
+import { Avatar, Container, Group, Input, Loader, ScrollArea, SimpleGrid, Text, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { FormEvent, useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";

@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Container, Grid, Input, SimpleGrid, Space, Image, Text, Badge, Pagination, ThemeIcon, Modal } from "@mantine/core";
+import { Badge, Button, Card, Checkbox, Container, Grid, Image, Input, Modal, Pagination, SimpleGrid, Space, Text, ThemeIcon } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons";
 import moment from "moment";

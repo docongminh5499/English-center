@@ -1,4 +1,4 @@
-import { Container, Loader, ScrollArea, Space, Table, Title, Text, Pagination, Modal, Grid, Input } from "@mantine/core";
+import { Container, Grid, Input, Modal, Pagination, ScrollArea, Space, Table, Text, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";

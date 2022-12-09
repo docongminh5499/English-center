@@ -1,5 +1,4 @@
 import { createStyles, Text } from "@mantine/core";
-import { UseListStateHandlers } from "@mantine/hooks";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Lecture from "../../../../models/lecture.model";
 import Button from "../../../commons/Button";

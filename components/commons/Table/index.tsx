@@ -1,6 +1,6 @@
+import { createStyles, ScrollArea, Table } from '@mantine/core';
 import { useState } from 'react';
 import styles from './table.module.css';
-import { createStyles, Table, ScrollArea } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
   header: {

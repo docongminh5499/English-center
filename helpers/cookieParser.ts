@@ -17,4 +17,5 @@ class CookieParser {
 const CookieParserObject = new CookieParser();
 export {
     CookieParserObject as CookieParser
-}
+};
+

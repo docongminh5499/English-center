@@ -1,26 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
-import styles from "./allCourse.module.css";
-import Head from "next/head";
-import { Tabs, Accordion, Space, Pagination, Button, Group, Select } from "@mantine/core";
-import { Container, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useAuth } from "../../../stores/Auth";
-import {
-  IconFileDescription, IconClockHour4, IconChartBar, IconBooks, IconZoomQuestion, IconUsers, IconBook, IconCurrentLocation
-} from "@tabler/icons";
-import { Course } from "../../../models/course.model";
-import { getAvatarImageUrl, getImageUrl } from "../../../helpers/image.helper";
-import { getLevelName } from "../../../helpers/getLevelName";
-import moment from "moment";
-import { formatCurrency } from "../../../helpers/formatCurrency";
-import { CurriculumLevel, GuestConstants, Url, UserRole } from "../../../helpers/constants";
-import Branch from "../../../models/branch.model";
-import Tag from "../../../models/tag.model";
-import CourseSale from "./components/CourseSale";
-import API from "../../../helpers/api";
-import { toast } from "react-toastify";
-import Loading from "../../commons/Loading";
+import { Button, Container, Group, Pagination, Select, Space } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import API from "../../../helpers/api";
+import { CurriculumLevel, GuestConstants, Url } from "../../../helpers/constants";
+import Branch from "../../../models/branch.model";
+import { Course } from "../../../models/course.model";
+import Tag from "../../../models/tag.model";
+import { useAuth } from "../../../stores/Auth";
+import Loading from "../../commons/Loading";
+import styles from "./allCourse.module.css";
+import CourseSale from "./components/CourseSale";
 
 
 

@@ -1,4 +1,4 @@
-import { Container, Space, Text } from "@mantine/core";
+import { Container, Text } from "@mantine/core";
 import { formatCurrency } from "../../../../helpers/formatCurrency";
 import Button from "../../../commons/Button";
 import Loading from "../../../commons/Loading";
