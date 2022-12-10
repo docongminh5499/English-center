@@ -1,7 +1,7 @@
 import { Avatar, Container, Group, MediaQuery, Menu, Modal, Text, UnstyledButton, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
-    IconBrandEdge, IconLogout, IconSwitchHorizontal, IconUserCircle
+  IconBrandEdge, IconLogout, IconSwitchHorizontal, IconUserCircle
 } from '@tabler/icons';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';

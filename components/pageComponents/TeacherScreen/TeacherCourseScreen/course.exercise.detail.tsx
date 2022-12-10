@@ -1,4 +1,3 @@
-import { CChart } from "@coreui/react-chartjs";
 import { Badge, Box, Button, Container, Divider, Grid, Group, Image, Loader, ScrollArea, Text, Title } from "@mantine/core";
 import { IconArrowBackUp, IconEdit } from "@tabler/icons";
 import moment from "moment";
@@ -9,6 +8,9 @@ import { Url } from "../../../../helpers/constants";
 import { getAudioUrl, getImageUrl } from "../../../../helpers/image.helper";
 import { useAuth } from "../../../../stores/Auth";
 import CourseModifyExercise from "./course.exercise.modify";
+import dynamic from 'next/dynamic';
+const CChart = dynamic(() => import("./cchart").then(module => module.default));
+
 
 const CourseExerciseDetail = (props: any) => {
 	const [authState] = useAuth();

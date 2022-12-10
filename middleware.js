@@ -2,7 +2,6 @@ import {
   chainMatch,
   isPageRequest,
   csp,
-  strictDynamic,
 } from "@next-safe/middleware";
 import { Url, SocketBaseUrl } from "./helpers/constants";
 
