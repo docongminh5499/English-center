@@ -253,7 +253,7 @@ const ParentCourseScreen = (props: any) => {
                 <SimpleGrid cols={isSmallerThan768 ? 2 : 4}>
                   <Checkbox
                     styles={{ label: { color: "#444" } }}
-                    label="Đang diễn ra"
+                    label="Đang - Sắp diễn ra"
                     checked={open}
                     onChange={setOpen}
                   />

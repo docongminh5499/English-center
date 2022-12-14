@@ -19,7 +19,7 @@ const SelectStudentModal = (props: any) => {
 
   return (
     <Box style={{ width: "100%" }}>
-      <Modal opened={opened} onClose={() => setOpened(false)} centered withCloseButton = {false}>
+      <Modal opened={opened} onClose={() => setOpened(false)} centered>
         {students.length !== 0 && (
           <Box>
             <Title order={1} align="center">

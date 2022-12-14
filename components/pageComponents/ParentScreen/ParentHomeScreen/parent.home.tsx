@@ -8,6 +8,7 @@ import {
   MediaQuery,
   Modal,
   Popover,
+  ScrollArea,
   Select,
   Table,
   Title,
@@ -69,13 +70,10 @@ const ParentHomeScreen = (props: any) => {
       try {
         setLoading(true);
         if (parentState.selectedStudentId == undefined) return;
-        const exerciseResponse = await API.get(
-          Url.parents.getAllStudentCourses,
-          {
-            token: authState.token,
-            studentId: parentState.selectedStudentId,
-          }
-        );
+        const courseResponse = await API.get(Url.parents.getAllStudentCourses, {
+          token: authState.token,
+          studentId: parentState.selectedStudentId,
+        });
 
         //Set state
         console.log(
@@ -90,7 +88,7 @@ const ParentHomeScreen = (props: any) => {
         );
         console.log(userStudent);
         if (userStudent.length !== 0) setSelectedStudent(userStudent[0]);
-        setCourses(exerciseResponse);
+        setCourses(courseResponse);
       } catch (error) {
         toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
       } finally {
@@ -103,7 +101,7 @@ const ParentHomeScreen = (props: any) => {
   const dayInTimetable = format2dayInTimetable(courses);
   let minDate = new Date();
 
-  if (!courses) {
+  if (courses.length !== 0) {
     minDate = new Date(courses[0].openingDate);
     minDate = new Date(minDate.setDate(1));
   }
@@ -112,7 +110,7 @@ const ParentHomeScreen = (props: any) => {
   console.log(`Selected Student: ${selectedStudent?.user.fullName}`);
 
   console.log("=================================================");
-  console.log(courses);
+  console.log(dayInTimetable);
 
   return (
     <Box m={"md"} style={{ width: "100%" }}>
@@ -129,7 +127,7 @@ const ParentHomeScreen = (props: any) => {
       )}
       {!selectStudentModal && !loading && courses.length === 0 && (
         <Box style={{ width: "100%", margin: "0px 20px" }}>
-          <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
+          <MediaQuery smallerThan={768} styles={{ fontSize: "2rem" }}>
             <Title
               order={1}
               align="justify"
@@ -147,7 +145,7 @@ const ParentHomeScreen = (props: any) => {
         <>
           <Box style={{ width: "100%" }}>
             <Box>
-              <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
+              <MediaQuery smallerThan={768} styles={{ fontSize: "2rem" }}>
                 <Title
                   order={1}
                   align="justify"
@@ -160,7 +158,7 @@ const ParentHomeScreen = (props: any) => {
                 </Title>
               </MediaQuery>
 
-              <MediaQuery smallerThan={768} styles={{ fontSize: "0.6rem" }}>
+              <MediaQuery smallerThan={768} styles={{ fontSize: "1.5rem" }}>
                 <Title
                   order={5}
                   align="center"
@@ -225,6 +223,7 @@ const ParentHomeScreen = (props: any) => {
                 let dropdownInfo = <></>;
                 // TODO: handle studysession is cancelled
                 if (dayInTimetable.has(key)) {
+                  console.log(date);
                   for (const data of dayInTimetable.get(key)) {
                     console.log("***********************");
                     dateBackgroundColor = "green";
@@ -254,10 +253,11 @@ const ParentHomeScreen = (props: any) => {
                 return (
                   <Box>
                     <Popover
-                      width={"300"}
-                      position="bottom"
+                      width={"100"}
+                      position="bottom-end"
                       withArrow
                       shadow="md"
+                      zIndex={1}
                     >
                       <Popover.Target>
                         <div>
@@ -276,16 +276,18 @@ const ParentHomeScreen = (props: any) => {
                         </div>
                       </Popover.Target>
                       <Popover.Dropdown>
-                        <Table withBorder withColumnBorders>
-                          <thead>
-                            <tr>
-                              <th>Tên khóa học</th>
-                              <th>Giờ</th>
-                              <th>Phòng</th>
-                            </tr>
-                          </thead>
-                          <tbody>{dropdownInfo}</tbody>
-                        </Table>
+                        <ScrollArea style={{ width: "100%", flex: 1 }}>
+                          <Table withBorder withColumnBorders>
+                            <thead>
+                              <tr>
+                                <th>Tên khóa học</th>
+                                <th>Giờ</th>
+                                <th>Phòng</th>
+                              </tr>
+                            </thead>
+                            <tbody>{dropdownInfo}</tbody>
+                          </Table>
+                        </ScrollArea>
                       </Popover.Dropdown>
                     </Popover>
                   </Box>

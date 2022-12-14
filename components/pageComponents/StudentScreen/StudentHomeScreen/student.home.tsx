@@ -8,6 +8,7 @@ import {
   MediaQuery,
   Modal,
   Popover,
+  ScrollArea,
   Table,
   Text,
   Title,
@@ -204,7 +205,7 @@ const StudentHomeScreen = (props: any) => {
     {courses.length !== 0 &&
       <Box style={{width: "100%"}}>
         <Box>
-        <MediaQuery smallerThan={768} styles={{ fontSize: "1rem" }}>
+        <MediaQuery smallerThan={768} styles={{ fontSize: "2rem" }}>
           <Title
             order={1}
             align="justify"
@@ -217,7 +218,7 @@ const StudentHomeScreen = (props: any) => {
           </Title>
         </MediaQuery>
 
-        <MediaQuery smallerThan={768} styles={{ fontSize: "0.6rem" }}>
+        <MediaQuery smallerThan={768} styles={{ fontSize: "1.5rem" }}>
           <Title
             order={5}
             align="center"
@@ -292,6 +293,7 @@ const StudentHomeScreen = (props: any) => {
                       setMakeupLessionRow(<Box><Text size="md" weight={500} color={"gray"}>Không có buổi học bù tương ứng</Text></Box>);
                     }else {
                       setMakeupLessionRow(
+                        <ScrollArea style={{width: "100%", flex: 1}}>
                         <Table withBorder withColumnBorders mt={"md"}>
                           <thead>
                             <tr>
@@ -370,6 +372,7 @@ const StudentHomeScreen = (props: any) => {
                               )
                             })}</tbody>
                         </Table>
+                        </ScrollArea>
                         );
                     }
                   }catch (error){
@@ -424,13 +427,14 @@ const StudentHomeScreen = (props: any) => {
             }
             return (
               <Box>
-                <Popover width={"300"} position="bottom" withArrow shadow="md" zIndex={1}>
+                <Popover width={"100"} position="bottom-end" withArrow shadow="md" zIndex={1}>
                   <Popover.Target>
                     <div>
                       <span style={{backgroundColor: dateBackgroundColor, padding: "10px", width: "70px", height: "70px", color: textColor ,borderRadius: "50%"}}>{day}</span>  
                     </div>
                   </Popover.Target>
                   <Popover.Dropdown>
+                  <ScrollArea style={{width: "100%", flex: 1}}>
                     <Table withBorder withColumnBorders>
                       <thead>
                         <tr>
@@ -442,6 +446,7 @@ const StudentHomeScreen = (props: any) => {
                       </thead>
                       <tbody>{dropdownInfo}</tbody>
                     </Table>
+                    </ScrollArea>
                   </Popover.Dropdown>
                 </Popover>
               </Box>
@@ -466,7 +471,7 @@ const StudentHomeScreen = (props: any) => {
               Danh sách buổi học bù
             </Title>
           </MediaQuery>
-
+          <ScrollArea style={{width: "100%", flex: 1}}>
           <Table withBorder withColumnBorders mt={"md"}>
             <thead>
               <tr>
@@ -479,6 +484,7 @@ const StudentHomeScreen = (props: any) => {
             </thead>
             <tbody>{makeupLessonRows}</tbody>
           </Table>
+          </ScrollArea>
         </Box>
       }
     </Box>

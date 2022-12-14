@@ -115,6 +115,7 @@ const CourseAttendanceTab = (props: any) => {
             onChange={() => console.log("CHANGED")}
             locale="vi"
             labelFormat="MM/YYYY"
+            hideOutsideDates
             minDate={openingDate}
             maxDate={closingDate}
             initialMonth={initialMonth}

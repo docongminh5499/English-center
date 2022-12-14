@@ -11,6 +11,7 @@ import {
   Loader,
   Modal,
   Radio,
+  ScrollArea,
   Space,
   Table,
   Text,
@@ -35,6 +36,7 @@ const CourseExerciseTab = (props: any) => {
   const [confirmDoExercise, setConfirmDoExercise] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [confirmSubmitExercise, setConfirmSubmitExercise] = useState(false);
+  const [doingId, setDoingId] = useState(null);
   const course = props.course;
   console.log(course);
   console.log("==========================================");
@@ -263,11 +265,30 @@ const CourseExerciseTab = (props: any) => {
     [selectedExercise]
   );
 
+  const startDoExercise = async ()=> {
+    try {
+      const result = await API.post(Url.students.startDoExercise, {
+        token: authState.token,
+        exerciseId: selectedExercise?.id,
+      });
+      if (result === null){
+        throw new Error();
+      }
+      setDoingId(result);
+      setDoExercise(true);
+    } catch (error) {
+      console.log(error);
+      toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau!");
+    } finally {
+      setConfirmDoExercise(false);
+    }
+  }
+
   const handleSubmitExercise = async (exercise: any) => {
     try {
       const studentDoExercise = await API.post(Url.students.submitExercise, {
         token: authState.token,
-        exerciseId: exercise.id,
+        doingId: doingId,
         ...answerForm.values,
       });
       setStudentDoExercise((current: any[]) => [...current, studentDoExercise]);
@@ -276,6 +297,7 @@ const CourseExerciseTab = (props: any) => {
       toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau!");
     } finally {
       answerForm.reset();
+      setDoingId(null);
       setSelectedExercise(null);
       setDoExercise(false);
     }
@@ -299,10 +321,7 @@ const CourseExerciseTab = (props: any) => {
                 type="submit"
                 color={"green"}
                 mt="md"
-                onClick={() => {
-                  setConfirmDoExercise(false);
-                  setDoExercise(true);
-                }}
+                onClick={startDoExercise}
               >
                 Xác nhận
               </Button>
@@ -340,6 +359,7 @@ const CourseExerciseTab = (props: any) => {
           {exercise.length !== 0 && !loading && (
             <>
               <Group position="center" mt={"md"}>
+                <ScrollArea style={{width: "100%", flex: 1}}>
                 <Table withBorder withColumnBorders highlightOnHover>
                   <thead>
                     <tr>
@@ -366,13 +386,14 @@ const CourseExerciseTab = (props: any) => {
                   </thead>
                   <tbody>{exerciseRows}</tbody>
                 </Table>
+                </ScrollArea>
               </Group>
             </>
           )}
         </>
       )}
 
-      {doExercise === true && setSelectedExercise !== null && (
+      {doExercise === true && selectedExercise !== null && (
         <>
           <Modal
             centered

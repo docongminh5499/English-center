@@ -76,7 +76,7 @@ const CourseAttendanceTab = (props: any) => {
   const { classes, cx } = useStyles();
   return (
     <>
-      <MediaQuery smallerThan={768} styles={{fontSize: "1rem"}}>
+      <MediaQuery smallerThan={768} styles={{fontSize: "2rem"}}>
         <Title order={1} align="justify"  style={{width: "100%", margin: "20px 20px 0px", textAlign: "center"}}>Kết quả điểm danh</Title>
       </MediaQuery>
       <Grid grow style={{ margin: "20px 0px" }}>
@@ -86,6 +86,7 @@ const CourseAttendanceTab = (props: any) => {
             onChange={() => console.log("CHANGED")}
             locale="vi"
             labelFormat="MM/YYYY"
+            hideOutsideDates
             minDate={openingDate}
             maxDate={closingDate}
             initialMonth={initialMonth}

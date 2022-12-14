@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Center, Container, Divider, Grid, Group, Image, Loader, Modal, Radio, Space, Table, Text, Title } from "@mantine/core";
+import { Badge, Box, Button, Center, Container, Divider, Grid, Group, Image, Loader, Modal, Radio, ScrollArea, Space, Table, Text, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import moment from "moment";
 import { useEffect, useState, useMemo } from "react";
@@ -93,6 +93,7 @@ const CourseExerciseTab = (props: any) => {
             {exercise.length !== 0 && !loading &&
                 <>
                     <Group position="center" mt={"md"}>
+					<ScrollArea style={{width: "100%", flex: 1}}>
                         <Table withBorder withColumnBorders highlightOnHover >
                             <thead>
                                 <tr>
@@ -106,6 +107,7 @@ const CourseExerciseTab = (props: any) => {
                             </thead>
                             <tbody>{exerciseRows}</tbody>
                         </Table>
+						</ScrollArea>
                     </Group>
                 </>
             }

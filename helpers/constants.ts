@@ -222,6 +222,7 @@ export const Url = {
     getAttendance: "/api/students/courses/attendance-course/",
     getTotalCourseStudySession: "/api/students/courses/get-total-course-study-session/",
     getAllExercises: "/api/students/exercise/get-all-exercises/",
+    startDoExercise: "/api/students/exercise/start-do-exercise/",
     submitExercise: "/api/students/exercise/submit-exercise/",
     getStudentDoExercise: "/api/students/exercise/get-student-do-exercise/",
     getAllDocument: "/api/students/document/get-all-document/",
