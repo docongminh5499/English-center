@@ -2,7 +2,6 @@ import { GetServerSideProps } from "next";
 import { CookieKey, StudentConstants, Url, UserRole } from "../../../helpers/constants";
 import { CookieParser } from "../../../helpers/cookieParser";
 import { CustomNextPage } from "../../../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import API from "../../../helpers/api";
 import StudentPersonalScreen from "../../../components/pageComponents/StudentScreen/StudentPersonalScreen";
 

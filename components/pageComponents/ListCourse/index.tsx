@@ -12,7 +12,6 @@ import Branch from "../../../models/branch.model";
 import { Course } from "../../../models/course.model";
 import MaskedComment from "../../../models/maskedComment.model";
 import Tag from "../../../models/tag.model";
-import { useAuth } from "../../../stores/Auth";
 import CourseSaleComponent from './components/CourseSale';
 import ModalWrapper from "./components/WrapModalVideo";
 import styles from "./ListCourse.module.css";

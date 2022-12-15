@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomAppProps } from "../interfaces/app.interface";
 import { useAuth } from "../stores/Auth";
 import { ToastContainer } from "react-toastify";

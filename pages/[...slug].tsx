@@ -1,6 +1,5 @@
 import NotFoundScreen from "../components/pageComponents/NotFoundScreen";
 import { CustomNextPage } from "../interfaces/page.interface";
-import { gsspWithNonce } from "@next-safe/middleware/dist/document";
 import { GetServerSideProps } from "next";
 import { CookieParser } from "../helpers/cookieParser";
 import { CookieKey, UserRole } from "../helpers/constants";

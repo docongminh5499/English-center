@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Button, Container, Grid, Group, Image, Input, Loader, Modal, Pagination, ScrollArea, SimpleGrid, Space, Table, Text, ThemeIcon, Title, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Container, Grid, Group, Image, Input, Loader, Pagination, ScrollArea, SimpleGrid, Space, Table, Text, ThemeIcon, Title, Tooltip } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { IconHighlight, IconLock, IconLockOpen, IconPencil, IconSquarePlus, IconTrash } from "@tabler/icons";
 import moment from "moment";
@@ -17,14 +17,19 @@ import StudySession from "../../../../models/studySession.model";
 import UserStudent from "../../../../models/userStudent.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
-import AmountModal from "../Modal/amount.modal";
-import CloseCourseModal from "../Modal/closeCourse.modal";
-import CreateStudySessionModal from "../Modal/createStudySession.modal";
-import FindStudentModal from "../Modal/findStudent.modal";
-import { default as RemoveCourseModal, default as RemoveStudySessionModal } from "../Modal/modal";
-import ModifyStudySessionModal from "../Modal/modifyStudySession.modal";
-import OpenCourseModal from "../Modal/openCourse.modal";
 import styles from "./course.module.css";
+
+import dynamic from "next/dynamic";
+const Modal = dynamic(() => import("@mantine/core").then(module => module.Modal));
+const AmountModal = dynamic(() => import("../Modal/amount.modal").then(module => module.default));
+const CloseCourseModal = dynamic(() => import("../Modal/closeCourse.modal").then(module => module.default));
+const CreateStudySessionModal = dynamic(() => import("../Modal/createStudySession.modal").then(module => module.default));
+const FindStudentModal = dynamic(() => import("../Modal/findStudent.modal").then(module => module.default));
+const RemoveCourseModal = dynamic(() => import("../Modal/modal").then(module => module.default));
+const RemoveStudySessionModal = dynamic(() => import("../Modal/modal").then(module => module.default));
+const ModifyStudySessionModal = dynamic(() => import("../Modal/modifyStudySession.modal").then(module => module.default));
+const OpenCourseModal = dynamic(() => import("../Modal/openCourse.modal").then(module => module.default));
+
 
 interface IProps {
   userRole?: UserRole | null;

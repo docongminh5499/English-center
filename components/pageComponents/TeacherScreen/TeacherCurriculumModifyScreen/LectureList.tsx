@@ -1,8 +1,11 @@
 import { createStyles, Text } from "@mantine/core";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Lecture from "../../../../models/lecture.model";
 import Button from "../../../commons/Button";
+import dynamic from "next/dynamic";
 
+const DragDropContext = dynamic(() => import("react-beautiful-dnd").then(module => module.DragDropContext));
+const Draggable = dynamic(() => import("react-beautiful-dnd").then(module => module.Draggable));
+const Droppable = dynamic(() => import("react-beautiful-dnd").then(module => module.Droppable));
 
 const useStyles = createStyles((theme) => ({
   item: {

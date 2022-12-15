@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+})
+
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -52,4 +56,4 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
 }
 
-module.exports = nextConfig
+module.exports = withBundleAnalyzer(nextConfig);

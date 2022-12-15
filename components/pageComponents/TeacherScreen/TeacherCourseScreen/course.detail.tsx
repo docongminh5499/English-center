@@ -12,13 +12,15 @@ import { getCourseStatus } from "../../../../helpers/getCourseStatus";
 import { Course } from "../../../../models/course.model";
 import { useAuth } from "../../../../stores/Auth";
 import Loading from "../../../commons/Loading";
-import CloseCourseModal from "../Modal/closeCourse.modal";
-import CourseCurriculum from "./course.curriculum";
-import CourseDocument from "./course.document";
-import CourseExercise from "./course.exercise";
-import CourseRating from "./course.rating";
-import CourseSession from "./course.session";
-import CourseStudent from "./course.student";
+
+import dynamic from "next/dynamic";
+const CloseCourseModal = dynamic(() => import("../Modal/closeCourse.modal").then(module => module.default));
+const CourseCurriculum = dynamic(() => import("./course.curriculum").then(module => module.default));
+const CourseDocument = dynamic(() => import("./course.document").then(module => module.default));
+const CourseExercise = dynamic(() => import("./course.exercise").then(module => module.default));
+const CourseRating = dynamic(() => import("./course.rating").then(module => module.default));
+const CourseSession = dynamic(() => import("./course.session").then(module => module.default));
+const CourseStudent = dynamic(() => import("./course.student").then(module => module.default));
 
 interface IProps {
   userRole?: UserRole | null;
