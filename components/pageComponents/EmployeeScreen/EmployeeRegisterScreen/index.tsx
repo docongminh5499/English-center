@@ -1,6 +1,6 @@
 import {
-    Box, Button, Container, Group, PasswordInput, Select, Stepper,
-    Text, TextInput, Title
+  Box, Button, Container, Group, PasswordInput, Select, Stepper,
+  Text, TextInput, Title
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -76,8 +76,13 @@ const EmployeeRegisterScreen = (props: IProps) => {
     validate: {
       fullName: (value: any) =>
         value !== "" ? null : "Vui lòng nhập tên của bạn",
-      email: (value: any) =>
-        /^\S+@\S+$/.test(value) ? null : "Email không hợp lệ",
+      email: (value: any) => {
+        if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) === false)
+          return "Email không hợp lệ";
+        if (value.length > 50)
+          return "Chiều dài email tối đa 50 kí tự.";
+        return null;
+      },
       phone: (value: any) =>
         /^\d{10}$/.test(value) ? null : "Số điện thoại không hợp lệ",
       address: (value: any) => (value !== "" ? null : "Vui lòng nhập đại chỉ"),

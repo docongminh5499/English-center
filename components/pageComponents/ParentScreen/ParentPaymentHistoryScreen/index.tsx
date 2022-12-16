@@ -265,7 +265,7 @@ const ParentPaymentHistoryScreen = (props: any) => {
                                 Thanh toán
                               </Button>
                             ) : (
-                              fee.transCode.userEmployee.worker.user.fullName
+                              fee.transCode.userEmployee?.worker.user.fullName || "-"
                             )}
                           </td>
                         </tr>

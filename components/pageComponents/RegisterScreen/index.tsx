@@ -104,10 +104,10 @@ const RegisterScreen = (props: IProps) => {
       fullName: (value: any) =>
         value !== "" ? null : "Vui lòng nhập tên của bạn",
       email: (value: any) =>{
-        if (/^\S+@\S+$/.test(value))
+        if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) === false)
           return "Email không hợp lệ";
         if(value.length > 50)
-          return "Chieefuf dài email tối đa 50 kí tự.";
+          return "Chiều dài email tối đa 50 kí tự.";
         return null;
       },
       phone: (value: any) =>

@@ -414,7 +414,7 @@ const EmployeeTransactionScreen = (props: IProps) => {
                           <Text color="#444">{(item as Salary).worker.user.fullName}</Text>
                         )}
                       </td>
-                      <td>{item.transCode.userEmployee.worker.user.fullName}</td>
+                      <td>{item.transCode.userEmployee?.worker.user.fullName || "-"}</td>
                     </tr>
                   ))}
                 </tbody>

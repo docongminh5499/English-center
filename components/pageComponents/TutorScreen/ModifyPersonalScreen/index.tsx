@@ -35,7 +35,7 @@ const schema = yup.object().shape({
   address: yup.string().max(255, "Địa chỉ có độ dài quá lớn, tối đa 255 ký tự"),
   email: yup.string().nullable().notRequired().when('email', {
     is: (value: string) => value?.length,
-    then: rule => rule.email("Vui lòng kiểm tra lại email").max(25, "Độ dài email quá lớn, tối đa 25 ký tự")
+    then: rule => rule.email("Vui lòng kiểm tra lại email").max(50, "Độ dài email quá lớn, tối đa 50 ký tự")
   }),
   phone: yup.string().nullable().notRequired().when('phone', {
     is: (value: string) => value?.length,
@@ -211,14 +211,27 @@ const TutorModifyPersonalScreen = (props: IProps) => {
         newPassword: data.newPassword,
       });
       if (responses == true) {
-        toast.success("Cập nhật thông tin thành công. Vui lòng đăng nhập lại bằng thông tin mới.")
+        setTimeout(() => {
+          toast.success("Cập nhật thông tin thành công. Vui lòng đăng nhập lại bằng thông tin mới.")
+        }, 100);
       } else toast.error("Cập nhật thông tin thất bại.")
       setIsSaveAccountModalOpen(false);
       setIsSavingAccount(false);
-    } catch (error) {
+    } catch (error: any) {
       setIsSaveAccountModalOpen(false);
       setIsSavingAccount(false);
-      toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      if (error.status < 500) {
+        if (error.data.message && typeof error.data.message === "string")
+          toast.error(error.data.message);
+        else if (error.data.message && Array.isArray(error.data.message)) {
+          const messages: any[] = Array.from(error.data.message);
+          if (messages.length > 0 && typeof messages[0] === "string")
+            toast.error(messages[0]);
+          else if (messages.length > 0 && Array.isArray(messages))
+            toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+          else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
+      } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.")
     }
   }, [authState.token])
 

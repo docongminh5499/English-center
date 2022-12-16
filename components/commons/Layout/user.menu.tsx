@@ -47,6 +47,7 @@ export function UserMenu() {
         <LogoutModal
           onLogout={onLogout}
           onCancelLogout={onCancelLogout}
+          loading={authState.loggingOut || false}
         />
       </Modal>
 

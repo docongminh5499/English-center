@@ -345,7 +345,7 @@ const StudentPersonalScreen = (props: any) => {
             <Box>
               {parentRows}
               <Group position="center">
-                <Button color="green" mt={"md"} onClick={() => addParent()}>
+                <Button color="green" mt={"md"} onClick={() => addParent()} disabled={selectedParent === null}>
                   Thêm
                 </Button>
               </Group>
@@ -510,7 +510,7 @@ const StudentPersonalScreen = (props: any) => {
                     <Text weight={600} color="#444" mr={5}>
                       Họ và tên:{" "}
                     </Text>
-                    <Text color="#444">{props.userStudent?.user.fullName}</Text>
+                    <Text color="#444">{props.userStudent?.userParent.user.fullName}</Text>
                   </Group>
                   <Space h={10} />
                   <Group position="apart">
@@ -518,7 +518,7 @@ const StudentPersonalScreen = (props: any) => {
                       Giới tính:{" "}
                     </Text>
                     <Text color="#444">
-                      {getGenderName(props.userStudent?.user.sex)}
+                      {getGenderName(props.userStudent?.userParent.user.sex)}
                     </Text>
                   </Group>
                   <Space h={10} />
@@ -527,7 +527,7 @@ const StudentPersonalScreen = (props: any) => {
                       Ngày sinh:{" "}
                     </Text>
                     <Text color="#444">
-                      {moment(props.userStudent?.user.dateOfBirth)
+                      {moment(props.userStudent?.userParent.user.dateOfBirth)
                         .utcOffset(TimeZoneOffset)
                         .format("DD/MM/YYYY")}
                     </Text>
@@ -539,7 +539,7 @@ const StudentPersonalScreen = (props: any) => {
                     <Text weight={600} color="#444" mr={5}>
                       Địa chỉ:{" "}
                     </Text>
-                    <Text color="#444">{props.userStudent?.user.address}</Text>
+                    <Text color="#444">{props.userStudent?.userParent.user.address}</Text>
                   </Group>
                   <Space h={10} />
                   <Group position="apart">
@@ -547,7 +547,7 @@ const StudentPersonalScreen = (props: any) => {
                       Email:{" "}
                     </Text>
                     <Text color="#444">
-                      {props.userStudent?.user.email || "-"}
+                      {props.userStudent?.userParent.user.email || "-"}
                     </Text>
                   </Group>
                   <Space h={10} />
@@ -556,7 +556,7 @@ const StudentPersonalScreen = (props: any) => {
                       Số điện thoại:{" "}
                     </Text>
                     <Text color="#444">
-                      {props.userStudent?.user.phone || "-"}
+                      {props.userStudent?.userParent.user.phone || "-"}
                     </Text>
                   </Group>
                 </Grid.Col>
@@ -677,7 +677,7 @@ const StudentPersonalScreen = (props: any) => {
                               Thanh toán
                             </Button>
                           ) : (
-                            fee.transCode.userEmployee.worker.user.fullName
+                            fee.transCode.userEmployee?.worker.user.fullName || "-"
                           )}
                         </td>
                       </tr>

@@ -243,7 +243,7 @@ const ParentPersonalScreen = (props: any) => {
 						</Group>
 					}
 
-					{(props.userParent.userStudents !== null || props.userParent.userStudents.length !== 0) &&
+					{(props.userParent.userStudents !== null && props.userParent.userStudents.length !== 0) &&
 						<Box mt="sm">
 							{studentRows}
 						</Box>

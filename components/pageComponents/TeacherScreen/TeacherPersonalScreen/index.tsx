@@ -225,7 +225,7 @@ const TeacherPersonalScreen = (props: IProps) => {
                       <td>{salary.transCode.content}</td>
                       <td>{formatCurrency(salary.transCode.amount)}</td>
                       <td>{moment(salary.transCode.payDate).utcOffset(TimeZoneOffset).format("HH:mm:ss DD/MM/YYYY")}</td>
-                      <td>{salary.transCode.userEmployee.worker.user.fullName}</td>
+                      <td>{salary.transCode.userEmployee?.worker.user.fullName || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
