@@ -34,6 +34,7 @@ const diffDays = (date1: Date, date2: Date) => {
 interface IProps {
   course: Course | null;
   isAttended: boolean;
+  countStudent: number;
 }
 
 
@@ -43,6 +44,7 @@ const index = (props: IProps) => {
   const [didMount, setDidMount] = useState(false);
 
   // Attnd course
+  const [countStudent, setCountStudent] = useState(props.countStudent);
   const [isAttended, setIsAttended] = useState(props.isAttended);
   const [isSendingCheckAttendCourseRequest, setIsSendingCheckAttendCourseRequest] = useState(false);
   const [isSendingAttendCourseRequest, setIsSendingAttendCourseRequest] = useState(false);
@@ -183,6 +185,9 @@ const index = (props: IProps) => {
           });
           setIsAttended(result);
         }
+        // Update amount of student
+        const result = await API.post(Url.guests.countStudentAttendCourse, { courseSlug: props.course?.slug });
+        setCountStudent(result);
         setIsSendingCheckAttendCourseRequest(false);
       } catch (error: any) {
         setIsSendingCheckAttendCourseRequest(false);
@@ -571,15 +576,24 @@ const index = (props: IProps) => {
                     <p className={styles.txtPrice}>
                       {formatCurrency(props.course?.price)}
                     </p>
-                    {authState.role === UserRole.GUEST && (
-                      <button type="button" className={styles.buttonBuy}
-                        onClick={() => router.push({
-                          pathname: "/login",
-                          query: { returnUrl: router.asPath },
-                        })}>
-                        Đăng ký ngay
-                      </button>
-                    )}
+                    {authState.role === UserRole.GUEST &&
+                      props.course &&
+                      props.course.maxNumberOfStudent > countStudent && (
+                        <button type="button" className={styles.buttonBuy}
+                          onClick={() => router.push({
+                            pathname: "/login",
+                            query: { returnUrl: router.asPath },
+                          })}>
+                          Đăng ký ngay
+                        </button>
+                      )}
+                    {authState.role === UserRole.GUEST &&
+                      props.course &&
+                      props.course.maxNumberOfStudent <= countStudent && (
+                        <button type="button" className={styles.buttonBuySuccess}>
+                          Khóa học đã hết chỗ
+                        </button>
+                      )}
                     {(authState.role === UserRole.STUDENT) && (
                       <>
                         {isSendingCheckAttendCourseRequest && (
@@ -593,11 +607,21 @@ const index = (props: IProps) => {
                           </Container>
                         )}
                         {!isSendingCheckAttendCourseRequest &&
-                          !isAttended && (
+                          !isAttended &&
+                          props.course &&
+                          props.course.maxNumberOfStudent > countStudent && (
                             <button
                               type="button" className={styles.buttonBuy}
                               onClick={onOpenConfirmAttendCourseModalByStudent}>
                               Tham gia khóa học
+                            </button>
+                          )}
+                        {!isSendingCheckAttendCourseRequest &&
+                          !isAttended &&
+                          props.course &&
+                          props.course.maxNumberOfStudent <= countStudent && (
+                            <button type="button" className={styles.buttonBuySuccess}>
+                              Khóa học đã hết chỗ
                             </button>
                           )}
                         {!isSendingCheckAttendCourseRequest &&
@@ -608,13 +632,22 @@ const index = (props: IProps) => {
                           )}
                       </>
                     )}
-                    {(authState.role === UserRole.PARENT) && (
-                      <button
-                        type="button" className={styles.buttonBuy}
-                        onClick={onClickAttendCourseByParent}>
-                        Tham gia khóa học
-                      </button>
-                    )}
+                    {(authState.role === UserRole.PARENT) &&
+                      props.course &&
+                      props.course.maxNumberOfStudent > countStudent && (
+                        <button
+                          type="button" className={styles.buttonBuy}
+                          onClick={onClickAttendCourseByParent}>
+                          Tham gia khóa học
+                        </button>
+                      )}
+                    {(authState.role === UserRole.PARENT) &&
+                      props.course &&
+                      props.course.maxNumberOfStudent <= countStudent && (
+                        <button type="button" className={styles.buttonBuySuccess}>
+                          Khóa học đã hết chỗ
+                        </button>
+                      )}
                   </div>
                 </div>
               </div>

@@ -333,6 +333,7 @@ export const Url = {
     getTopComments: "/api/guests/get-top-comments",
     getCourseDetail: "/api/guests/get-course-detail",
     checkAttendCourse: "/api/guests/check-attend-course",
+    countStudentAttendCourse: "/api/guests/get-student-attend-course",
   },
   payments: {
     getStudentOrderDetail: "/api/payments/get-student-order-detail",
