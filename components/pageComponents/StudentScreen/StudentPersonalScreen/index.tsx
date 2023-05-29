@@ -343,7 +343,9 @@ const StudentPersonalScreen = (props: any) => {
 
           {parentList !== null && (
             <Box>
-              {parentRows}
+              <ScrollArea style={{ height: "500px" }} mt={"md"} type="never">
+                {parentRows}
+              </ScrollArea>
               <Group position="center">
                 <Button color="green" mt={"md"} onClick={() => addParent()} disabled={selectedParent === null}>
                   Thêm

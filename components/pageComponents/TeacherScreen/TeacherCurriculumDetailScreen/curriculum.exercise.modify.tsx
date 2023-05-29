@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, NativeSelect, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, NativeSelect, NumberInput, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
@@ -13,7 +13,7 @@ import { useAuth } from "../../../../stores/Auth";
 import Lecture from "../../../../models/lecture.model";
 import Exercise from "../../../../models/exercise.model";
 
-const CourseModifyExercise = (props: any) => {
+const CurriculumModifyExercise = (props: any) => {
 	const [authState] = useAuth();
 	const exercise: any = props.exercise;
 	const [loading, setLoading] = useState(true);
@@ -22,10 +22,6 @@ const CourseModifyExercise = (props: any) => {
   const [rerender, setRerender] = useState(false);
 
   const now = new Date();
-  const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
-  const [endTimePopoverOpened, setEndTimePopoverOpened] = useState(false);
-  const [openTime, setOpenTime] = useState(new Date(exercise.openTime));
-  const [endTime, setEndTime] = useState(new Date(exercise.endTime));
   const listLecture = props.listLecture;
 
 	//Tags
@@ -45,11 +41,8 @@ const CourseModifyExercise = (props: any) => {
     initialValues: {
       nameExercise: exercise.name,
       maxTime: exercise.maxTime,
-      startDate: new Date(exercise.openTime),
-      startTime: new Date(exercise.openTime),
-      endDate: new Date(exercise.endTime),
-      endTime: new Date(exercise.endTime),
-      lecture: exercise.lecture.id
+      lecture: exercise.lecture.id,
+      startWeek: exercise.startWeek,
     },
 
     validate: {
@@ -292,16 +285,12 @@ const CourseModifyExercise = (props: any) => {
       console.log(questionForm.values);
       setConfirmModifyExercise(false);
       //Validate Input
-      if(endTime.getTime() <= openTime.getTime()){
-        toast.error("Thời gian đóng bài tập phải sau thời gian mở bài tập.");
-        return;
-      }
       basicInfo.validate();
       questionForm.validate();
 
       if (!basicInfo.isValid() || !questionForm.isValid())
         return;
-      const response = await API.post(Url.teachers.modifyExercise, {
+      const response = await API.post(Url.teachers.modifyCurriculumExercise, {
         token: authState.token, 
         exerciseId: exercise.id,
         basicInfo: basicInfo.values,
@@ -322,7 +311,7 @@ const CourseModifyExercise = (props: any) => {
         const formData = new FormData();
         formData.append("temporaryKey", question.key);
         formData.append("image", question.imgSrc!);
-        const result = await API.post(Url.teachers.sendQuesitonImage, formData, {
+        const result = await API.post(Url.teachers.sendQuesitonStoreImage, formData, {
           headers: {
             'x-access-token': authState.token || "",
             'content-type': 'multipart/form-data'
@@ -344,7 +333,7 @@ const CourseModifyExercise = (props: any) => {
         const formData = new FormData();
         formData.append("temporaryKey", question.key);
         formData.append("audio", question.audioSrc!);
-        const result = await API.post(Url.teachers.sendQuesitonAudio, formData, {
+        const result = await API.post(Url.teachers.sendQuesitonStoreAudio, formData, {
           headers: {
             'x-access-token': authState.token || "",
             'content-type': 'multipart/form-data'
@@ -366,7 +355,7 @@ const CourseModifyExercise = (props: any) => {
         const formData = new FormData();
         formData.append("questionId", question.id);
         formData.append("image", question.imgSrc);
-        const result = await API.post(Url.teachers.sendModifiedQuesitonImage, formData, {
+        const result = await API.post(Url.teachers.sendModifiedQuesitonStoreImage, formData, {
           headers: {
             'x-access-token': authState.token || "",
             'content-type': 'multipart/form-data'
@@ -388,7 +377,7 @@ const CourseModifyExercise = (props: any) => {
         const formData = new FormData();
         formData.append("questionId", question.id);
         formData.append("audio", question.audioSrc);
-        const result = await API.post(Url.teachers.sendModifiedQuesitonAudio, formData, {
+        const result = await API.post(Url.teachers.sendModifiedQuesitonStoreAudio, formData, {
           headers: {
             'x-access-token': authState.token || "",
             'content-type': 'multipart/form-data'
@@ -399,7 +388,7 @@ const CourseModifyExercise = (props: any) => {
         }
       }
 
-      const exerciseResponse =  await API.post(Url.teachers.deleteQuestionTemporaryKey, {
+      const exerciseResponse =  await API.post(Url.teachers.deleteQuestionStoreTemporaryKey, {
         token: authState.token, 
         exerciseId: response.id,
       });
@@ -522,137 +511,7 @@ const CourseModifyExercise = (props: any) => {
           </Grid.Col>
 
           <Grid.Col span={6}>
-            <Title order={4} mt="md">Thời gian mở</Title>
-            <Group mt="md" grow>
-              <Popover opened={openTimePopoverOpened} position="bottom" width="target" transition="pop">
-                <Popover.Target>
-                  <div
-                    onFocusCapture={() => setOpenTimePopoverOpened(true)}
-                  >
-                    <Input
-                      placeholder="Thời gian bắt đầu"
-                      value={moment(openTime).format("HH:mm - DD/MM/YYYY")}
-                      onChange={() => {}}
-                    />
-                  </div>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <TimeInput
-                    mt="sm"
-                    defaultValue={new Date()}
-                    label="Chọn giờ"
-                    withSeconds 
-                    // clearable
-                    {...basicInfo.getInputProps("startTime")}
-                  />
-                  <DatePicker
-                    mt="sm"
-                    locale="vi"
-                    label="Chọn ngày"
-                    defaultValue={new Date()}
-                    clearable={false}
-                    {...basicInfo.getInputProps("startDate")}
-                  />
-
-                <Button 
-                  mt="sm" 
-                  onClick={() => {
-                    setOpenTimePopoverOpened(false);
-                    const startDate = basicInfo.values.startDate;
-                    const startTime = basicInfo.values.startTime;
-                    if (startDate === null || startTime === null)
-                      return;
-                    setOpenTime(new Date(
-                      startDate.getFullYear(), 
-                      startDate.getMonth(), 
-                      startDate.getDate(), 
-                      startTime.getHours(),
-                      startTime.getMinutes(),
-                      startTime.getSeconds(),
-                    ));
-                  }}>
-                  Chọn
-                </Button>
-                <Button 
-                  color={"red"}
-                  mt="sm" 
-                  ml={"sm"}
-                  onClick={() => {
-                    setOpenTimePopoverOpened(false);
-                }}>
-                  Hủy
-                </Button>
-                </Popover.Dropdown>
-              </Popover>
-            </Group>
-
-            <Title order={4} mt="md">Thời gian đóng</Title>
-            <Group mt="md" grow>
-              <Popover opened={endTimePopoverOpened} position="bottom" width="target" transition="pop">
-                <Popover.Target>
-                  <div
-                    onFocusCapture={() => setEndTimePopoverOpened(true)}
-                  >
-                    <Input
-                      placeholder="Thời gian kết thúc"
-                      value={moment(endTime).format("HH:mm - DD/MM/YYYY")}
-                      onChange={() => {}}
-                    />
-                  </div>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <TimeInput
-                    mt="sm"
-                    defaultValue={new Date()}
-                    label="Chọn giờ"
-                    withSeconds 
-                    // clearable
-                    {...basicInfo.getInputProps("endTime")}
-                  />
-                  <DatePicker
-                    mt="sm"
-                    locale="vi"
-                    label="Chọn ngày"
-                    defaultValue={new Date()}
-                    clearable={false}
-                    {...basicInfo.getInputProps("endDate")}
-                  />
-
-                <Button 
-                  mt="sm" 
-                  onClick={() => {
-                    setEndTimePopoverOpened(false);
-                    const endDate = basicInfo.values.endDate;
-                    const endTime = basicInfo.values.endTime;
-                    if (endDate === null || endTime === null)
-                      return;
-                    setEndTime(new Date(
-                      endDate.getFullYear(), 
-                      endDate.getMonth(), 
-                      endDate.getDate(), 
-                      endTime.getHours(),
-                      endTime.getMinutes(),
-                      endTime.getSeconds(),
-                    ));
-                  }}>
-                  Chọn
-                </Button>
-                <Button 
-                  color={"red"}
-                  mt="sm" 
-                  ml={"sm"}
-                  onClick={() => {
-                    setEndTimePopoverOpened(false);
-                  }}>
-                  Hủy
-                </Button>
-                </Popover.Dropdown>
-              </Popover>
-            </Group>
-          </Grid.Col>
-
-          <Grid.Col span={6}>
-            <Title order={4} mt="xs">Chọn bài học</Title>
+            <Title order={4} mt="md">Chọn bài học</Title>
             <NativeSelect
               mt="md"
               data={listLecture.map((lecture: Lecture, index: number) => {
@@ -663,6 +522,18 @@ const CourseModifyExercise = (props: any) => {
               {...basicInfo.getInputProps("lecture")}
               withAsterisk
             />
+
+              <Title order={4} mt="md">
+                Tuần bắt đầu
+              </Title>
+
+              <NumberInput
+                mt="md"
+                placeholder="1"
+                max={120}
+                min={1}
+                {...basicInfo.getInputProps("startWeek")}
+              />
           </Grid.Col>
         </Grid>
       </form>
@@ -708,4 +579,4 @@ const CourseModifyExercise = (props: any) => {
 	);
 }
 
-export default CourseModifyExercise;
+export default CurriculumModifyExercise;

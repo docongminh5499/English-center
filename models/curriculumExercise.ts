@@ -1,12 +1,12 @@
+import Curriculum from "./cirriculum.model";
 import Lecture from "./lecture.model";
 
 
-export default interface Exercise {
+export default interface CurriculumExercise {
   id: number;
   name: string;
-  openTime: Date | null;
-  endTime: Date | null;
   maxTime: number | null;
   lecture: Lecture;
+  curriculum: Curriculum
 //   questions: Question[];
 }

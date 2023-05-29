@@ -278,6 +278,7 @@ const TeacherCourseDetailScreen = (props: IProps) => {
                     courseSlug={course?.slug}
                     course={course}
                     courseId={props.course?.id}
+                    curriculum={course?.curriculum}
                   />
                 </Tabs.Panel>
                 <Tabs.Panel value="document" pt="xs">

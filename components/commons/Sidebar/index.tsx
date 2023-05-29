@@ -12,6 +12,7 @@ import {
     IconMessage
 } from '@tabler/icons';
 import Link from "next/link";
+import { useAuth } from "../../../stores/Auth";
 
 interface IProps {
   unreadNotificationCount: number;
@@ -95,6 +96,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const Sidebar = (props: IProps) => {
+  const [authState] = useAuth();
   const router = useRouter();
 
   const sidebarSelector = useCallback(() => {
@@ -121,6 +123,11 @@ const Sidebar = (props: IProps) => {
       personalSidebar = tutorSidebar;
     else if (props.userRole === UserRole.PARENT)
       personalSidebar = parentSidebar;
+    if(authState.role == UserRole.EMPLOYEE && !authState.isManager){
+      personalSidebar.pop();
+    }
+    console.log("============================================")
+    console.log(authState);
     return [...personalSidebar, ...userSidebar];
 
     // TODO: another user role

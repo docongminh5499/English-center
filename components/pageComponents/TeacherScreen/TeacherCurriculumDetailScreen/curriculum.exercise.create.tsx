@@ -1,4 +1,4 @@
-import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, NativeSelect, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { Box, Button, Container, Divider, FileButton, Grid, Group, Image, Input, Loader, Modal, MultiSelect, NativeSelect, NumberInput, Popover, Text, Textarea, TextInput, Title } from "@mantine/core";
 import { DatePicker, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
@@ -11,18 +11,14 @@ import { Url } from "../../../../helpers/constants";
 import { useAuth } from "../../../../stores/Auth";
 import Lecture from "../../../../models/lecture.model";
 
-const CourseCreateExercise = (props: any) => {
+const CurriculumCreateExercise = (props: any) => {
   console.log(props);
   const now = new Date();
-  const [loader, setLoader] = useState(false);
   const [addQuestion, setAddQuestion] = useState(false);
   const [rerender, setRerender] = useState(false);
   const [authState,] = useAuth();
-  const [openTimePopoverOpened, setOpenTimePopoverOpened] = useState(false);
-  const [endTimePopoverOpened, setEndTimePopoverOpened] = useState(false);
-  const [openTime, setOpenTime] = useState(now);
-  const [endTime, setEndTime] = useState(moment(now).add(7, "days").toDate());
-  const listLecture = props.listLecture; 
+  const lecture: Lecture = props.lecture; 
+  const [loader, setLoader] = useState(false);
   //Tags
   const [tags, setTags] = useState([]);
   const [addTagLoading, setAddTagLoading] = useState(false);
@@ -51,11 +47,7 @@ const CourseCreateExercise = (props: any) => {
     initialValues: {
       nameExercise: "",
       maxTime: 1,
-      startDate: now,
-      startTime: now,
-      endDate: moment(now).add(7, "days").toDate(),
-      endTime: now,
-      lecture: listLecture[0].id,
+      startWeek: 1,
     },
 
     validate: {
@@ -221,7 +213,7 @@ const CourseCreateExercise = (props: any) => {
               rightSection={addTagLoading === true ? <Loader size={14}/> : null}
               getCreateLabel={(query) => `+ Thêm tag: ${query}`}
               onCreate={query => {
-                addTagHandler(query, index)
+                addTagHandler(query)
                 return { value: query, label: query };
               }}
               {...questionForm.getInputProps(`questions.${index}.tags`)}
@@ -265,10 +257,6 @@ const CourseCreateExercise = (props: any) => {
       setConfirmCreateExercise(false);
       setLoader(true);
       //Validate Input
-      if(endTime.getTime() <= openTime.getTime()){
-        toast.error("Thời gian đóng bài tập phải sau thời gian mở bài tập.");
-        return;
-      }
       basicInfo.validate();
       questionForm.validate();
 
@@ -278,10 +266,10 @@ const CourseCreateExercise = (props: any) => {
       for(const question of questionForm.values.questions){
         arrImage.push(question.imgSrc);
       }
-
-      const response = await API.post(Url.teachers.createExercise, {
+      const response = await API.post(Url.teachers.createCurriculumExercise, {
         token: authState.token, 
-        courseId: props.courseId, 
+        curriculumId: props.curriculum.id,
+				lectureId: lecture.id,
         basicInfo: basicInfo.values,
         ...questionForm.values,
       });
@@ -295,7 +283,7 @@ const CourseCreateExercise = (props: any) => {
         const formData = new FormData();
         formData.append("temporaryKey", question.key);
         formData.append("image", question.imgSrc!);
-        const result = await API.post(Url.teachers.sendQuesitonImage, formData, {
+        const result = await API.post(Url.teachers.sendQuesitonStoreImage, formData, {
           headers: {
             'x-access-token': authState.token || "",
             'content-type': 'multipart/form-data'
@@ -314,7 +302,7 @@ const CourseCreateExercise = (props: any) => {
         const formData = new FormData();
         formData.append("temporaryKey", question.key);
         formData.append("audio", question.audioSrc!);
-        const result = await API.post(Url.teachers.sendQuesitonAudio, formData, {
+        const result = await API.post(Url.teachers.sendQuesitonStoreAudio, formData, {
           headers: {
             'x-access-token': authState.token || "",
             'content-type': 'multipart/form-data'
@@ -325,25 +313,25 @@ const CourseCreateExercise = (props: any) => {
         }
       }
 
-      await API.post(Url.teachers.deleteQuestionTemporaryKey, {
+      //Delete TemporaryKey
+      await API.post(Url.teachers.deleteQuestionStoreTemporaryKey, {
         token: authState.token, 
         exerciseId: response.id,
       });
 
-      props.setListExercises((current: any) => [...current, {
+			props.setListExercises((current: any) => [...current, {
         id: response.id,
         name: response.name,
-        openTime: response.openTime,
-        endTime: response.endTime,
         maxTime: response.maxTime,
         lecture: response.lecture,
+				curriculum: response.curriculum,
       }])
       toast.success("Tạo bài tập thành công!");
       props.createExerState(false);
     }catch(error){
       console.log(error);
       toast.error("Hệ thống gặp sự cố, vui lòng thử lại sau!");
-    } finally{
+    }finally {
       setLoader(false);
     }
   };
@@ -375,7 +363,7 @@ const CourseCreateExercise = (props: any) => {
         tagName: query,
       });
       const item = { value: response.name, label: response.name };
-      setTags((current) => [...current, item]);
+      setTags((current: any) => [...current, item]);
       toast.success(`Thêm tag "${query}" thành công!`);
       return item;
     }catch(error){
@@ -389,10 +377,7 @@ const CourseCreateExercise = (props: any) => {
   console.log("==================================================")
   console.log(basicInfo.values)
   return (
-    <>
-      <Title order={1} align="center">
-        Tạo bài tập mới
-      </Title>
+    <Box ml={"md"} mt={"md"}>
 
       <Modal
         opened={loader}
@@ -408,6 +393,19 @@ const CourseCreateExercise = (props: any) => {
           <Text size={15}>Đang tạo...</Text>
         </Group>
       </Modal>
+
+      <Title order={1} align="center">
+        Tạo bài tập mới
+      </Title>
+
+			<Grid mt={"md"}>
+          <Grid.Col span={6}>
+            <Title order={3} mt="md">Chương trình học: {props.curriculum.name}</Title>
+          </Grid.Col>
+					<Grid.Col span={6}>
+            <Title order={3} mt="md">Bài học: {lecture.name}</Title>
+          </Grid.Col>
+        </Grid>
       {/* Confirm to Create Exercise*/}
       <Modal
         centered
@@ -458,7 +456,8 @@ const CourseCreateExercise = (props: any) => {
               placeholder="Tên bài tập"
               {...basicInfo.getInputProps("nameExercise")}
             />
-
+          </Grid.Col>
+					<Grid.Col span={6}>
             <Title order={4} mt="md">Số làn làm tối đa</Title>
             <TextInput
              mt="md"
@@ -467,148 +466,19 @@ const CourseCreateExercise = (props: any) => {
               {...basicInfo.getInputProps("maxTime")}
             />
           </Grid.Col>
-
           <Grid.Col span={6}>
-            <Title order={4} mt="md">Thời gian mở</Title>
-            <Group mt="md" grow>
-              <Popover opened={openTimePopoverOpened} position="bottom" width="target" transition="pop">
-                <Popover.Target>
-                  <div
-                    onFocusCapture={() => setOpenTimePopoverOpened(true)}
-                  >
-                    <Input
-                      placeholder="Thời gian bắt đầu"
-                      value={moment(openTime).format("HH:mm - DD/MM/YYYY")}
-                      onChange={() => {}}
-                    />
-                  </div>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <TimeInput
-                    mt="sm"
-                    defaultValue={new Date()}
-                    label="Chọn giờ"
-                    withSeconds 
-                    {...basicInfo.getInputProps("startTime")}
-                  />
-                  <DatePicker
-                    mt="sm"
-                    locale="vi"
-                    label="Chọn ngày"
-                    defaultValue={new Date()}
-                    clearable={false}
-                    {...basicInfo.getInputProps("startDate")}
-                  />
+              <Title order={4} mt="md">
+                Tuần bắt đầu
+              </Title>
 
-                <Button 
-                  mt="sm" 
-                  onClick={() => {
-                    setOpenTimePopoverOpened(false);
-                    const startDate = basicInfo.values.startDate;
-                    const startTime = basicInfo.values.startTime;
-                    if (startDate === null || startTime === null)
-                      return;
-                    setOpenTime(new Date(
-                      startDate.getFullYear(), 
-                      startDate.getMonth(), 
-                      startDate.getDate(), 
-                      startTime.getHours(),
-                      startTime.getMinutes(),
-                      startTime.getSeconds(),
-                    ));
-                  }}>
-                  Chọn
-                </Button>
-                <Button 
-                  color={"red"}
-                  mt="sm" 
-                  ml={"sm"}
-                  onClick={() => {
-                    setOpenTimePopoverOpened(false);
-                  }}>
-                  Hủy
-                </Button>
-                </Popover.Dropdown>
-              </Popover>
-            </Group>
-
-            <Title order={4} mt="md">Thời gian đóng</Title>
-            <Group mt="md" grow>
-              <Popover opened={endTimePopoverOpened} position="bottom" width="target" transition="pop">
-                <Popover.Target>
-                  <div
-                    onFocusCapture={() => setEndTimePopoverOpened(true)}
-                  >
-                    <Input
-                      placeholder="Thời gian kết thúc"
-                      value={moment(endTime).format("HH:mm - DD/MM/YYYY")}
-                      onChange={() => {}}
-                    />
-                  </div>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <TimeInput
-                    mt="sm"
-                    defaultValue={new Date()}
-                    label="Chọn giờ"
-                    withSeconds 
-                    {...basicInfo.getInputProps("endTime")}
-                  />
-                  <DatePicker
-                    mt="sm"
-                    locale="vi"
-                    label="Chọn ngày"
-                    defaultValue={new Date()}
-                    clearable={false}
-                    {...basicInfo.getInputProps("endDate")}
-                  />
-
-                <Button 
-                  mt="sm" 
-                  onClick={() => {
-                    setEndTimePopoverOpened(false);
-                    const endDate = basicInfo.values.endDate;
-                    const endTime = basicInfo.values.endTime;
-                    if (endDate === null || endTime === null)
-                      return;
-                    setEndTime(new Date(
-                      endDate.getFullYear(), 
-                      endDate.getMonth(), 
-                      endDate.getDate(), 
-                      endTime.getHours(),
-                      endTime.getMinutes(),
-                      endTime.getSeconds(),
-                    ));
-                  }}>
-                  Chọn
-                </Button>
-                <Button 
-                  color={"red"}
-                  mt="sm" 
-                  ml={"sm"}
-                  onClick={() => {
-                    setEndTimePopoverOpened(false);
-                  }}>
-                  Hủy
-                </Button>
-                </Popover.Dropdown>
-              </Popover>
-            </Group>
-          </Grid.Col>
-
-          <Grid.Col span={6}>
-            <Title order={4} mt="xs">Chọn bài học</Title>
-            <NativeSelect
-              mt="md"
-              data={listLecture.map((lecture: Lecture, index: number) => {
-                return {
-                  value: lecture.id,
-                  label: `Bài học ${lecture.order}: ` + lecture.name, 
-                }})}
-              {...basicInfo.getInputProps("lecture")}
-              withAsterisk
-            />
-          </Grid.Col>
+              <NumberInput
+                mt="md"
+                placeholder="1"
+                max={120}
+                min={1}
+                {...basicInfo.getInputProps("startWeek")}
+              />
+            </Grid.Col>
         </Grid>
       </form>
 
@@ -650,8 +520,8 @@ const CourseCreateExercise = (props: any) => {
         <Button mt="xl" onClick={() => setConfirmCreateExercise(true)}>Tạo bài tập</Button>
         <Button mt="xl" ml="md" color={"red"} onClick={() => setCancelCreateExercise(true)}>Hủy bỏ</Button>
       </Container>
-    </>
+    </Box>
   );
 };
 
-export default CourseCreateExercise;
+export default CurriculumCreateExercise;

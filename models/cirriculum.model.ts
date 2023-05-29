@@ -1,4 +1,5 @@
 import { CourseType, CurriculumLevel } from "../helpers/constants"
+import CurriculumExercise from "./curriculumExercise"
 import Lecture from "./lecture.model"
 import Tag from "./tag.model"
 
@@ -15,4 +16,5 @@ export default interface Curriculum {
     shiftsPerSession: number,
     tags: Tag[],
     level: CurriculumLevel
+    exercises: CurriculumExercise[],
 }

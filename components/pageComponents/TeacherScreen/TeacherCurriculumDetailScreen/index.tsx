@@ -1,4 +1,4 @@
-import { Badge, Container, Divider, Grid, Image, Input, Loader, Modal, NavLink, Pagination, ScrollArea, Space, Table, Text, ThemeIcon, Title } from "@mantine/core";
+import { Badge, Box, Container, Divider, Grid, Group, Image, Input, List, Loader, Modal, NavLink, Pagination, ScrollArea, Space, Table, Text, ThemeIcon, Title } from "@mantine/core";
 import { useInputState, useMediaQuery } from "@mantine/hooks";
 import { IconSquarePlus, IconTrash } from "@tabler/icons";
 import moment from "moment";
@@ -20,6 +20,10 @@ import Loading from "../../../commons/Loading";
 import DeleteModal from "../Modal/delete.modal";
 import FindAddPreferedTeacher from "../Modal/findAddPreferedTeacher.modal";
 import styles from "./curriculum.module.css";
+import Lecture from "../../../../models/lecture.model";
+import CurriculumExercise from "../../../../models/curriculumExercise";
+import CurriculumCreateExercise from "./curriculum.exercise.create";
+import CurriculumExerciseDetail from "./curriculum.exercise.detail";
 
 
 interface IProps {
@@ -54,7 +58,13 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
   const [maxPageTeacher, setMaxPageTeacher] = useState(1);
   const [queryTeacher, setQueryTeacher] = useInputState("");
 
-
+  const [listExercises, setListExercises] = useState(props.curriculum === undefined || props.curriculum?.exercises === undefined ? [] : props.curriculum?.exercises);
+  const [selectedExercise, setSelectedExercise] = useState<CurriculumExercise | null>(null);
+  const [selectedLecture, setSelectedLecture] = useState<Lecture | null>(null);
+  const [seeExerciseDetail, setSeeExerciseDetail] = useState(false);
+  const [createNewExercise, setCreateNewExercise] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [loaderDelete, setLoaderDelete] = useState(false);
 
   const getTeachers = useCallback(async (limit: number, skip: number, query: string, curriculumId?: number) => {
     return await API.post(Url.teachers.getTeachersPreferedCurriculum, {
@@ -213,7 +223,46 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
     else setDidMount(true);
   }, []);
 
+  const listLecture =
+    props.curriculum === undefined ||  props.curriculum?.lectures === undefined? [] : props.curriculum?.lectures;
+  listLecture.sort((a: Lecture, b: Lecture) => {
+    return a.order - b.order;
+  });
+  const groupedExercise = new Map<number, CurriculumExercise[]>();
+  for (const lecture of listLecture) {
+    groupedExercise.set(lecture.id, []);
+  }
+  
+  for (const exercise of listExercises) {
+    const key = exercise.lecture.id;
+    if (groupedExercise.has(key)) {
+      groupedExercise.get(key)?.push(exercise);
+    }
+  }
+  console.log(props.curriculum);
 
+  const deleteExercise = async ()=>{
+    setIsOpenDeleteModal(false);
+    setLoaderDelete(true);
+    try {
+      await API.post(Url.teachers.deleteCurriculumExercise, {
+        token: authState.token, 
+        exerciseId: selectedExercise?.id,
+      });
+      const updatedListExercises = listExercises?.filter(
+        (item) => item.id !== selectedExercise?.id
+      );
+      setLoaderDelete(false);
+      setListExercises(updatedListExercises);
+      toast.success("Xóa bài tập thành công!");
+    } catch (error) {
+      console.log(error);
+      setLoaderDelete(false);
+      toast.error("Xóa bài tập thất bại, vui lòng thử lại sau!");
+    } finally {
+      setLoaderDelete(false);
+    }
+  }
 
   return (
     <>
@@ -221,6 +270,42 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
         <title>Chi tiết chương trình học</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {/* <Modal
+        opened={loaderDelete}
+        onClose={() => setLoaderDelete(false)}
+        centered
+        withCloseButton={false}
+        overlayOpacity={0.55}
+        overlayBlur={3}
+      >
+        <Group>
+          <Loader />
+          <Text size={15}>Đang xử lý...</Text>
+        </Group>
+      </Modal> */}
+
+      <Modal
+        opened={isOpenDeleteModal}
+        onClose={() => setIsOpenDeleteModal(false)}
+        centered
+        closeOnClickOutside={true}
+        overlayOpacity={0.55}
+        overlayBlur={3}
+        withCloseButton={false}
+      >
+        <Group  position="center">
+          <Text size="xl">Xác nhận xóa bài tập?</Text>
+        </Group>
+        <Group position="center">
+          <Button type="submit" color={"green"} mt="md" onClick={deleteExercise}>
+            Xác nhận
+          </Button>
+          <Button type="submit" color={"red"} mt="md" ml="sm" onClick={()=>setIsOpenDeleteModal(false)}>
+            Hủy bỏ  
+          </Button>
+        </Group>
+      </Modal>
 
       <Modal
         opened={isOpenRemoveTeacherPreferedCurrModal}
@@ -262,7 +347,7 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
         </Container>
       )}
 
-      {didMount && (
+      {didMount && !seeExerciseDetail && !createNewExercise && (
         <Container size="xl" style={{ width: "100%" }}>
           <Title transform="uppercase" color="#444" size="2.6rem" my={20} align="center">
             {props.curriculum?.name}
@@ -488,6 +573,63 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
                       <Container p={0} dangerouslySetInnerHTML={{ __html: props.curriculum.lectures[active].desc || "" }} />
                       <Text color="#444" weight={600} mt={20}>Chi tiết bài học: </Text>
                       <Container p={0} dangerouslySetInnerHTML={{ __html: props.curriculum.lectures[active].detail }} />
+                      <Group mt={20}>
+                        <Text color="#444" weight={600}>Danh sách bài tập: </Text>
+                        {authState.isManager && 
+                          <ThemeIcon size="md" color="green" style={{ cursor: "pointer", marginBottom: "0px" }}
+                            onClick={() => {
+                              setCreateNewExercise(true);
+                              setSelectedLecture(props.curriculum?.lectures[active]!);
+                            }}>
+                            <IconSquarePlus size={20} style={{marginBottom: "0px" }}/>
+                          </ThemeIcon>
+                        }
+                      </Group>
+                        {groupedExercise.has(props.curriculum.lectures[active].id) &&
+                          groupedExercise.get(props.curriculum.lectures[active].id)?.map((exercise: CurriculumExercise, index: number) => {
+                            return (
+                              <Box style={{width: "100%"}} key={index}>
+                                  <Grid style={{width: "100%"}}>
+                                    <Grid.Col span={"auto"} style={{width: "100%"}}>
+                                      <Text size={15}>
+                                        {exercise.name}
+                                      </Text>
+                                    </Grid.Col>
+                                    <Grid.Col span={2} style={{width: "100%"}}>
+                                      <Button
+                                        compact={isLargeTablet ? false : true}
+                                        fullWidth
+                                        variant="light"
+                                        onClick={() => {
+                                          setSelectedExercise(exercise);
+                                          setSeeExerciseDetail(true);
+                                        }}
+                                      >
+                                        Xem chi tiết
+                                      </Button>
+                                    </Grid.Col>
+                                    {authState.isManager && 
+                                      <Grid.Col span={2} style={{width: "100%"}}>
+                                        <Button
+                                          variant="light"
+                                          onClick={() => {
+                                            setSelectedExercise(exercise);
+                                            setIsOpenDeleteModal(true);
+                                          }}
+                                          compact={isLargeTablet ? false : true}
+                                          color="red"
+                                          fullWidth
+                                          size="xs"
+                                        >
+                                          Xóa bài tập
+                                        </Button>
+                                      </Grid.Col>
+                                    }
+                                  </Grid>
+                                </Box>
+                            )
+                          })
+                        }
                     </Container>
                   )}
                 </Container>
@@ -504,6 +646,31 @@ const TeacherCurriculumDetailScreen = (props: IProps) => {
             </Container>
           )}
         </Container>
+      )}
+
+      {seeExerciseDetail && (
+        <>
+          <CurriculumExerciseDetail 
+            {...props}
+            setSeeExerciseDetail={setSeeExerciseDetail}
+            exerciseId={selectedExercise?.id}
+            exercise={selectedExercise}
+            listLecture={listLecture}
+            setListExercises={setListExercises}
+          />
+        </>
+      )}
+
+      {createNewExercise && (
+        <>
+          <CurriculumCreateExercise
+            {...props}
+            createExerState={setCreateNewExercise}
+            lecture={selectedLecture}
+            curriculum={props.curriculum}
+            setListExercises={setListExercises}
+          />
+        </>
       )}
     </>
   );

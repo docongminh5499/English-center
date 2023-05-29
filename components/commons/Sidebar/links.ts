@@ -1,6 +1,6 @@
 import {
     IconBrandCashapp, IconCalendar, IconCertificate, IconCoin, IconLamp2, IconNotebook,
-    IconSchool, IconUsers
+    IconSchool, IconUsers, IconReportMoney,
 } from '@tabler/icons';
 import { SidebarItem } from "../../../interfaces/sidebarItem.interface";
 
@@ -65,6 +65,11 @@ export const employeeSidebar: Array<SidebarItem> = [
     src: IconUsers,
     name: "Nhân sự",
     href: "/employee/workers",
+  },
+  {
+    src: IconReportMoney,
+    name: "Kinh doanh",
+    href: "/employee/business",
   }
 ];
 

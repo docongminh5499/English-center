@@ -27,6 +27,8 @@ import {
   Container,
   Grid,
   SimpleGrid,
+  Modal,
+  Loader,
 } from "@mantine/core";
 import styles from "./course.module.css";
 import { useInputState, useMediaQuery } from "@mantine/hooks";

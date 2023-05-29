@@ -12,6 +12,14 @@ export enum UserRole {
   PARENT = "parent",
 }
 
+export enum ReportType {
+  REVENUE = "revenue",
+  SALARY = "salary",
+  STUDENT = "student",
+  PROFIT = "profit",
+  COURSE = "course"
+}
+
 export enum Gender {
   MALE = "male",
   FEMALE = "female",
@@ -208,11 +216,26 @@ export const Url = {
     getExerciseById: "/api/teachers/exercise/get-exercise-by-id/",
     getStdExeResult: "/api/teachers/exercise/get-student-exercise-result/",
     modifyExercise: "/api/teachers/exercise/modify-exercise",
+    changeExerciseInfo: "/api/teachers/exercise/change-exercise-info",
     sendQuesitonImage: "/api/teachers/exercise/send-question-image",
     sendModifiedQuesitonImage: "/api/teachers/exercise/send-modified-question-image",
     sendQuesitonAudio: "/api/teachers/exercise/send-question-audio",
     sendModifiedQuesitonAudio: "/api/teachers/exercise/send-modified-question-audio",
     deleteQuestionTemporaryKey: "/api/teachers/exercise/delete-question-temporary-key",
+    getAllCurriculumExercise: "/api/teachers/exercise/get-all-curriculum-exercise",
+    addCurriculumExerciseToCourse: "/api/teachers/exercise/add-curriculum-exercise-to-course",
+
+    createCurriculumExercise: "/api/teachers/curriculum/exercise/create-curriculum-exercise",
+    modifyCurriculumExercise: "/api/teachers/curriculum/exercise/modify-curriculum-exercise",
+    sendQuesitonStoreImage: "/api/teachers/curriculum/exercise/send-question-store-image",
+    sendModifiedQuesitonStoreImage: "/api/teachers/curriculum/exercise/send-modified-question-store-image",
+    sendQuesitonStoreAudio: "/api/teachers/curriculum/exercise/send-question-store-audio",
+    sendModifiedQuesitonStoreAudio: "/api/teachers/curriculum/exercise/send-modified-question-store-audio",
+    deleteQuestionTemporaryKeyForCurriculumExercise: "/api/teachers/curriculum/exercise/delete-question-temporary-key",
+    getCurriculumExerciseById: "/api/teachers/curriculum/exercise/get-curriculum-exercise-by-id",
+    deleteQuestionStoreTemporaryKey: "/api/teachers/curriculum/exercise/delete-question-store-temporary-key",
+    changeCurriculumExerciseInfo: "/api/teachers/curriculum/exercise/change-curriculum-exercise-info",
+    deleteCurriculumExercise: "/api/teachers/curriculum/exercise/delete-curriculum-exercise",
   },
   students: {
     getTimetable: "/api/students/timetable",
@@ -307,6 +330,13 @@ export const Url = {
     notifyLateFeeStudent: "/api/employees/student/notify-late-fee-students",
     getUnpaidFee: "/api/employees/student/get-unpaid-fee",
     payFee: "/api/employees/student/pay-fee",
+
+    //Business
+    getRevenueReport: "/api/employees/business/get-revenue-report",
+    getSalaryReport: "/api/employees/business/get-salary-report",
+    getStudentReport: "/api/employees/business/get-student-report",
+    getProfitReport: "/api/employees/business/get-profit-report",
+    getCourseReport: "/api/employees/business/get-course-report",
   },
   tutors: {
     getCourse: "/api/tutors/courses/get-course",
