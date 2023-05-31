@@ -163,7 +163,7 @@ export const GuestConstants = {
 }
 
 export const Url = {
-  baseUrl: production ? "https://root-smile-370415.as.r.appspot.com" : "http://localhost:5000",
+  baseUrl: production ? "https://glass-cedar-237913.as.r.appspot.com" : "http://localhost:5000",
   users: {
     signIn: "/api/users/sign-in",
     verify: "/api/users/verify",
