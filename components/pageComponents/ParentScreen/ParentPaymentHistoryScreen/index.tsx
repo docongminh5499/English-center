@@ -33,6 +33,7 @@ import Head from "next/head";
 import { useParent } from "../../../../stores/Parent";
 import styles from "./fee.module.css";
 import { formatCurrency } from "../../../../helpers/formatCurrency";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 
 const ParentPaymentHistoryScreen = (props: any) => {
   const [authState] = useAuth();
@@ -139,12 +140,98 @@ const ParentPaymentHistoryScreen = (props: any) => {
   console.log(props.parent);
   console.log(`Selected Student: ${selectedStudent?.user.fullName}`);
 
+  const createOrder = useCallback(
+    (data: any, actions: any) => {
+      return actions.order.create(orderDetail);
+    },
+    [orderDetail]
+  );
+
+  const onApprove = 
+    (data: any, actions: any) => {
+      return actions.order.capture().then(async function (detail: any) {
+        try {
+          await API.post(Url.payments.parentPayment, {
+            token: authState.token,
+            courseSlug: selectedCourseForPayment?.slug,
+            studentId: parentState.selectedStudentId,
+            orderId: detail.id,
+          });
+          const paymentHistory = await API.get(
+            Url.parents.getStudentPaymentHistory,
+            {
+              token: authState.token,
+              studentId: parentState.selectedStudentId,
+              limit: ParentConstants.limitFee,
+              skip: 0,
+            }
+          );
+          setListFee(paymentHistory === null ? [] : paymentHistory.fee);
+          setConfirmPayment(false);
+          toast.success("Thanh toán thành công.");
+        } catch (error: any) {
+          if (error.status < 500) {
+            if (error.data.message && typeof error.data.message === "string")
+              toast.error(error.data.message);
+            else if (error.data.message && Array.isArray(error.data.message)) {
+              const messages: any[] = Array.from(error.data.message);
+              if (messages.length > 0 && typeof messages[0] === "string")
+                toast.error(messages[0]);
+              else if (messages.length > 0 && Array.isArray(messages))
+                toast.error("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại");
+              else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+            } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+          } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } finally {
+          setConfirmPayment(false);
+        }
+      });
+    };
+
+    const onError = useCallback((error: any) => {
+      console.log(error)
+      toast.error("Lỗi thanh toán, vui lòng thử lại sau.");
+      setConfirmPayment(false);
+    }, []);
+  //================================================================================================
+
   return (
     <Box m={"md"} style={{ width: "100%" }}>
       <Head>
         <title>Lịch sử thanh toán</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Modal
+        zIndex={10}
+        centered
+        opened={confirmPayment}
+        onClose={() => {
+          setPaymentFee(null);
+          setConfirmPayment(false);
+        }}
+      >
+        <Box>
+          <Title order={3} align="center">
+            Xác nhận thanh toán khoản tiền{" "}
+            {formatCurrency(paymentFee?.transCode.amount)}?
+          </Title>
+
+          <Group position="center" mt="sm">
+            <PayPalButtons
+              style={{
+                color: "blue",
+                shape: "pill",
+                label: "pay",
+                tagline: false,
+                layout: "horizontal",
+              }}
+              createOrder={createOrder}
+              onApprove={onApprove}
+              onError={onError}
+            />
+          </Group>
+        </Box>
+      </Modal>
       {selectStudentModal && (
         <SelectStudentModal
           students={parent.userStudents}
@@ -239,19 +326,14 @@ const ParentPaymentHistoryScreen = (props: any) => {
                                 onClick={() => {
                                   setConfirmPayment(true);
                                   setPaymentFee(fee);
-                                  setSelectedCourseForPayment(fee.course);
+                                  setSelectedCourseForPayment(fee.course)
                                   setOrderDetail({
                                     intent: "CAPTURE",
                                     purchase_units: [
                                       {
                                         amount: {
                                           currency_code: "USD",
-                                          value: (
-                                            Math.ceil(
-                                              (fee.transCode.amount / 23000) *
-                                                100
-                                            ) / 100
-                                          ).toString(),
+                                          value: (Math.ceil(fee.transCode.amount / 23000 * 100) / 100).toString(),
                                         },
                                       },
                                     ],

@@ -38,7 +38,7 @@ interface IProps {
 }
 
 
-const index = (props: IProps) => {
+const DetailsCourseScreen = (props: IProps) => {
   const [authState, authAction] = useAuth();
   const router = useRouter();
   const [didMount, setDidMount] = useState(false);
@@ -659,4 +659,4 @@ const index = (props: IProps) => {
   )
 }
 
-export default index
+export default DetailsCourseScreen

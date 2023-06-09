@@ -117,6 +117,9 @@ const CourseSession = (props: IProps) => {
       <Text color="#444" transform="uppercase" align="center" weight={600} style={{ fontSize: "2.6rem" }}>
         Danh sách buổi học
       </Text>
+      <Text color="dimmed" align="center" weight={600} style={{ fontSize: "1.8rem" }}>
+        Số buổi học: {total}
+      </Text>
 
       <Modal
         opened={isOpenRequestOffModal}

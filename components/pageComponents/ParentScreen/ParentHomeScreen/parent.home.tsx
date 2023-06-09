@@ -8,6 +8,7 @@ import {
   MediaQuery,
   Modal,
   Popover,
+  RingProgress,
   ScrollArea,
   Select,
   Table,
@@ -42,6 +43,7 @@ function format2dayInTimetable(courses: any) {
       formatDayInTimetable.get(key).push({
         courseName: course.name,
         studySession: studySession,
+        branchName: course.branch.name,
       });
     }
   }
@@ -58,6 +60,7 @@ const ParentHomeScreen = (props: any) => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const arrColor = ["green", "blue", "orange", "grape", "yellow"];
 
   console.log(
     "============================================================================="
@@ -239,6 +242,7 @@ const ParentHomeScreen = (props: any) => {
                       <tr key={data.studySession.id}>
                         <td>{data.courseName}</td>
                         <td>{`${startTime} - ${endTime}`}</td>
+                        <td>{data.branchName}</td>
                         <td>
                           {data.studySession.classroom === null
                             ? "-"
@@ -260,20 +264,19 @@ const ParentHomeScreen = (props: any) => {
                       zIndex={1}
                     >
                       <Popover.Target>
-                        <div>
-                          <span
-                            style={{
-                              backgroundColor: dateBackgroundColor,
-                              padding: "10px",
-                              width: "70px",
-                              height: "70px",
-                              color: textColor,
-                              borderRadius: "50%",
-                            }}
-                          >
+                      <Group position="center">
+                      <RingProgress
+                      size={90}
+                        label={
+                          <>
                             {day}
-                          </span>
-                        </div>
+                          </>
+                        }
+                        sections={dayInTimetable.get(key).map((value, index) => {
+                          return { value: 100/dayInTimetable.get(key).length, color: arrColor[index % arrColor.length] };
+                        })}
+                      />
+                    </Group>
                       </Popover.Target>
                       <Popover.Dropdown>
                         <ScrollArea style={{ width: "100%", flex: 1 }}>
@@ -282,6 +285,7 @@ const ParentHomeScreen = (props: any) => {
                               <tr>
                                 <th>Tên khóa học</th>
                                 <th>Giờ</th>
+                                <th>Chi nhánh</th>
                                 <th>Phòng</th>
                               </tr>
                             </thead>

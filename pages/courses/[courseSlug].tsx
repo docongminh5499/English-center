@@ -20,6 +20,7 @@ export default ListCourse;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = CookieParser.parse(context.req.headers.cookie);
   const user = cookies[CookieKey.USER] ? JSON.parse(cookies[CookieKey.USER]) : { role: UserRole.GUEST };
+  console.log("A")
   try {
     const [course, isAttended, countStudent] = await Promise.all([
       API.post(Url.guests.getCourseDetail, { courseSlug: context.params?.courseSlug }),
@@ -28,10 +29,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         courseSlug: context.params?.courseSlug,
         studentId: user.userId
       }),
-      API.post(Url.guests.countStudentAttendCourse, { courseSlug: context.params?.courseSlug }),
+      // API.post(Url.guests.countStudentAttendCourse, { courseSlug: context.params?.courseSlug }),
+      10,
     ]);
+    console.log("B")
     return { props: { userRole: user.role || null, course: course, isAttended: isAttended, countStudent: countStudent } };
   } catch (error: any) {
+    console.log(error)
     return { props: { userRole: user.role || null, course: null, isAttended: false, countStudent: 0 } }
   };
 }

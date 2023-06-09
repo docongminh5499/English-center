@@ -53,6 +53,18 @@ const StudentCourseContentScreen = (props: any) => {
             textAlign: "left",
           }}
         >
+          Giáo viên: {
+            course.teacher.worker.user.fullName 
+          }
+        </Text>
+        <Text
+          size="md"
+          align="left"
+          style={{
+            width: "100%",
+            textAlign: "left",
+          }}
+        >
           Thời gian: {
             `${openingDate.getDate()}/${openingDate.getMonth() + 1}/${openingDate.getFullYear()} -
             ${closingDate.getDate()}/${closingDate.getMonth() + 1}/${closingDate.getFullYear()}`

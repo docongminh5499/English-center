@@ -112,7 +112,7 @@ const StudentPersonalScreen = (props: any) => {
     [orderDetail]
   );
 
-  const onApprove = useCallback(
+  const onApprove = 
     (data: any, actions: any) => {
       return actions.order.capture().then(async function (detail: any) {
         try {
@@ -122,6 +122,10 @@ const StudentPersonalScreen = (props: any) => {
             studentId: props.userStudent?.user.id,
             orderId: detail.id,
           });
+          const paymentHistory = await API.get(Url.students.getPaymentHistory,  { token: authState.token, limit: StudentConstants.limitFee, skip: 0 });
+          setListFee(paymentHistory === null ? [] : paymentHistory.fee);
+          setConfirmPayment(false);
+          toast.success("Thanh toán thành công.");
         } catch (error: any) {
           if (error.status < 500) {
             if (error.data.message && typeof error.data.message === "string")
@@ -135,11 +139,17 @@ const StudentPersonalScreen = (props: any) => {
               else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
             } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
           } else toast.error("Hệ thống gặp sự cố. Vui lòng thử lại.");
+        } finally {
+          setConfirmPayment(false);
         }
       });
-    },
-    [authState.token, paymentFee]
-  );
+    };
+
+    const onError = useCallback((error: any) => {
+      console.log(error)
+      toast.error("Lỗi thanh toán, vui lòng thử lại sau.");
+      setConfirmPayment(false);
+    }, []);
   //================================================================================================
 
   const findParent = async () => {
@@ -292,7 +302,7 @@ const StudentPersonalScreen = (props: any) => {
               }}
               createOrder={createOrder}
               onApprove={onApprove}
-              // onError={onError}
+              onError={onError}
             />
           </Group>
         </Box>

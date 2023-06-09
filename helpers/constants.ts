@@ -1,6 +1,6 @@
 export const TimeZoneOffset = new Date().getTimezoneOffset() * (-1);
 
-export const production = true;
+export const production = false;
 
 export enum UserRole {
   GUEST = "guest",
@@ -369,6 +369,7 @@ export const Url = {
     getStudentOrderDetail: "/api/payments/get-student-order-detail",
     onSuccessParticipateCourse: "/api/payments/on-success-student-participate-course",
     studentPayment: "/api/payments/student-payment",
+    parentPayment: "/api/payments/parent-payment",
   }
 };
 

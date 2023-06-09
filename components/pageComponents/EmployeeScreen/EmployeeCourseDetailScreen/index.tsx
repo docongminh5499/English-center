@@ -1112,8 +1112,11 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
             </Container>
           </Container>
           <Container size="xl" style={{ width: "100%" }} p={0}>
-            <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} mb={10} transform="uppercase">
+            <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} transform="uppercase">
               Danh sách học viên
+            </Text>
+            <Text color="dimmed" align="center" weight={600} mb={10} style={{ fontSize: "1.8rem" }}>
+              Sĩ số: {totalStudent}
             </Text>
             <Grid mb={20}>
               {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
@@ -1233,8 +1236,11 @@ const EmployeeCourseDetailScreen = (props: IProps) => {
           </Container>
           <Space h={40} />
           <Container size="xl" style={{ width: "100%" }} p={0}>
-            <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} mb={10} transform="uppercase">
+            <Text weight={600} align="center" style={{ fontSize: "2rem" }} mt={20} transform="uppercase">
               Danh sách buổi học
+            </Text>
+            <Text color="dimmed" align="center" weight={600} mb={10} style={{ fontSize: "1.8rem" }}>
+              Số buổi học: {totalStudySession}
             </Text>
             <Grid mb={20}>
               {!isTablet && (<Grid.Col span={3}></Grid.Col>)}
